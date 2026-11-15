@@ -77,6 +77,16 @@ A small model for one cooperative use case (image classifier, bilingual search o
 
 The brief, the README template and the rubric are in [`labs/capstone/`](labs/capstone/). Pre-work, a two-hour array-programming refresher checked by an entry quiz, is [`labs/00_prework_arrays.ipynb`](labs/00_prework_arrays.ipynb). The tracked follow-up task, a second dataset to adapt the capstone model to within two weeks, is in [`labs/followup/`](labs/followup/).
 
+## How the course is organised
+
+Four teaching days of four sessions, then a capstone day. A session is about 25 minutes of concepts, one checkpoint and a 25-minute lab on the case study. Every lab starts from supplied files, has a worked solution, and runs on a laptop processor or in Google Colab; Day 3 reads supplied vectors of the embedding model and Day 4 reads supplied logged runs of two small open-weight language models, so no language model is downloaded to a laptop. Practice questions for every outcome are in `assessments/bank.json`.
+
+**Assessment.** A supervised entry quiz and exit check without AI assistance (shapes and gradients by hand, reading a learning curve, the transformer diagram, the effect of sampling settings): 20%. The capstone repository, scored on the five-criterion rubric: 60%. The live defence, in which the participant explains one curve or failure the assessor selects: 20%. Passing takes 70% overall, with at least 60% on the capstone rubric and at least 60% on the supervised check.
+
+**AI policy.** No AI assistance in the supervised checks and in the first attempt at the training-loop lab (1.2) and the attention lab (3.2). In the other labs an assistant may explain and hint, one step at a time. In the capstone any assistant may be used, and the participant defends the work live.
+
+**Responsible use.** Every model and dataset goes through a licence and provenance check that is recorded in the capstone README. Lab 4.3 probes the language model for fabricated answers and for different quality in Arabic and in English, and participants write the limits of a generated output before it may be shown to a customer. The national references are listed under Sources.
+
 ## Prerequisites
 
 - AE-201 Machine Learning Foundations and Model Evaluation
@@ -104,7 +114,7 @@ Each line is a capability; the examples are interchangeable.
 
 - [PyTorch documentation: automatic differentiation with torch.autograd](https://docs.pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html)
 - [PyTorch documentation: torch.nn.CrossEntropyLoss](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html)
-- [PyTorch documentation: torch.nn.functional.scaled_dot_product_attention](https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html)
+- [PyTorch documentation: the scaled dot-product attention function](https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html)
 - [torchvision: models and pretrained weights](https://docs.pytorch.org/vision/stable/models.html)
 - [Sentence Transformers documentation](https://sbert.net/)
 - [Hugging Face Transformers: text generation strategies](https://huggingface.co/docs/transformers/generation_strategies)
