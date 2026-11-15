@@ -129,7 +129,7 @@ p = np.exp(z) / np.exp(z).sum()</code></pre>
     <ul class="bullets">
       <li>Sort the tokens; keep the most likely until their probabilities add up to <code>top_p</code></li>
       <li>Drop the rest and share the probability again among those kept</li>
-      <li>The two settings pull in opposite directions, and a request always carries both</li>
+      <li>The two settings pull in opposite directions, and every request has a value for both, if only the default</li>
     </ul>
     <table class="t small">
       <tr><th>At temperature 1.5</th><th class="num">Tokens that can be drawn</th><th class="num">First token</th></tr>

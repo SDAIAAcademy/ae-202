@@ -1,7 +1,7 @@
 <!-- academy:title -->
 # Deep Learning and Generative AI Fundamentals
 
-أساسيات التعلم العميق والذكاء الاصطناعي التوليدي
+أساسيات التعلّم العميق والذكاء الاصطناعي التوليدي
 
 AI Engineering Track · SDAIA Academy · AE-202 · Level 200
 

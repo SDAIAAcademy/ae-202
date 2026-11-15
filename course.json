@@ -7,7 +7,7 @@
   "lang": "en",
   "title": {
     "en": "Deep Learning and Generative AI Fundamentals",
-    "ar": "أساسيات التعلم العميق والذكاء الاصطناعي التوليدي"
+    "ar": "أساسيات التعلّم العميق والذكاء الاصطناعي التوليدي"
   },
   "tagline": "Train, debug, adapt and measure small deep learning and generative models, and choose a model family with evidence",
   "description": "Participants go from tensors to a working generative model and learn what each layer of the stack does. For a fictional crafts cooperative they write a training loop by hand, debug a network that will not learn, adapt a pretrained image model to synthetic textile images, implement attention for a toy sequence, build bilingual semantic search with sentence embeddings, and generate text with a small open-weight model while varying sampling settings. They finish by comparing model families on quality, size, latency, licence and cost for three of the cooperative's use cases.",

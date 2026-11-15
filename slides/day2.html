@@ -179,7 +179,7 @@ out[i, j] = (img[i:i+3, j:j+3] * edge).sum()
       <li>Early layers: edges, colours. Middle: textures, repeated shapes. Last layer: that set's own classes</li>
       <li>The early and middle layers <b>transfer</b>: every image task needs them</li>
     </ul>
-    <div class="card c-teal"><h4>In the lab: ResNet-18</h4><p class="small mb0">11.2 million weights, trained on ImageNet-1k (1.28 million photographs, 1,000 everyday classes). A 45 MB download, loaded with one line (torchvision; the same weights are in timm).</p></div>
+    <div class="card c-teal"><h4>In the lab: ResNet-18</h4><p class="small mb0">11.7 million weights, 11.2 million without its 1,000-class head, trained on ImageNet-1k (1.28 million photographs, 1,000 everyday classes). A 45 MB download, loaded with one line (torchvision; the same weights are in timm).</p></div>
   </div>
   <aside class="notes"><p>ResNet-18 is from 2015 and is small on purpose: it runs on a laptop processor in seconds. Larger and newer backbones follow the same three steps. Sources: He et al., Deep Residual Learning (2015); Yosinski et al., How transferable are features (2014); torchvision models documentation.</p></aside>
 </section>
@@ -292,7 +292,7 @@ for p in m.layer4.parameters():
 for p in m.fc.parameters():
     p.requires_grad = True</code></pre>
     <div class="stack">
-      <div class="stat"><div class="big">75%</div><div class="lbl">of ResNet-18's weights sit in its last block: 8.4 of 11.2 million (Lab 2.3)</div></div>
+      <div class="stat"><div class="big">75%</div><div class="lbl">of ResNet-18's weights, without the head, sit in its last block: 8.4 of 11.2 million (Lab 2.3)</div></div>
       <p class="small">"Only the last block" is still 8 million numbers fitted to 800 photographs.</p>
     </div>
   </div>
@@ -485,7 +485,7 @@ for p in m.fc.parameters():
 </section>
 
 <section class="slide lab" id="lab-2-4" data-auto="lab" data-lab="2.4">
-  <aside class="notes"><p>The lab starts from supplied predictions of the fine-tuned model, so nobody needs a finished Lab 2.3. In task 2, insist that participants judge the ten photographs by eye and write their count down before running the cell that reads the generator's record. The trainer's answer key (solutions/answer_key.md) lists the planted duplicates and wrong labels.</p></aside>
+  <aside class="notes"><p>The lab starts from supplied predictions of the fine-tuned model, so nobody needs a finished Lab 2.3. In task 2, insist that participants judge the ten photographs by eye and write their count down before running the cell that reads the generator's record. The trainer's key, cache/planted_key.json, is written with the images when they are drawn and lists the planted duplicates and wrong labels.</p></aside>
 </section>
 
 <section class="slide" id="wrap-up">

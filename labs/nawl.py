@@ -451,7 +451,11 @@ def try_live(fn, what: str = "the live run"):
     if llm_backend() is None:
         print(f"(skipped {what}: no live model here; the supplied logged runs carry the lab)")
         return None
-    return fn()
+    try:
+        return fn()
+    except Exception as e:  # a wrong key, a model the endpoint does not list, no network
+        print(f"(skipped {what}: the live model did not answer: {type(e).__name__}: {str(e)[:160]})")
+        return None
 
 
 def words(text: str) -> list[str]:
