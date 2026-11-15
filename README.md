@@ -5,7 +5,7 @@
 
 AI Engineering Track · SDAIA Academy · AE-202 · Level 200
 
-REPLACE: one line under the title: what participants can do after the course
+Train, debug, adapt and measure small deep learning and generative models, and choose a model family with evidence
 
 Participants go from tensors to a working generative model and learn what each layer of the stack does. For a fictional crafts cooperative they write a training loop by hand, debug a network that will not learn, adapt a pretrained image model to synthetic textile images, implement attention for a toy sequence, build bilingual semantic search with sentence embeddings, and generate text with a small open-weight model while varying sampling settings. They finish by comparing model families on quality, size, latency, licence and cost for three of the cooperative's use cases.
 
@@ -35,7 +35,7 @@ Participants go from tensors to a working generative model and learn what each l
 | Day 2 | Vision and transfer | Convolutions and what they detect; Pretrained backbones; Fine-tuning with little data; Evaluating a deep model | [`slides/day2.html`](slides/day2.html) |
 | Day 3 | Transformers and embeddings | Tokens, including Arabic; Attention step by step; Sentence embeddings; Multilingual search and its failures | [`slides/day3.html`](slides/day3.html) |
 | Day 4 | Generation and model choice | Next-token prediction and sampling; From base models to assistants; Limits: fabrication, cut-off and context; Choosing a model family | [`slides/day4.html`](slides/day4.html) |
-| Capstone | Capstone project presentations |  | [`slides/capstone.html`](slides/capstone.html) |
+| Capstone | Capstone: a small model for the cooperative, defended live |  | [`slides/capstone.html`](slides/capstone.html) |
 <!-- /academy:units -->
 
 ## Case study
@@ -49,22 +49,22 @@ Every lab is a notebook in `labs/`. Open it in Google Colab from the course page
 
 | | Session | Lab | File |
 |---|---|---|---|
-| 1.1 | Day 1 · Session 1 | Compute a gradient by hand and with automatic differentiation for a two-layer network and compare the numbers | [`D1_1_compute_gradient_hand.ipynb`](labs/D1_1_compute_gradient_hand.ipynb) |
-| 1.2 | Day 1 · Session 2 | Write a training loop with batching, a loss and an optimiser for the textile images and plot the loss curves | [`D1_2_write_training_loop.ipynb`](labs/D1_2_write_training_loop.ipynb) |
-| 1.3 | Day 1 · Session 3 | Run the same model at three learning rates, with and without dropout, and read the curves | [`D1_3_run_same_model.ipynb`](labs/D1_3_run_same_model.ipynb) |
-| 1.4 | Day 1 · Session 4 | Find three seeded faults in a broken script, starting with an overfit-one-batch test | [`D1_4_find_three_seeded.ipynb`](labs/D1_4_find_three_seeded.ipynb) |
-| 2.1 | Day 2 · Session 1 | Train a small convolutional network and visualise its first-layer filters | [`D2_1_train_small_convolutional.ipynb`](labs/D2_1_train_small_convolutional.ipynb) |
-| 2.2 | Day 2 · Session 2 | Extract features with a pretrained image model and train a linear classifier on them | [`D2_2_extract_features_pretrained.ipynb`](labs/D2_2_extract_features_pretrained.ipynb) |
-| 2.3 | Day 2 · Session 3 | Fine-tune the last blocks with augmentation on 800 images and compare with supplied frozen-feature results | [`D2_3_fine_tune_last.ipynb`](labs/D2_3_fine_tune_last.ipynb) |
-| 2.4 | Day 2 · Session 4 | Build a confusion matrix, inspect the ten most confident errors and check the splits for near-duplicates | [`D2_4_build_confusion_matrix.ipynb`](labs/D2_4_build_confusion_matrix.ipynb) |
-| 3.1 | Day 3 · Session 1 | Tokenise the same Arabic and English sentences with three tokenisers and compare token counts | [`D3_1_tokenise_same_arabic.ipynb`](labs/D3_1_tokenise_same_arabic.ipynb) |
-| 3.2 | Day 3 · Session 2 | Implement scaled dot-product attention for a toy sequence and check it against the library function | [`D3_2_implement_scaled_dot.ipynb`](labs/D3_2_implement_scaled_dot.ipynb) |
-| 3.3 | Day 3 · Session 3 | Embed the product descriptions and measure recall at 5 on 50 labelled queries | [`D3_3_embed_product_descriptions.ipynb`](labs/D3_3_embed_product_descriptions.ipynb) |
-| 3.4 | Day 3 · Session 4 | Compare Arabic, English and mixed queries and collect three failure cases with a likely cause | [`D3_4_compare_arabic_english.ipynb`](labs/D3_4_compare_arabic_english.ipynb) |
-| 4.1 | Day 4 · Session 1 | Generate from a small local model at four temperatures and measure variation across five samples | [`D4_1_generate_from_small.ipynb`](labs/D4_1_generate_from_small.ipynb) |
-| 4.2 | Day 4 · Session 2 | Compare a base model and an instruction-tuned model of the same size on ten tasks | [`D4_2_compare_base_model.ipynb`](labs/D4_2_compare_base_model.ipynb) |
-| 4.3 | Day 4 · Session 3 | Probe the model with questions beyond its training cut-off and inputs beyond its context window and record the failures | [`D4_3_probe_model_questions.ipynb`](labs/D4_3_probe_model_questions.ipynb) |
-| 4.4 | Day 4 · Session 4 | Fill a model-choice table for three cooperative use cases from supplied lab measurements of latency, size and quality and each model's licence, then choose the capstone task | [`D4_4_fill_model_choice.ipynb`](labs/D4_4_fill_model_choice.ipynb) |
+| 1.1 | Day 1 · Session 1 | A gradient by hand and by autograd | [`D1_1_gradient_by_hand.ipynb`](labs/D1_1_gradient_by_hand.ipynb) |
+| 1.2 | Day 1 · Session 2 | The training loop | [`D1_2_training_loop.ipynb`](labs/D1_2_training_loop.ipynb) |
+| 1.3 | Day 1 · Session 3 | Three learning rates and dropout | [`D1_3_learning_rates_dropout.ipynb`](labs/D1_3_learning_rates_dropout.ipynb) |
+| 1.4 | Day 1 · Session 4 | Three faults in a training script | [`D1_4_three_faults.ipynb`](labs/D1_4_three_faults.ipynb) |
+| 2.1 | Day 2 · Session 1 | A small convolutional network | [`D2_1_small_cnn.ipynb`](labs/D2_1_small_cnn.ipynb) |
+| 2.2 | Day 2 · Session 2 | Frozen features | [`D2_2_frozen_features.ipynb`](labs/D2_2_frozen_features.ipynb) |
+| 2.3 | Day 2 · Session 3 | Fine-tune the last block | [`D2_3_fine_tune.ipynb`](labs/D2_3_fine_tune.ipynb) |
+| 2.4 | Day 2 · Session 4 | Errors and near-duplicates | [`D2_4_errors_duplicates.ipynb`](labs/D2_4_errors_duplicates.ipynb) |
+| 3.1 | Day 3 · Session 1 | Three tokenisers | [`D3_1_three_tokenisers.ipynb`](labs/D3_1_three_tokenisers.ipynb) |
+| 3.2 | Day 3 · Session 2 | Attention by hand | [`D3_2_attention.ipynb`](labs/D3_2_attention.ipynb) |
+| 3.3 | Day 3 · Session 3 | Catalogue search | [`D3_3_catalogue_search.ipynb`](labs/D3_3_catalogue_search.ipynb) |
+| 3.4 | Day 3 · Session 4 | Failures by language | [`D3_4_failures_by_language.ipynb`](labs/D3_4_failures_by_language.ipynb) |
+| 4.1 | Day 4 · Session 1 | Four temperatures | [`D4_1_four_temperatures.ipynb`](labs/D4_1_four_temperatures.ipynb) |
+| 4.2 | Day 4 · Session 2 | Base against instruction-tuned | [`D4_2_base_and_instruct.ipynb`](labs/D4_2_base_and_instruct.ipynb) |
+| 4.3 | Day 4 · Session 3 | Probe the limits | [`D4_3_probe_limits.ipynb`](labs/D4_3_probe_limits.ipynb) |
+| 4.4 | Day 4 · Session 4 | The model-choice table | [`D4_4_model_choice.ipynb`](labs/D4_4_model_choice.ipynb) |
 <!-- /academy:labs -->
 
 ## Capstone
@@ -96,7 +96,44 @@ Each line is a capability; the examples are interchangeable.
 <!-- academy:sources -->
 ## Sources
 
-- REPLACE: every source the course cites, with its address, in course.json under "sources"; this list is written from there
+### Libraries and their documentation
+
+- [PyTorch documentation: automatic differentiation with torch.autograd](https://docs.pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html)
+- [PyTorch documentation: torch.nn.CrossEntropyLoss](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html)
+- [PyTorch documentation: torch.nn.functional.scaled_dot_product_attention](https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html)
+- [torchvision: models and pretrained weights](https://docs.pytorch.org/vision/stable/models.html)
+- [Sentence Transformers documentation](https://sbert.net/)
+- [Hugging Face Transformers: text generation strategies](https://huggingface.co/docs/transformers/generation_strategies)
+- [Hugging Face Tokenizers documentation](https://huggingface.co/docs/tokenizers/index)
+
+### Models used in the labs, with their licences
+
+- [ResNet-18 trained on ImageNet-1k, torchvision weights (model card)](https://huggingface.co/timm/resnet18.tv_in1k)
+- [ImageNet: terms of access](https://www.image-net.org/download.php)
+- [intfloat/multilingual-e5-small (model card)](https://huggingface.co/intfloat/multilingual-e5-small)
+- [Qwen/Qwen2.5-0.5B (model card)](https://huggingface.co/Qwen/Qwen2.5-0.5B)
+- [Qwen/Qwen2.5-0.5B-Instruct (model card)](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct)
+- [Qwen/Qwen2.5-3B-Instruct (model card and licence)](https://huggingface.co/Qwen/Qwen2.5-3B-Instruct)
+- [openai-community/gpt2 (model card)](https://huggingface.co/openai-community/gpt2)
+
+### Papers
+
+- [Vaswani et al., Attention Is All You Need (2017)](https://arxiv.org/abs/1706.03762)
+- [He et al., Deep Residual Learning for Image Recognition (2015)](https://arxiv.org/abs/1512.03385)
+- [Srivastava et al., Dropout: A Simple Way to Prevent Neural Networks from Overfitting (2014)](https://jmlr.org/papers/v15/srivastava14a.html)
+- [Kingma and Ba, Adam: A Method for Stochastic Optimization (2014)](https://arxiv.org/abs/1412.6980)
+- [Yosinski et al., How transferable are features in deep neural networks? (2014)](https://arxiv.org/abs/1411.1792)
+- [Holtzman et al., The Curious Case of Neural Text Degeneration (2019)](https://arxiv.org/abs/1904.09751)
+- [Wang et al., Multilingual E5 Text Embeddings: A Technical Report (2024)](https://arxiv.org/abs/2402.05672)
+- [Karpathy, A Recipe for Training Neural Networks (2019)](https://karpathy.github.io/2019/04/25/recipe/)
+
+### National references
+
+- [SDAIA: Generative AI Guideline for Government](https://sdaia.gov.sa/en/SDAIA/about/Files/GenAIGuidelinesForGovernmentENCompressed.pdf)
+- [SDAIA: Generative AI Guideline for Public](https://sdaia.gov.sa/en/SDAIA/about/Files/GenerativeAIPublicEN.pdf)
+- [SDAIA: Principles of AI Ethics](https://sdaia.gov.sa/en/SDAIA/about/Documents/ai-principles.pdf)
+- [Personal Data Protection Law](https://sdaia.gov.sa/en/SDAIA/about/Documents/PersonalDataProtectionLaw.pdf)
+- [Implementing Regulation of the Personal Data Protection Law](https://sdaia.gov.sa/en/SDAIA/about/Documents/ImplementingRegulationPersonalDataProtectionLaw.pdf)
 <!-- /academy:sources -->
 
 ### National references

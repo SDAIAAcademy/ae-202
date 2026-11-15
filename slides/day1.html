@@ -1,158 +1,540 @@
 <section class="slide title" id="title" data-auto="title">
-  <aside class="notes">REPLACE: welcome; introduce yourself; one question to the room that calibrates the pace; the rhythm of the day</aside>
+  <aside class="notes"><p>Welcome. Ask the room: who has trained a model with a library call, and who has written the loop under that call? This course is the second group's week. Rhythm of every session: about 25 minutes of concepts, one checkpoint, a 25-minute lab. The entry quiz on the array-programming pre-work comes before session 1; it is supervised and AI-off.</p></aside>
 </section>
 
 <section class="slide" id="agenda" data-auto="agenda"></section>
+
+<section class="slide" id="case-study">
+  <div class="kicker">The case study</div>
+  <h2>One cooperative, three small models</h2>
+  <div class="cols cols-3">
+    <div class="card c-teal"><h4>Naqsh · the pattern classifier</h4><p class="small mb0">Names the pattern of a textile from a photograph: eight classes, 8,000 images. Days 1 and 2.</p></div>
+    <div class="card c-cyan"><h4>Khayt · the catalogue search</h4><p class="small mb0">Finds products among 4,000 Arabic and English descriptions. Day 3.</p></div>
+    <div class="card c-coral"><h4>Wasf · the description drafter</h4><p class="small mb0">A small open-weight language model that writes one product line. Day 4.</p></div>
+  </div>
+  <div class="callout note mt"><b>Al-Nawl Crafts Cooperative is fictional.</b> Every image, description and log is synthetic and drawn from a fixed seed. You are Zaid Al-Luhaidan, its junior machine learning engineer.</div>
+  <aside class="notes"><p>Introduce the people once: Mariam Al-Hudaithi directs the cooperative and decides; Shaima Al-Wadaani, a master weaver, owns the pattern labels and wrote the first training script; Rayan Al-Sudais runs the online shop and owns search; Bushra Al-Aqeel checks licences and data protection. The three models are also the three use cases of the last lab and the three capstone options.</p></aside>
+</section>
+
+<section class="slide" id="what-you-keep">
+  <div class="kicker">The week</div>
+  <h2>Each day removes one layer of magic</h2>
+  <div class="ladder" style="--n:4">
+    <div class="rung c-teal on"><b>Day 1</b>Tensors and training<small>the loop, by hand</small></div>
+    <div class="rung c-cyan off"><b>Day 2</b>Vision and transfer<small>800 labels are enough</small></div>
+    <div class="rung c-purple off"><b>Day 3</b>Transformers and embeddings<small>tokens, attention, search</small></div>
+    <div class="rung c-coral off"><b>Day 4</b>Generation and choice<small>sampling, limits, licences</small></div>
+  </div>
+  <p class="small muted mt">Day 5 is yours: a small model for one use case, defended live.</p>
+  <aside class="notes"><p>AI policy, say it now: AI-off for the supervised checks and for the first attempt at two labs, the training loop (1.2) and attention (3.2). In the other labs an assistant may explain and hint one step at a time. The capstone is AI-full and defended live, with one hyperparameter changed in front of the assessor.</p></aside>
+</section>
 
 <!-- Session 1 -->
 
 <section class="slide section" id="s1" data-auto="section" data-session="1"></section>
 
-<section class="slide" id="s1-idea" data-lo="LO2">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
+<section class="slide" id="tensor-is-array" data-lo="LO2">
+  <div class="kicker">What a tensor is</div>
+  <h2>A tensor is an array with a shape, a number format and a device</h2>
   <div class="cols cols-2">
     <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
+      <li><b>Shape</b>: how many axes, how long each one is</li>
+      <li><b>Number format</b>: 32-bit floats by default; 64-bit when you check arithmetic</li>
+      <li><b>Device</b>: the processor or a graphics processor; two tensors must share one</li>
+      <li>One more thing than an array: it can <b>remember how it was computed</b></li>
     </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
+    <pre class="code"><code class="language-python">X.shape    # torch.Size([4, 576])
+X.dtype    # torch.float32
+X.device   # cpu
+W1.requires_grad   # True</code></pre>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <div class="callout tip mt"><b>At Al-Nawl.</b> A batch of four grey swatches of 24 by 24 pixels is a tensor of shape <code>(4, 576)</code>.</div>
+  <aside class="notes"><p>Everyone has used NumPy arrays (the pre-work). The new parts are the device and the recorded history. Do not go into graphics processors: every lab of this course runs on a laptop processor.</p></aside>
 </section>
 
-<section class="slide" id="s1-steps" data-lo="LO2">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="swatches" data-lo="LO2">
+  <div class="kicker">Today's data</div>
+  <h2>Eight patterns, laid straight on the sorting table</h2>
+  <div class="figure">
+    <img src="../assets/swatches.png" width="1040" alt="Two grey swatches for each of eight pattern classes: stripe, chevron, diamond, check, triangle, dot, wave and star. Contrast, weave and noise differ from swatch to swatch.">
+    <div class="caption">4,000 synthetic swatches: 3,000 to train, 500 to validate, 500 to test. Grey, 24 by 24 pixels, 576 numbers each.</div>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <aside class="notes"><p>Day 1 uses swatches laid straight and cut at the same place, so that a plain two-layer network can learn them. Tomorrow's catalogue photographs are turned and shifted, and the same network fails on them: that failure opens Day 2. Do not give the number away yet.</p></aside>
+</section>
+
+<section class="slide" id="shapes-first" data-lo="LO2">
+  <div class="kicker">Shapes</div>
+  <h2>Predict the shape before you run the line</h2>
+  <table class="t">
+    <tr><th>Operation</th><th>Shapes in</th><th>Shape out</th></tr>
+    <tr><td><code>X @ W1</code></td><td>(4, 576) and (576, 5)</td><td>(4, 5)</td></tr>
+    <tr><td><code>X @ W1 + b1</code></td><td>(4, 5) and (5,)</td><td>(4, 5)</td></tr>
+    <tr><td><code>X.mean(axis=0)</code></td><td>(4, 576)</td><td>(576,)</td></tr>
+    <tr><td><code>X.mean(axis=1, keepdims=True)</code></td><td>(4, 576)</td><td>(4, 1)</td></tr>
+    <tr class="hl"><td><code>X - X.mean(axis=1)</code></td><td>(4, 576) and (4,)</td><td>an error</td></tr>
+  </table>
+  <div class="callout warn mt"><b>What goes wrong.</b> Most deep learning bugs are shape bugs that do not raise an error: a shape of <code>(4,)</code> against <code>(4, 1)</code> broadcasts to <code>(4, 4)</code> and trains on nonsense.</div>
+  <aside class="notes"><p>Cover the right column and ask for each row. The inner sizes of a matrix product must agree and disappear. The last row is task 1 of the lab.</p></aside>
+</section>
+
+<section class="slide" id="broadcasting-rule" data-lo="LO2">
+  <div class="kicker">Broadcasting</div>
+  <h2>Shapes align from the right; a size of 1 stretches</h2>
+  <div class="cols cols-2">
+    <div class="card c-teal"><h4>Works</h4><p class="small mb0"><code>(4, 576)</code> with <code>(576,)</code>: the last axes match, the vector is repeated over the 4 rows.<br><code>(4, 576)</code> with <code>(4, 1)</code>: the 1 stretches over the 576 columns.</p></div>
+    <div class="card c-coral"><h4>Fails, or worse</h4><p class="small mb0"><code>(4, 576)</code> with <code>(4,)</code>: 576 against 4, an error.<br><code>(4,)</code> with <code>(4, 1)</code>: no error, a <code>(4, 4)</code> table nobody asked for.</p></div>
+  </div>
+  <div class="callout tip mt"><b>Habit.</b> Print <code>.shape</code> after every new line until the shapes are boring.</div>
+  <aside class="notes"><p>The second failing case is the dangerous one: predictions of shape (N, 1) against labels of shape (N,) in a mean squared error give an N by N difference, and the loss still falls a little. Mention it; the debugging session returns to "runs without an error".</p></aside>
+</section>
+
+<section class="slide" id="two-layer-network" data-lo="LO2">
+  <div class="kicker">The network of today</div>
+  <h2>Two layers: multiply, bend, multiply, compare</h2>
+  <div class="flow">
+    <div class="step c-teal"><b>Input</b>X: (N, 576)</div>
+    <div class="arrow">→</div>
+    <div class="step c-cyan"><b>Layer 1</b>z1 = X W1 + b1, then relu</div>
+    <div class="arrow">→</div>
+    <div class="step c-purple"><b>Layer 2</b>z2 = h W2 + b2: eight scores</div>
+    <div class="arrow">→</div>
+    <div class="step c-coral"><b>Loss</b>softmax, then −log p of the true class</div>
+  </div>
+  <ul class="bullets mt">
+    <li>The eight raw scores are called <b>logits</b>; softmax turns them into probabilities</li>
+    <li><b>Cross-entropy</b> is the mean of −log p(true class): 0 when certain and right, ln 8 = 2.08 when guessing among eight</li>
+  </ul>
+  <aside class="notes"><p>Keep ln 8 = 2.08 on the board all day: it is the loss of a network that knows nothing, and every flat curve today sits on it. In the lab the untrained network starts at 2.20, a little worse than guessing, because its random weights are confidently wrong on some swatches.</p></aside>
+</section>
+
+<section class="slide" id="chain-rule-backwards" data-lo="LO2">
+  <div class="kicker">Gradients</div>
+  <h2>The backward pass is the chain rule, one local step at a time</h2>
+  <div class="cols cols-2">
+    <ol class="bullets">
+      <li>Softmax with cross-entropy: <code>dz2 = (p − onehot) / N</code></li>
+      <li>Linear layer: <code>dW = a.T @ dz</code>, <code>db = dz.sum(0)</code></li>
+      <li>Pass back: <code>da = dz @ W.T</code></li>
+      <li>Relu: the gradient passes where <code>z1 &gt; 0</code></li>
+    </ol>
+    <div class="card c-teal"><h4>One rule to check everything</h4><p class="small mb0">A gradient has the shape of the thing it is the gradient of. <code>dW1</code> is <code>(576, 5)</code> because <code>W1</code> is.</p></div>
+  </div>
+  <div class="callout note mt"><b>You know this.</b> It is the chain rule of FN-103, written for matrices. The lab does it for four swatches.</div>
+  <aside class="notes"><p>Recap, not a derivation: participants computed derivatives with the chain rule in FN-103. Write the four lines on the board next to the forward flow, right to left. If someone asks where p minus onehot comes from: the derivative of minus log softmax, three lines of algebra, in the lab notes.</p></aside>
+</section>
+
+<section class="slide" id="autograd-graph" data-lo="LO2">
+  <div class="kicker">Automatic differentiation</div>
+  <h2>The library records the forward pass and replays it backwards</h2>
+  <div class="cols cols-2">
+    <pre class="code"><code class="language-python">W1 = torch.tensor(w1, requires_grad=True)
+z2 = torch.relu(X @ W1 + b1) @ W2 + b2
+loss = F.cross_entropy(z2, y)
+loss.backward()
+W1.grad.shape     # (576, 5)</code></pre>
+    <ul class="bullets">
+      <li>Each operation adds a node to a <b>computational graph</b></li>
+      <li><code>backward()</code> applies the local rules from the loss to every leaf</li>
+      <li>Gradients <b>add up</b> in <code>.grad</code> until you clear them</li>
+    </ul>
+  </div>
+  <div class="stat center mt"><div class="big">1e-16</div><div class="lbl">largest gap between hand and autograd in Lab 1.1, in 64-bit numbers; 9e-8 between a 32-bit and a 64-bit run</div></div>
+  <aside class="notes"><p>The two numbers are from the lab's reference run: hand and autograd differ by at most 1.0e-16 in 64 bits; the same gradients in 32 bits differ from the 64-bit ones by 8.7e-8. The lesson of the second number: comparisons need a tolerance that fits the number format. "Gradients add up" is the reason for zero_grad in session 2.</p></aside>
+</section>
+
+<section class="slide" id="check-shapes" data-lo="LO2">
+  <div class="kicker">Checkpoint</div>
+  <h2>Which gradient is right?</h2>
+  <div class="quiz" data-type="single" data-lo="LO2">
+    <p class="lead">A layer computes <code>z = a @ W + b</code> with <code>a</code> of shape (32, 64) and <code>W</code> of shape (64, 8). You have <code>dz</code>, the gradient of the loss with respect to <code>z</code>. Which line gives the gradient for <code>W</code>?</p>
+    <div class="opts">
+      <div class="opt" data-why="Gives shape (32, 64): this is the gradient passed back to a, not the one for W"><code>dz @ W.T</code></div>
+      <div class="opt" data-why="The shapes (32, 64) and (32, 8) cannot be multiplied: the batch axis must be summed away, which needs the transpose"><code>a @ dz</code></div>
+      <div class="opt" data-ok><code>a.T @ dz</code></div>
+      <div class="opt" data-why="Gives shape (8,): this is the gradient for the bias b"><code>dz.sum(axis=0)</code></div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> The gradient for W must have the shape of W, (64, 8). Only <code>a.T @ dz</code>, (64, 32) times (32, 8), has it.</div>
+  </div>
+  <aside class="notes"><p>Answer: a.T @ dz. Let them solve it by shapes alone; nobody needs to remember the formula. If many choose the first option, they have the right idea for the wrong variable: it is the line that passes the gradient to the layer before.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-1-1" data-auto="lab" data-lab="1.1">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>Watch for: a missing keepdims in task 1; forgetting the division by N in dz2 (the gradients are then 4 times too large and the comparison fails by a clean factor, which is a good hint to give). The check cells print the shape that is wrong. Nobody needs an earlier lab: the swatches are drawn on first use, about 10 seconds.</p></aside>
 </section>
 
 <!-- Session 2 -->
 
 <section class="slide section" id="s2" data-auto="section" data-session="2"></section>
 
-<section class="slide" id="s2-idea" data-lo="LO2">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
-  <div class="cols cols-2">
-    <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
-    </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
-  </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+<section class="slide" id="five-lines" data-lo="LO2">
+  <div class="kicker">The training step</div>
+  <h2>Every training step is the same five lines</h2>
+  <pre class="code l"><code class="language-python">logits = model(xb)                  # 1 forward
+loss = F.cross_entropy(logits, yb)  # 2 loss
+optimiser.zero_grad()               # 3 clear old gradients
+loss.backward()                     # 4 backward
+optimiser.step()                    # 5 update the weights</code></pre>
+  <div class="callout tip mt"><b>From a two-layer network to a language model</b>, these five lines do not change. What changes is the model, the data and the loss.</div>
+  <aside class="notes"><p>Say each line aloud with the room. Line 3 can sit anywhere before line 4. In Lab 1.2 participants write exactly these lines, AI-off for the first attempt.</p></aside>
 </section>
 
-<section class="slide" id="s2-steps" data-lo="LO2">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="what-loss-receives" data-lo="LO2 LO3">
+  <div class="kicker">The loss</div>
+  <h2>Cross-entropy takes logits, not probabilities</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li><code>F.cross_entropy</code> applies the softmax itself, in a numerically safe way</li>
+      <li>Its inputs: raw scores of shape (N, classes) and class numbers of shape (N,)</li>
+      <li>Give it probabilities and it applies a second softmax: <b>no error, a loss that cannot reach zero</b></li>
+    </ul>
+    <div class="stat center"><div class="big">1.27</div><div class="lbl">the loss of a perfect prediction when softmax is applied twice (Lab 1.4)</div></div>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <aside class="notes"><p>This is the first of the three faults of Lab 1.4; do not announce that. The number: a perfect one-hot probability vector, pushed through a second softmax over eight classes, gives minus log of e over (e + 7), which is 1.27. Sources: PyTorch documentation, torch.nn.CrossEntropyLoss.</p></aside>
+</section>
+
+<section class="slide" id="optimiser-rule" data-lo="LO2">
+  <div class="kicker">The optimiser</div>
+  <h2>The optimiser is the rule that turns a gradient into a step</h2>
+  <div class="cols cols-2">
+    <div class="card c-teal"><h4>Gradient descent (SGD)</h4><p class="small mb0"><code>w = w − lr × grad</code>. One setting: the learning rate is the step size and nothing else.</p></div>
+    <div class="card c-cyan"><h4>Adam</h4><p class="small mb0">Keeps a running average of each weight's gradient and of its square, and scales every step by them. Forgiving: a rate of 0.001 works on most small problems.</p></div>
+  </div>
+  <div class="callout note mt"><b>In the labs.</b> Adam when the point is the loop (1.2), plain gradient descent when the point is the learning rate (1.3, 1.4).</div>
+  <aside class="notes"><p>No momentum formulas. The practical message: start with Adam at 0.001; know that plain gradient descent exists and shows the effect of the learning rate without anything in between. Sources: Kingma and Ba, Adam (2014).</p></aside>
+</section>
+
+<section class="slide" id="mini-batches" data-lo="LO2">
+  <div class="kicker">Batches</div>
+  <h2>A mini-batch is a noisy, cheap estimate of the full gradient</h2>
+  <ul class="bullets">
+    <li>All 3,000 swatches per step: an exact gradient, one update per pass</li>
+    <li>32 swatches per step: a noisy gradient, <b>94 updates per pass</b></li>
+    <li>An <b>epoch</b> is one pass over the training set in a new random order</li>
+    <li>Shuffle every epoch, and keep each input with its own label</li>
+  </ul>
+  <div class="callout warn mt"><b>What goes wrong.</b> Data stored class by class and never shuffled gives batches of one class; inputs shuffled without their labels give a network nothing to learn.</div>
+  <aside class="notes"><p>3,000 divided by 32 is 93.75, so 94 batches, the last one smaller. The warning is the third fault of Lab 1.4 (inputs shuffled, labels not). Ask: what does a batch of 32 stripes teach the network?</p></aside>
+</section>
+
+<section class="slide" id="validation-pass" data-lo="LO2">
+  <div class="kicker">Validation</div>
+  <h2>The validation pass measures and must not learn</h2>
+  <div class="cols cols-2">
+    <pre class="code"><code class="language-python">model.eval()
+with torch.no_grad():
+    logits = model(Xva)
+    loss = F.cross_entropy(logits, yva)
+    acc = (logits.argmax(1) == yva)
+          .float().mean()</code></pre>
+    <ul class="bullets">
+      <li><code>eval()</code>: layers that behave differently in training switch to their test behaviour</li>
+      <li><code>no_grad()</code>: no graph is recorded, so no memory and no time are spent on it</li>
+      <li>Once per epoch, on data the training step never sees</li>
+    </ul>
+  </div>
+  <aside class="notes"><p>The split into training, validation and test sets is AE-201's subject and is assumed here. The code on the slide breaks the last line for width; in a notebook it is one line. Remind them to call model.train() again before the next epoch.</p></aside>
+</section>
+
+<section class="slide" id="reference-curves" data-lo="LO2">
+  <div class="kicker">What a healthy run looks like</div>
+  <h2>Both losses fall together, from chance towards zero</h2>
+  <div class="cols cols-21">
+    <div class="figure">
+      <img src="../assets/d1_2_curves.png" width="760" alt="Training and validation loss of the reference run over 12 epochs. Both start at chance, 2.08, and fall together to about 0.7; the validation loss stays just under the training loss.">
+    </div>
+    <div class="stack">
+      <div class="stat"><div class="big">0.79</div><div class="lbl">validation accuracy after 12 epochs; chance is 0.125</div></div>
+      <p class="small">37,448 weights, Adam at 0.001, batches of 32. Validation loss from 1.99 to 0.70 (Lab 1.2, reference run).</p>
+    </div>
+  </div>
+  <aside class="notes"><p>This is the reference run of Lab 1.2; the participants' curves are compared with it within a tolerance (last validation loss within 0.15, accuracy within 0.08). Ask why the validation loss is below the training loss here: the training loss is averaged over an epoch during which the network was still improving, the validation loss is measured at its end.</p></aside>
+</section>
+
+<section class="slide" id="tolerance-not-equality" data-lo="LO2">
+  <div class="kicker">Reproducibility</div>
+  <h2>Two correct runs differ; say by how much they may</h2>
+  <ul class="bullets">
+    <li>A different batch order or seed gives a different path to a similar place</li>
+    <li>Fix the seed to repeat <b>your</b> run; state a tolerance to compare with <b>someone else's</b></li>
+    <li>Keep the curve as a file, with the settings that produced it</li>
+  </ul>
+  <div class="callout tip mt"><b>Experiment tracking</b> (MLflow, TensorBoard) is this habit with a user interface: one record per run with its settings, its curves and its code version.</div>
+  <aside class="notes"><p>The labs write each run to a JSON file in labs/runs; the capstone rubric gives 20 points to reproducibility, and training logs with the commit history are the authenticity evidence. Tools are examples: any tracker that stores settings with curves will do.</p></aside>
+</section>
+
+<section class="slide" id="check-zero-grad" data-lo="LO2">
+  <div class="kicker">Checkpoint</div>
+  <h2>The curve that jumps</h2>
+  <div class="quiz" data-type="single" data-lo="LO2">
+    <p class="lead">Zaid's loop runs. The training loss falls for a few steps, then swings wildly and grows. His step has four lines: forward, loss, <code>loss.backward()</code>, <code>optimiser.step()</code>. What is the most likely cause?</p>
+    <div class="opts">
+      <div class="opt" data-ok>Gradients from earlier steps are still added to each new one</div>
+      <div class="opt" data-why="A missing eval() changes what validation measures; it does not make the training loss grow">The model was never put in evaluation mode</div>
+      <div class="opt" data-why="Unshuffled data makes learning slower or biased; the missing line explains growing swings directly">The batches were not shuffled between epochs</div>
+      <div class="opt" data-why="A batch of 32 is noisy and still converges; noise alone does not make the loss grow step after step">The batch size of 32 is too small for this network</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> Without <code>zero_grad()</code> the gradients accumulate, so every update is larger and less related to the current batch.</div>
+  </div>
+  <aside class="notes"><p>Answer: the first option; the missing line is zero_grad. If the room splits between the first and the third, ask which of the five lines is missing from his step.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-1-2" data-auto="lab" data-lab="1.2">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>AI-off for the first attempt: say it again and ask for assistants to be closed. Typical problems: validate returns tensors instead of numbers (use .item()); the model is created outside the seeded function, so the start differs and the curve leaves the tolerance; the batch function returns the same order every epoch because the generator is recreated inside it. The notebook runs to the end on its safety nets if someone is stuck, and shows the reference run.</p></aside>
 </section>
 
 <!-- Session 3 -->
 
 <section class="slide section" id="s3" data-auto="section" data-session="3"></section>
 
-<section class="slide" id="s3-idea" data-lo="LO2 LO3">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
-  <div class="cols cols-2">
-    <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
+<section class="slide" id="learning-rate-first" data-lo="LO2 LO3">
+  <div class="kicker">The learning rate</div>
+  <h2>Tune the learning rate first: it decides whether anything else matters</h2>
+  <div class="cols cols-21">
+    <div class="figure">
+      <img src="../assets/d1_3_rates.png" width="760" alt="Validation loss over eight epochs at three learning rates. At 0.001 the loss stays flat at chance, 2.08. At 0.1 it falls steadily to 1.23. At 3.0 it jumps between 2.4 and above 4.">
+    </div>
+    <ul class="bullets small">
+      <li><b>0.001</b>: flat at 2.08, accuracy 0.11. Too low: the weights barely move</li>
+      <li><b>0.1</b>: falls to 1.23, accuracy 0.62. Usable</li>
+      <li><b>3.0</b>: between 2.4 and 12. Too high: every step overshoots</li>
     </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <aside class="notes"><p>Numbers from Lab 1.3, plain gradient descent on the swatches, eight epochs. Point out that "too low" and "broken" look the same on this plot: a flat line at ln 8. Session 4 separates the two.</p></aside>
 </section>
 
-<section class="slide" id="s3-steps" data-lo="LO2 LO3">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
+<section class="slide" id="sweep-powers-of-ten" data-lo="LO2">
+  <div class="kicker">How to search</div>
+  <h2>Sweep powers of ten, read curves, then refine</h2>
   <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+    <div class="step c-teal"><b>1 · Coarse</b>0.001, 0.01, 0.1, 1: a few epochs each</div>
+    <div class="arrow">→</div>
+    <div class="step c-cyan"><b>2 · Read</b>too low, usable or too high, from the validation curve</div>
+    <div class="arrow">→</div>
+    <div class="step c-coral"><b>3 · Refine</b>two or three values around the best one</div>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <ul class="bullets mt">
+    <li>Change <b>one setting at a time</b>, from the same starting weights</li>
+    <li>A larger batch gives a less noisy gradient and usually tolerates a larger rate</li>
+    <li>Schedules (warm-up, decay) shape the rate over time; a constant rate is the baseline</li>
+  </ul>
+  <aside class="notes"><p>Batch size is the lab's stretch item. Keep schedules to this one line: the fine-tuning lab of Day 2 uses two rates, a small one for the pretrained block and a larger one for the new head, and that is as far as this course goes.</p></aside>
+</section>
+
+<section class="slide" id="overfitting-gap" data-lo="LO2">
+  <div class="kicker">Overfitting</div>
+  <h2>The gap between the two losses is what the network memorised</h2>
+  <ul class="bullets">
+    <li>Training loss keeps falling as long as the network has capacity to spare</li>
+    <li>Validation loss stops falling when the rest is <b>particular to the training examples</b></li>
+    <li>The gap grows with a larger network, a smaller training set, more epochs</li>
+  </ul>
+  <div class="callout tip mt"><b>At Al-Nawl.</b> With 400 swatches and 256 hidden units: training loss 0.52, validation loss 0.95 after 60 epochs. A gap of 0.43 (Lab 1.3).</div>
+  <aside class="notes"><p>AE-201 taught overfitting with classical models; the picture is the same, the knob "more epochs" is new. The 400-swatch run is the plain run of task 3.</p></aside>
+</section>
+
+<section class="slide" id="dropout-weight-decay" data-lo="LO2">
+  <div class="kicker">Regularisation</div>
+  <h2>Dropout and weight decay make memorising harder</h2>
+  <div class="cols cols-3">
+    <div class="card c-teal"><h4>Dropout</h4><p class="small mb0">In training, each hidden unit is switched off with probability p at every step. No unit can rely on one other unit. Off in evaluation mode.</p></div>
+    <div class="card c-cyan"><h4>Weight decay</h4><p class="small mb0">Every step also pulls each weight a little towards zero. Large weights must earn their size.</p></div>
+    <div class="card c-purple"><h4>Augmentation</h4><p class="small mb0">Show changed copies that keep the label: a flipped or shifted image. More data without new labels. Day 2.</p></div>
+  </div>
+  <div class="callout warn mt"><b>What goes wrong.</b> Validating with dropout still on: the model is measured with half its units missing. This is what <code>model.eval()</code> prevents.</div>
+  <aside class="notes"><p>Sources: Srivastava et al., Dropout (2014). Augmentation is taught and used in Lab 2.3; here it is named so that the three sit side by side.</p></aside>
+</section>
+
+<section class="slide" id="regularisation-evidence" data-lo="LO2">
+  <div class="kicker">What the lab measured</div>
+  <h2>The gap shrank; the validation loss hardly moved</h2>
+  <table class="t">
+    <tr><th>400 swatches, 60 epochs</th><th class="num">Training loss</th><th class="num">Validation loss</th><th class="num">Gap</th><th class="num">Validation accuracy</th></tr>
+    <tr><td>Plain</td><td class="num">0.52</td><td class="num">0.95</td><td class="num">0.43</td><td class="num">0.64</td></tr>
+    <tr><td>Dropout 0.5</td><td class="num">0.86</td><td class="num">1.05</td><td class="num">0.19</td><td class="num">0.68</td></tr>
+    <tr><td>Weight decay 0.001</td><td class="num">0.60</td><td class="num">0.93</td><td class="num">0.33</td><td class="num">0.64</td></tr>
+    <tr class="hl"><td>All 3,000 swatches, 12 epochs (Lab 1.2)</td><td class="num">0.73</td><td class="num">0.70</td><td class="num">0</td><td class="num">0.79</td></tr>
+  </table>
+  <div class="callout tip mt"><b>Read it honestly.</b> Regularisation stops a network from flattering itself. It does not replace the data that is missing.</div>
+  <aside class="notes"><p>All four rows are reference runs of the labs (1.3 task 3, and 1.2). The finding is unflattering to the textbook and worth keeping: dropout more than halved the gap, added four points of accuracy and left the validation loss slightly worse; seven times more data did what no setting did. The last row's gap is slightly negative (0.70 against 0.73), shown as 0.</p></aside>
+</section>
+
+<section class="slide" id="early-stopping" data-lo="LO2">
+  <div class="kicker">When to stop</div>
+  <h2>Keep the weights of the best validation epoch</h2>
+  <ul class="bullets">
+    <li>Watch the validation loss; save the weights whenever it improves</li>
+    <li><b>Patience</b>: stop after this many epochs without an improvement</li>
+    <li>A noisy curve needs more patience: with 500 validation swatches, a patience of 3 stops on a bump</li>
+    <li>The stopping epoch is chosen on <b>validation</b> data; the test set is used once, at the end</li>
+  </ul>
+  <div class="callout note mt"><b>In Lab 1.3.</b> On the plain run, a patience of 3 keeps epoch 43; a patience of 10 keeps epoch 58, with a lower loss (0.93 against 0.98).</div>
+  <aside class="notes"><p>Numbers from the reference run of task 4. Early stopping is itself a regulariser: it limits how far the weights travel.</p></aside>
+</section>
+
+<section class="slide" id="curve-reading-table" data-lo="LO2 LO3">
+  <div class="kicker">Reading curves</div>
+  <h2>Four shapes cover most of what a curve can tell you</h2>
+  <table class="t small">
+    <tr><th>What you see</th><th>Likely meaning</th><th>First thing to try</th></tr>
+    <tr><td>Both losses flat at chance</td><td>Rate far too low, or no signal reaches the network</td><td>Overfit one batch (session 4)</td></tr>
+    <tr><td>Loss jumps, grows or becomes "nan"</td><td>Rate too high</td><td>Divide the rate by 10</td></tr>
+    <tr><td>Training falls, validation rises</td><td>Overfitting</td><td>Stop earlier, more data, regularise</td></tr>
+    <tr><td>Both fall slowly and are still falling</td><td>Not finished, or rate a little low</td><td>More epochs, or a rate 3 times larger</td></tr>
+  </table>
+  <aside class="notes"><p>This table is on the supervised exit check: "reading a learning curve". Ask the room to match the three curves of the learning-rate slide to rows.</p></aside>
+</section>
+
+<section class="slide" id="check-curve" data-lo="LO2 LO3">
+  <div class="kicker">Checkpoint</div>
+  <h2>What would you change first?</h2>
+  <div class="quiz" data-type="single" data-lo="LO2">
+    <p class="lead">A network with 256 hidden units trains on 400 swatches. After 60 epochs the training loss is 0.20 and still falling; the validation loss reached 0.93 at epoch 35 and is now 1.10. Which change addresses what the curves show?</p>
+    <div class="opts">
+      <div class="opt" data-why="A higher rate speeds up the fall of the training loss, which is not the problem here">Raise the learning rate so that training converges faster</div>
+      <div class="opt" data-why="More capacity lets the network memorise the 400 swatches even more easily">Add a second hidden layer of 256 units</div>
+      <div class="opt" data-why="Longer training lowers the training loss further while the validation loss keeps rising">Train for 60 more epochs until the training loss is near zero</div>
+      <div class="opt" data-ok>Keep the weights of epoch 35 and get more labelled swatches</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> Training falls while validation rises: overfitting. Stop at the best validation epoch; the lasting fix is more data.</div>
+  </div>
+  <aside class="notes"><p>Answer: the last option. The numbers are a constructed scenario, not a lab run. If someone proposes dropout: fine as an addition, and the lab shows how much it helps here.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-1-3" data-auto="lab" data-lab="1.3">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The runs take about a minute in full mode. Watch for: models created without resetting the seed, so the three rates start from different weights; a rule in task 2 that checks only the last epoch (the high rate can end below 2.5 by luck: the rule must look at every epoch). The plot clips losses at 4 so that the high rate does not flatten the other two.</p></aside>
 </section>
 
 <!-- Session 4 -->
 
 <section class="slide section" id="s4" data-auto="section" data-session="4"></section>
 
-<section class="slide" id="s4-idea" data-lo="LO3">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
+<section class="slide" id="silent-failure" data-lo="LO3">
+  <div class="kicker">Why this is hard</div>
+  <h2>A broken training script usually runs without an error</h2>
   <div class="cols cols-2">
     <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
+      <li>Ordinary code fails loudly: an exception, a line number</li>
+      <li>Training code fails quietly: <b>a number that is worse than it should be</b></li>
+      <li>Several faults stack, and each hides the others</li>
+      <li>So you need tests with a <b>known right answer</b></li>
     </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
+    <div class="trace s">
+      <div class="ev user"><b>log</b>epoch 1 · train loss 2.130 · val loss 65.4 · val acc 0.124</div>
+      <div class="ev result"><b>log</b>epoch 2 · train loss 2.148 · val loss 67.3 · val acc 0.126</div>
+      <div class="ev error"><b>log</b>epoch 3 · train loss 2.149 · val loss 31.9 · val acc 0.128</div>
+    </div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <aside class="notes"><p>The log is Shaima's script as found (Lab 1.4, task 1). Ask what the room would change first, and write the guesses on the board. Come back to them after the lab: most guesses fix one fault and leave the curve flat, which looks as if the fix were wrong.</p></aside>
 </section>
 
-<section class="slide" id="s4-steps" data-lo="LO3">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="overfit-one-batch" data-lo="LO3">
+  <div class="kicker">The cheapest test</div>
+  <h2>First, make the network memorise one batch</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>Take 16 examples. Train on them alone for a few hundred steps</li>
+      <li>A healthy model, loss and optimiser drive the loss <b>towards zero</b></li>
+      <li>It takes seconds and has a known right answer</li>
+    </ul>
+    <div class="stack">
+      <div class="card c-coral"><h4>It fails</h4><p class="small mb0">The fault is in the model, the loss or the update. More data will not help.</p></div>
+      <div class="card c-teal"><h4>It passes, and full training still fails</h4><p class="small mb0">Those three work. Look at what reaches them: the data pipeline.</p></div>
+    </div>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <aside class="notes"><p>The test cuts the search in two, which is why it comes first. Sources: Karpathy, A Recipe for Training Neural Networks (2019), where overfitting one batch is a step of the recipe.</p></aside>
+</section>
+
+<section class="slide" id="checklist" data-lo="LO3">
+  <div class="kicker">The checklist</div>
+  <h2>Five checks, from cheap to expensive</h2>
+  <ol class="bullets">
+    <li><b>Run as found</b> and write down the numbers: is the loss at chance, above it, "nan"?</li>
+    <li><b>Overfit one batch</b></li>
+    <li><b>Check the loss on a known case</b>: a perfect prediction must cost about 0</li>
+    <li><b>Sweep the learning rate</b> on the one-batch test, in powers of ten</li>
+    <li><b>Test the pipeline</b>: does every input still travel with its own label?</li>
+  </ol>
+  <div class="callout tip mt"><b>One change at a time, and a log line for each.</b> What you tested, what it showed, what you changed.</div>
+  <aside class="notes"><p>The log is the evidence of this outcome: it must show the one-batch test, each fault and the corrected curve. The checklist is deliberately short; the capstone defence asks participants to explain one curve or failure the assessor picks, and this is the vocabulary for it.</p></aside>
+</section>
+
+<section class="slide" id="stacked-faults" data-lo="LO3">
+  <div class="kicker">Stacked faults</div>
+  <h2>A correct fix can leave the test failing</h2>
+  <table class="t">
+    <tr><th>State of the script</th><th class="num">One-batch loss after 300 steps</th><th>Verdict</th></tr>
+    <tr><td>As found</td><td class="num">134.2</td><td>Fails</td></tr>
+    <tr><td>Loss input fixed, rate still 30</td><td class="num">4.4</td><td>Fails: another fault</td></tr>
+    <tr class="hl"><td>Loss input fixed, rate 0.1</td><td class="num">0.08</td><td>Passes</td></tr>
+  </table>
+  <div class="callout warn mt"><b>What goes wrong.</b> Undoing a correct fix because the curve did not improve. Keep the fix when its own check passes (a perfect prediction now costs 0), and look for the next fault.</div>
+  <aside class="notes"><p>Numbers from the reference run of Lab 1.4. The sweep on the one-batch test gave 2.04 at 0.001, 1.77 at 0.01, 0.08 at 0.1 and 1.40 at 1.0: only one of the four passes within 300 steps, which is a second lesson on why a sweep beats a guess.</p></aside>
+</section>
+
+<section class="slide" id="pipeline-test" data-lo="LO3">
+  <div class="kicker">The data pipeline</div>
+  <h2>Tag every row and see whether the pairs survive</h2>
+  <div class="cols cols-2">
+    <pre class="code"><code class="language-python">tag = torch.arange(40)
+X = tag.float().unsqueeze(1)
+for xb, yb in make_batches(X, tag, 8, g):
+    assert torch.equal(
+        xb.squeeze(1).long(), yb)</code></pre>
+    <ul class="bullets">
+      <li>Give the pipeline inputs that <b>are</b> their labels</li>
+      <li>Any batch where they differ is a pipeline bug</li>
+      <li>Passing the one-batch test and sitting at exactly ln 8 on full data points here</li>
+    </ul>
+  </div>
+  <div class="stat center mt"><div class="big">2.08 → 1.23</div><div class="lbl">validation loss with two fixes, and with the third (the data order), after 8 epochs (Lab 1.4)</div></div>
+  <aside class="notes"><p>With two fixes the full run sits at 2.08 for every epoch; with the third it falls to 1.23 and accuracy reaches 0.62 in 8 epochs. Exactly ln 8, not above it, is the fingerprint of inputs that carry no information about the labels: the best the network can do is predict the class frequencies.</p></aside>
+</section>
+
+<section class="slide" id="other-usual-suspects" data-lo="LO3">
+  <div class="kicker">Beyond today's three</div>
+  <h2>The usual suspects, by where they sit</h2>
+  <div class="cols cols-3">
+    <div class="card c-teal"><h4>Data</h4><p class="small mb0">Labels shifted or shuffled away; inputs not normalised as the model expects; the same preprocessing missing at validation.</p></div>
+    <div class="card c-cyan"><h4>Model and loss</h4><p class="small mb0">Wrong loss input; an output layer with the wrong number of classes; a silent broadcast between (N,) and (N, 1).</p></div>
+    <div class="card c-coral"><h4>Update</h4><p class="small mb0">Rate too high or too low; gradients never cleared; weights frozen by mistake; evaluation mode left on.</p></div>
+  </div>
+  <aside class="notes"><p>"Inputs not normalised as the model expects" returns tomorrow: a pretrained backbone expects images scaled with the statistics it was trained with, and feeding it raw pixels is a quiet fault of exactly this kind.</p></aside>
+</section>
+
+<section class="slide" id="check-one-batch" data-lo="LO3">
+  <div class="kicker">Checkpoint</div>
+  <h2>Where is the fault?</h2>
+  <div class="quiz" data-type="single" data-lo="LO3">
+    <p class="lead">Rayan trains a classifier on ten product categories. On 16 examples the loss reaches 0.02 in 200 steps. On the full training set it stays at 2.30 for 20 epochs, at every learning rate he tries. Where should he look first?</p>
+    <div class="opts">
+      <div class="opt" data-why="A network too small would still beat chance a little; exactly ln 10 means no signal at all">At the size of the network: it cannot hold ten categories</div>
+      <div class="opt" data-ok>At the data pipeline: inputs and labels no longer match</div>
+      <div class="opt" data-why="The one-batch test already showed that this loss can be driven to zero with this model">At the loss function: it cannot reach zero</div>
+      <div class="opt" data-why="He tried several rates, and the one-batch test passed with one of them">At the learning rate: it needs a finer sweep</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> One batch can be memorised, so model, loss and update work. A loss of exactly ln 10 = 2.30 on the full data means the inputs say nothing about the labels.</div>
+  </div>
+  <aside class="notes"><p>Answer: the data pipeline. A constructed scenario with ten classes, so that they compute ln 10 themselves and do not match the 2.08 of the day by memory.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-1-4" data-auto="lab" data-lab="1.4">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The file broken/train_swatches.py is not edited: corrected pieces are passed to its train function, so the log shows each state. Watch for participants who spot the double softmax by reading and want to skip the one-batch test: the log must show the test, it is the evidence. The notebook writes runs/d1_4_debug_log.json. Stretch: plant a fourth fault for a neighbour.</p></aside>
 </section>
 
 <section class="slide" id="wrap-up">
   <div class="kicker">Day 1 · wrap-up</div>
   <h2>Three things to keep</h2>
   <div class="cols cols-3">
-    <div class="card c-teal"><h4>Remember</h4><p class="small mb0">REPLACE: one idea participants keep</p></div>
-    <div class="card c-coral"><h4>Remember</h4><p class="small mb0">REPLACE: one idea participants keep</p></div>
-    <div class="card c-purple"><h4>Remember</h4><p class="small mb0">REPLACE: one idea participants keep</p></div>
+    <div class="card c-teal"><h4>Shapes and gradients</h4><p class="small mb0">Predict the shape first. A gradient has the shape of its weight, and autograd computes what you computed by hand.</p></div>
+    <div class="card c-coral"><h4>Five lines and two curves</h4><p class="small mb0">Forward, loss, clear, backward, update. Then read the training and validation losses together, against chance.</p></div>
+    <div class="card c-purple"><h4>Debug with known answers</h4><p class="small mb0">Overfit one batch first. Keep a correct fix even when the curve stays flat, and log every step.</p></div>
   </div>
+  <aside class="notes"><p>Return to the guesses on the board from the start of session 4. Which of them would have found all three faults?</p></aside>
 </section>
 
 <section class="slide dark" id="next" data-label="Next">
   <div class="kicker">Next</div>
   <h2>Day 2: Vision and transfer</h2>
-  <p class="lead">REPLACE: what participants prepare before then; unfinished labs can be finished at home</p>
-  <aside class="notes">REPLACE: accounts, installs or reading participants need before the next unit</aside>
+  <p class="lead">The network that reached 0.79 on swatches meets the catalogue photographs. Unfinished labs can be finished at home; each one starts from supplied files.</p>
+  <aside class="notes"><p>For tomorrow: Lab 2.2 downloads the weights of a pretrained image model, about 45 MB, on first use. Ask participants on a slow connection to run the setup-check notebook tonight, which fetches them.</p></aside>
 </section>

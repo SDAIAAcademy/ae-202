@@ -366,7 +366,7 @@ def _load(model_id: str):
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
         tok = AutoTokenizer.from_pretrained(model_id)
-        model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float32)
+        model = AutoModelForCausalLM.from_pretrained(model_id, dtype=torch.float32)
         model.eval()
         _llm[model_id] = (tok, model)
     return _llm[model_id]

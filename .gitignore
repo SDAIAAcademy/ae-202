@@ -34,3 +34,7 @@ __pycache__/
 .DS_Store
 Thumbs.db
 /*.log
+
+# What the labs draw or write on a participant's computer
+labs/cache/
+labs/runs/

@@ -1,0 +1,73 @@
+{
+ "steps": [
+  {
+   "test": "run as found",
+   "val_loss": [
+    65.4474868774414,
+    67.33000946044922,
+    31.878887176513672
+   ],
+   "val_acc": [
+    0.12399999797344208,
+    0.12600000202655792,
+    0.12800000607967377
+   ],
+   "finding": "training loss flat near ln 8, validation loss far above it, accuracy at chance"
+  },
+  {
+   "test": "overfit one batch, as found",
+   "loss": 134.1521759033203,
+   "finding": "fails: the fault is not in the data order alone"
+  },
+  {
+   "fault": "loss input",
+   "was": "softmax applied before cross_entropy, which applies it again",
+   "fix": "pass the logits",
+   "loss_of_a_perfect_prediction_before": 1.2740087509155273,
+   "one_batch_loss_after": 4.445026397705078,
+   "finding": "still fails: another fault in the update"
+  },
+  {
+   "fault": "learning rate",
+   "was": 30.0,
+   "fix": 0.1,
+   "one_batch_loss_after": 0.07821828126907349,
+   "finding": "passes: model, loss and update are healthy"
+  },
+  {
+   "test": "full training with two fixes",
+   "val_loss": [
+    2.081822395324707,
+    2.0818111896514893,
+    2.0824320316314697
+   ],
+   "finding": "flat at ln 8: one batch can be learnt, the full data cannot, so look at the pipeline"
+  },
+  {
+   "fault": "data order",
+   "was": "inputs shuffled, labels left in the stored order",
+   "fix": "index inputs and labels with the same shuffled indices",
+   "val_loss": [
+    2.0697314739227295,
+    2.0373165607452393,
+    1.9698538780212402,
+    1.844093918800354,
+    1.6719157695770264,
+    1.495919108390808,
+    1.3299018144607544,
+    1.2310912609100342
+   ],
+   "val_acc": [
+    0.18400000035762787,
+    0.24799999594688416,
+    0.33399999141693115,
+    0.4259999990463257,
+    0.5040000081062317,
+    0.5899999737739563,
+    0.6460000276565552,
+    0.6200000047683716
+   ],
+   "finding": "the loss falls"
+  }
+ ]
+}
