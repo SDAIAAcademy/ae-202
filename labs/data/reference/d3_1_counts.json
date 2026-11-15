@@ -1,0 +1,29 @@
+{
+ "totals": {
+  "words_en": 152,
+  "words_ar": 156,
+  "gpt2_en": 234,
+  "gpt2_ar": 735,
+  "e5_en": 255,
+  "e5_ar": 302,
+  "qwen_en": 283,
+  "qwen_ar": 392
+ },
+ "summary": {
+  "gpt2": {
+   "tokens_per_word_en": 1.54,
+   "tokens_per_word_ar": 4.71,
+   "ar_over_en": 3.14
+  },
+  "e5": {
+   "tokens_per_word_en": 1.68,
+   "tokens_per_word_ar": 1.94,
+   "ar_over_en": 1.18
+  },
+  "qwen": {
+   "tokens_per_word_en": 1.86,
+   "tokens_per_word_ar": 2.51,
+   "ar_over_en": 1.39
+  }
+ }
+}

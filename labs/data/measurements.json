@@ -1,0 +1,148 @@
+{
+ "measured_on": "a laptop processor, one request at a time, 2026-11-15",
+ "note": "quality figures are the reference results of the labs; latencies are medians of repeated single requests",
+ "use_cases": {
+  "naqsh": {
+   "task": "name the pattern of a textile photograph on the shop's upload page",
+   "quality_measure": "test accuracy, 1,000 photographs, trained on the 800 labelled ones",
+   "options": [
+    {
+     "id": "naqsh-scratch",
+     "model": "small-cnn",
+     "what": "small convolutional network trained from scratch",
+     "quality": 0.476,
+     "latency_ms": 1.9
+    },
+    {
+     "id": "naqsh-frozen",
+     "model": "resnet18-imagenet",
+     "what": "frozen ResNet-18 features and a linear layer",
+     "quality": 0.774,
+     "latency_ms": 35.2
+    },
+    {
+     "id": "naqsh-finetuned",
+     "model": "resnet18-imagenet",
+     "what": "ResNet-18 with its last block fine-tuned",
+     "quality": 0.788,
+     "latency_ms": 35.2,
+     "quality_without_near_duplicates": 0.779
+    },
+    {
+     "id": "naqsh-hosted",
+     "model": "hosted-vision-language",
+     "what": "a hosted vision-language model asked to name the pattern",
+     "quality": null,
+     "latency_ms": null
+    }
+   ]
+  },
+  "khayt": {
+   "task": "find products in the bilingual catalogue from a customer's words",
+   "quality_measure": "recall at 5 on the 50 labelled queries",
+   "options": [
+    {
+     "id": "khayt-keywords",
+     "model": "no-model",
+     "what": "keyword search",
+     "quality": 0.175,
+     "latency_ms": 3.7,
+     "quality_by_language": {
+      "en": 0.263,
+      "ar": 0.113,
+      "mixed": 0.125
+     }
+    },
+    {
+     "id": "khayt-embeddings",
+     "model": "multilingual-e5-small",
+     "what": "sentence embeddings, brute-force search",
+     "quality": 0.225,
+     "latency_ms": 38.5,
+     "quality_by_language": {
+      "en": 0.3,
+      "ar": 0.188,
+      "mixed": 0.15
+     }
+    },
+    {
+     "id": "khayt-embeddings-paired",
+     "model": "multilingual-e5-small",
+     "what": "sentence embeddings, results paired by product",
+     "quality": 0.335,
+     "latency_ms": 38.5,
+     "quality_by_language": {
+      "en": 0.475,
+      "ar": 0.25,
+      "mixed": 0.225
+     }
+    },
+    {
+     "id": "khayt-hosted",
+     "model": "hosted-embedding",
+     "what": "a hosted multilingual embedding service",
+     "quality": null,
+     "latency_ms": null
+    }
+   ],
+   "tokens_per_request": {
+    "prompt": 14,
+    "output": 0
+   }
+  },
+  "wasf": {
+   "task": "draft one product line of at most 20 words from a product's attributes",
+   "quality_measure": "share of 100 drafts (20 products, 5 samples) that break none of the four rules",
+   "options": [
+    {
+     "id": "wasf-template",
+     "model": "no-model",
+     "what": "a sentence template filled with the attributes",
+     "quality": 1.0,
+     "latency_ms": 0.1,
+     "note": "every product line has the same shape"
+    },
+    {
+     "id": "wasf-small",
+     "model": "qwen2.5-0.5b-instruct",
+     "what": "small model, plain instruction, temperature 0.7",
+     "quality": 0.56,
+     "latency_ms": 6536
+    },
+    {
+     "id": "wasf-small-strict",
+     "model": "qwen2.5-0.5b-instruct",
+     "what": "small model, strict instruction, temperature 0.7",
+     "quality": 0.95,
+     "latency_ms": 6536
+    },
+    {
+     "id": "wasf-3b",
+     "model": "qwen2.5-3b-instruct",
+     "what": "a model six times larger of the same family",
+     "quality": null,
+     "latency_ms": null
+    },
+    {
+     "id": "wasf-7b",
+     "model": "qwen2.5-7b-instruct",
+     "what": "a model fifteen times larger of the same family",
+     "quality": null,
+     "latency_ms": null
+    },
+    {
+     "id": "wasf-hosted",
+     "model": "hosted-language-model",
+     "what": "a hosted large language model",
+     "quality": null,
+     "latency_ms": null
+    }
+   ],
+   "tokens_per_second": 2.9,
+   "tokens_per_request": {
+    "prompt": 106,
+    "output": 19
+   }
+  }
+ }
+}

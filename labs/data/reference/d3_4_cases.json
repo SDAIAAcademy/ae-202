@@ -1,0 +1,47 @@
+{
+ "recall_at_5": {
+  "plain": {
+   "all": 0.225,
+   "en": 0.3,
+   "ar": 0.188,
+   "mixed": 0.15
+  },
+  "merge_by_language": {
+   "all": 0.21,
+   "en": 0.3,
+   "ar": 0.15,
+   "mixed": 0.15
+  },
+  "pair_by_product": {
+   "all": 0.335,
+   "en": 0.475,
+   "ar": 0.25,
+   "mixed": 0.225
+  }
+ },
+ "own_language_share_of_top5": 1.0,
+ "same_language_found": 0.47368421052631576,
+ "other_language_found": 0.0,
+ "median_rank_of_best_other_language_relevant": 1988,
+ "still_failing": 25,
+ "cases": [
+  {
+   "query": "Q11",
+   "what_came_back": "cushion covers, but with dots and triangles in other colours: the kind of product is right, the pattern and colour are not",
+   "likely_cause": "synonym",
+   "fix_to_try": "expand the query with the catalogue's own words (zigzag to chevron, indigo to blue) before embedding it"
+  },
+  {
+   "query": "Q37",
+   "what_came_back": "wall hangings, belts and blankets that are green: the colour matched, the product did not",
+   "likely_cause": "dialect",
+   "fix_to_try": "a small table from dialect words to catalogue words, built from the shop's search log"
+  },
+  {
+   "query": "Q49",
+   "what_came_back": "shawls in other patterns and colours: nothing of the query was understood",
+   "likely_cause": "arabizi",
+   "fix_to_try": "detect Latin-script Arabic and transliterate it to Arabic script before embedding"
+  }
+ ]
+}

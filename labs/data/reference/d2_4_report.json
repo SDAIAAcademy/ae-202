@@ -1,0 +1,7 @@
+{
+ "accuracy_all": 0.7879999876022339,
+ "near_duplicates": 40,
+ "accuracy_on_duplicates": 1.0,
+ "accuracy_without": 0.7791666388511658,
+ "threshold": 0.985
+}

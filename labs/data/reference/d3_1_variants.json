@@ -1,0 +1,32 @@
+{
+ "catalogue Arabic": {
+  "gpt2": 20,
+  "e5": 7,
+  "qwen": 9
+ },
+ "with short vowels": {
+  "gpt2": 35,
+  "e5": 23,
+  "qwen": 25
+ },
+ "Arabizi": {
+  "gpt2": 11,
+  "e5": 8,
+  "qwen": 12
+ },
+ "English": {
+  "gpt2": 3,
+  "e5": 4,
+  "qwen": 3
+ },
+ "a size": {
+  "gpt2": 4,
+  "e5": 4,
+  "qwen": 9
+ },
+ "Arabic-Indic digits": {
+  "gpt2": 16,
+  "e5": 8,
+  "qwen": 15
+ }
+}

@@ -1,0 +1,47 @@
+# Deep Learning and Generative AI Fundamentals
+
+> Train, debug, adapt and measure small deep learning and generative models, and choose a model family with evidence. SDAIA Academy course AE-202, version 2027.1.0, in English.
+
+Each slide is a heading such as "#### [day1#slide-id] Title": cite slides by that id, and each citation is a link (slides/day1.html#slide-id). These files are what a trainee sees: no speaker notes and no answer keys.
+
+## Course
+
+- [Course page](https://sdaiaacademy.github.io/ae-202/index.md): overview, outcomes, schedule and labs; the page itself is https://sdaiaacademy.github.io/ae-202/index.html
+- [The whole course](https://sdaiaacademy.github.io/ae-202/llms-full.txt): every unit, session and slide in one file, about 25,884 tokens
+- [Practice questions](https://sdaiaacademy.github.io/ae-202/practice.html): questions to check yourself, with feedback after each answer
+
+## Slides
+
+- [Day 1: Tensors and training](https://sdaiaacademy.github.io/ae-202/slides/day1.md): From a tensor to a network that learns, and what to do when it does not; sessions: Tensors, shapes and gradients, Writing the training loop, Learning rates, batches and regularisation, When training goes wrong; page: https://sdaiaacademy.github.io/ae-202/slides/day1.html; about 5,530 tokens
+- [Day 2: Vision and transfer](https://sdaiaacademy.github.io/ae-202/slides/day2.md): Why convolutions suit images, and how a pretrained model turns 800 labels into a working classifier; sessions: Convolutions and what they detect, Pretrained backbones, Fine-tuning with little data, Evaluating a deep model; page: https://sdaiaacademy.github.io/ae-202/slides/day2.html; about 5,211 tokens
+- [Day 3: Transformers and embeddings](https://sdaiaacademy.github.io/ae-202/slides/day3.md): How text becomes tokens and vectors, what attention computes, and where bilingual search fails; sessions: Tokens, including Arabic, Attention step by step, Sentence embeddings, Multilingual search and its failures; page: https://sdaiaacademy.github.io/ae-202/slides/day3.html; about 5,708 tokens
+- [Day 4: Generation and model choice](https://sdaiaacademy.github.io/ae-202/slides/day4.md): How a language model writes one token at a time, what tuning adds, where it fails, and how to choose a model; sessions: Next-token prediction and sampling, From base models to assistants, Limits: fabrication, cut-off and context, Choosing a model family; page: https://sdaiaacademy.github.io/ae-202/slides/day4.html; about 7,380 tokens
+- [Capstone: Capstone: a small model for the cooperative, defended live](https://sdaiaacademy.github.io/ae-202/slides/capstone.md): An image classifier, a bilingual search or a constrained text generator, with its curves, its comparison, its latency and its licences; page: https://sdaiaacademy.github.io/ae-202/slides/capstone.html; about 1,473 tokens
+
+## Labs
+
+- [Lab 1.1: A gradient by hand and by autograd](https://sdaiaacademy.github.io/ae-202/labs/D1_1_gradient_by_hand.ipynb): Day 1, Session 1, 25 min
+- [Lab 1.2: The training loop](https://sdaiaacademy.github.io/ae-202/labs/D1_2_training_loop.ipynb): Day 1, Session 2, 25 min
+- [Lab 1.3: Three learning rates and dropout](https://sdaiaacademy.github.io/ae-202/labs/D1_3_learning_rates_dropout.ipynb): Day 1, Session 3, 25 min
+- [Lab 1.4: Three faults in a training script](https://sdaiaacademy.github.io/ae-202/labs/D1_4_three_faults.ipynb): Day 1, Session 4, 25 min
+- [Lab 2.1: A small convolutional network](https://sdaiaacademy.github.io/ae-202/labs/D2_1_small_cnn.ipynb): Day 2, Session 1, 25 min
+- [Lab 2.2: Frozen features](https://sdaiaacademy.github.io/ae-202/labs/D2_2_frozen_features.ipynb): Day 2, Session 2, 25 min
+- [Lab 2.3: Fine-tune the last block](https://sdaiaacademy.github.io/ae-202/labs/D2_3_fine_tune.ipynb): Day 2, Session 3, 25 min
+- [Lab 2.4: Errors and near-duplicates](https://sdaiaacademy.github.io/ae-202/labs/D2_4_errors_duplicates.ipynb): Day 2, Session 4, 25 min
+- [Lab 3.1: Three tokenisers](https://sdaiaacademy.github.io/ae-202/labs/D3_1_three_tokenisers.ipynb): Day 3, Session 1, 25 min
+- [Lab 3.2: Attention by hand](https://sdaiaacademy.github.io/ae-202/labs/D3_2_attention.ipynb): Day 3, Session 2, 25 min
+- [Lab 3.3: Catalogue search](https://sdaiaacademy.github.io/ae-202/labs/D3_3_catalogue_search.ipynb): Day 3, Session 3, 25 min
+- [Lab 3.4: Failures by language](https://sdaiaacademy.github.io/ae-202/labs/D3_4_failures_by_language.ipynb): Day 3, Session 4, 25 min
+- [Lab 4.1: Four temperatures](https://sdaiaacademy.github.io/ae-202/labs/D4_1_four_temperatures.ipynb): Day 4, Session 1, 25 min
+- [Lab 4.2: Base against instruction-tuned](https://sdaiaacademy.github.io/ae-202/labs/D4_2_base_and_instruct.ipynb): Day 4, Session 2, 25 min
+- [Lab 4.3: Probe the limits](https://sdaiaacademy.github.io/ae-202/labs/D4_3_probe_limits.ipynb): Day 4, Session 3, 25 min
+- [Lab 4.4: The model-choice table](https://sdaiaacademy.github.io/ae-202/labs/D4_4_model_choice.ipynb): Day 4, Session 4, 25 min
+
+## Context files
+
+- [context/course.md](https://sdaiaacademy.github.io/ae-202/context/course.md): the whole course, for an assistant that takes a file, about 25,884 tokens
+- [context/day1.md](https://sdaiaacademy.github.io/ae-202/context/day1.md): Day 1, about 5,530 tokens
+- [context/day2.md](https://sdaiaacademy.github.io/ae-202/context/day2.md): Day 2, about 5,211 tokens
+- [context/day3.md](https://sdaiaacademy.github.io/ae-202/context/day3.md): Day 3, about 5,708 tokens
+- [context/day4.md](https://sdaiaacademy.github.io/ae-202/context/day4.md): Day 4, about 7,380 tokens
+- [context/capstone.md](https://sdaiaacademy.github.io/ae-202/context/capstone.md): Capstone, about 1,473 tokens

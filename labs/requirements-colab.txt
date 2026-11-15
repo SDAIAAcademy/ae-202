@@ -1,0 +1,4 @@
+# What the labs need on top of a Google Colab runtime (PyTorch, torchvision, NumPy, matplotlib,
+# Transformers and Tokenizers are already there)
+sentence-transformers>=4.0
+httpx>=0.28

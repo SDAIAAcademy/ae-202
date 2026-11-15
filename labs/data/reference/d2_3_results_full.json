@@ -1,0 +1,44 @@
+{
+ "mode": "full",
+ "n_test": 1000,
+ "rows": [
+  {
+   "approach": "small network from scratch (supplied)",
+   "test_accuracy": 0.47600001096725464,
+   "trained_weights": 24152,
+   "seconds": 60.2
+  },
+  {
+   "approach": "frozen features + linear layer (supplied)",
+   "test_accuracy": 0.7739999890327454,
+   "trained_weights": 4104,
+   "seconds": 24.2
+  },
+  {
+   "approach": "last block fine-tuned, with augmentation",
+   "test_accuracy": 0.7879999876022339,
+   "trained_weights": 8397832,
+   "seconds": 102.04166913032532
+  }
+ ],
+ "history": {
+  "train_loss": [
+   1.117916887998581,
+   0.5360416519641876,
+   0.4401379930973053,
+   0.3692107379436493
+  ],
+  "val_loss": [
+   0.6955300569534302,
+   0.5752696990966797,
+   0.7007879614830017,
+   0.6174046993255615
+  ],
+  "val_acc": [
+   0.7260000109672546,
+   0.7900000214576721,
+   0.765999972820282,
+   0.7820000052452087
+  ]
+ }
+}
