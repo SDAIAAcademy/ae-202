@@ -1,0 +1,402 @@
+[
+ {
+  "id": "Q01",
+  "lang": "en",
+  "how": "plain",
+  "type": "runner",
+  "pattern": "wave",
+  "colour": "red"
+ },
+ {
+  "id": "Q02",
+  "lang": "en",
+  "how": "plain",
+  "type": "cushion",
+  "pattern": "wave",
+  "colour": "orange"
+ },
+ {
+  "id": "Q03",
+  "lang": "en",
+  "how": "plain",
+  "type": "hanging",
+  "pattern": "wave",
+  "colour": "green"
+ },
+ {
+  "id": "Q04",
+  "lang": "en",
+  "how": "plain",
+  "type": "belt",
+  "pattern": "chevron",
+  "colour": "black"
+ },
+ {
+  "id": "Q05",
+  "lang": "en",
+  "how": "plain",
+  "type": "rug",
+  "pattern": "stripe",
+  "colour": "orange"
+ },
+ {
+  "id": "Q06",
+  "lang": "en",
+  "how": "plain",
+  "type": "apron",
+  "pattern": "dot",
+  "colour": "white"
+ },
+ {
+  "id": "Q07",
+  "lang": "en",
+  "how": "plain",
+  "type": "basket",
+  "pattern": "stripe",
+  "colour": "green"
+ },
+ {
+  "id": "Q08",
+  "lang": "en",
+  "how": "plain",
+  "type": "rug",
+  "pattern": "chevron",
+  "colour": "blue"
+ },
+ {
+  "id": "Q09",
+  "lang": "en",
+  "how": "synonym",
+  "type": "headband",
+  "pattern": "stripe",
+  "colour": "orange"
+ },
+ {
+  "id": "Q10",
+  "lang": "en",
+  "how": "synonym",
+  "type": "bookmark",
+  "pattern": "diamond",
+  "colour": "red"
+ },
+ {
+  "id": "Q11",
+  "lang": "en",
+  "how": "synonym",
+  "type": "cushion",
+  "pattern": "chevron",
+  "colour": "blue"
+ },
+ {
+  "id": "Q12",
+  "lang": "en",
+  "how": "synonym",
+  "type": "coasters",
+  "pattern": "star",
+  "colour": "green"
+ },
+ {
+  "id": "Q13",
+  "lang": "en",
+  "how": "synonym",
+  "type": "headband",
+  "pattern": "dot",
+  "colour": "black"
+ },
+ {
+  "id": "Q14",
+  "lang": "en",
+  "how": "synonym",
+  "type": "blanket",
+  "pattern": "diamond",
+  "colour": "red"
+ },
+ {
+  "id": "Q15",
+  "lang": "en",
+  "how": "synonym",
+  "type": "bag",
+  "pattern": "triangle",
+  "colour": "yellow"
+ },
+ {
+  "id": "Q16",
+  "lang": "en",
+  "how": "synonym",
+  "type": "shawl",
+  "pattern": "diamond",
+  "colour": "black"
+ },
+ {
+  "id": "Q17",
+  "lang": "en",
+  "how": "negation",
+  "type": "runner",
+  "pattern": "dot",
+  "colour": "brown"
+ },
+ {
+  "id": "Q18",
+  "lang": "en",
+  "how": "negation",
+  "type": "shawl",
+  "pattern": "check",
+  "colour": "blue"
+ },
+ {
+  "id": "Q19",
+  "lang": "en",
+  "how": "size",
+  "type": "pouch",
+  "pattern": "check",
+  "colour": "orange"
+ },
+ {
+  "id": "Q20",
+  "lang": "en",
+  "how": "size",
+  "type": "cushion",
+  "pattern": "stripe",
+  "colour": "green"
+ },
+ {
+  "id": "Q21",
+  "lang": "ar",
+  "how": "plain",
+  "type": "cushion",
+  "pattern": "wave",
+  "colour": "yellow"
+ },
+ {
+  "id": "Q22",
+  "lang": "ar",
+  "how": "plain",
+  "type": "bookmark",
+  "pattern": "dot",
+  "colour": "yellow"
+ },
+ {
+  "id": "Q23",
+  "lang": "ar",
+  "how": "plain",
+  "type": "bookmark",
+  "pattern": "star",
+  "colour": "red"
+ },
+ {
+  "id": "Q24",
+  "lang": "ar",
+  "how": "plain",
+  "type": "runner",
+  "pattern": "chevron",
+  "colour": "yellow"
+ },
+ {
+  "id": "Q25",
+  "lang": "ar",
+  "how": "plain",
+  "type": "belt",
+  "pattern": "chevron",
+  "colour": "orange"
+ },
+ {
+  "id": "Q26",
+  "lang": "ar",
+  "how": "plain",
+  "type": "hanging",
+  "pattern": "stripe",
+  "colour": "red"
+ },
+ {
+  "id": "Q27",
+  "lang": "ar",
+  "how": "plain",
+  "type": "curtain",
+  "pattern": "triangle",
+  "colour": "blue"
+ },
+ {
+  "id": "Q28",
+  "lang": "ar",
+  "how": "synonym",
+  "type": "runner",
+  "pattern": "check",
+  "colour": "yellow"
+ },
+ {
+  "id": "Q29",
+  "lang": "ar",
+  "how": "synonym",
+  "type": "runner",
+  "pattern": "star",
+  "colour": "blue"
+ },
+ {
+  "id": "Q30",
+  "lang": "ar",
+  "how": "synonym",
+  "type": "bookmark",
+  "pattern": "wave",
+  "colour": "blue"
+ },
+ {
+  "id": "Q31",
+  "lang": "ar",
+  "how": "synonym",
+  "type": "blanket",
+  "pattern": "chevron",
+  "colour": "black"
+ },
+ {
+  "id": "Q32",
+  "lang": "ar",
+  "how": "synonym",
+  "type": "headband",
+  "pattern": "stripe",
+  "colour": "black"
+ },
+ {
+  "id": "Q33",
+  "lang": "ar",
+  "how": "synonym",
+  "type": "coasters",
+  "pattern": "wave",
+  "colour": "yellow"
+ },
+ {
+  "id": "Q34",
+  "lang": "ar",
+  "how": "dialect",
+  "type": "bookmark",
+  "pattern": "dot",
+  "colour": "blue"
+ },
+ {
+  "id": "Q35",
+  "lang": "ar",
+  "how": "dialect",
+  "type": "bookmark",
+  "pattern": "check",
+  "colour": "red"
+ },
+ {
+  "id": "Q36",
+  "lang": "ar",
+  "how": "dialect",
+  "type": "hanging",
+  "pattern": "check",
+  "colour": "yellow"
+ },
+ {
+  "id": "Q37",
+  "lang": "ar",
+  "how": "dialect",
+  "type": "pouch",
+  "pattern": "dot",
+  "colour": "green"
+ },
+ {
+  "id": "Q38",
+  "lang": "ar",
+  "how": "spelling",
+  "type": "belt",
+  "pattern": "triangle",
+  "colour": "red"
+ },
+ {
+  "id": "Q39",
+  "lang": "ar",
+  "how": "spelling",
+  "type": "bookmark",
+  "pattern": "wave",
+  "colour": "brown"
+ },
+ {
+  "id": "Q40",
+  "lang": "ar",
+  "how": "spelling",
+  "type": "hanging",
+  "pattern": "diamond",
+  "colour": "orange"
+ },
+ {
+  "id": "Q41",
+  "lang": "mixed",
+  "how": "codeswitch",
+  "type": "headband",
+  "pattern": "wave",
+  "colour": "yellow"
+ },
+ {
+  "id": "Q42",
+  "lang": "mixed",
+  "how": "codeswitch",
+  "type": "blanket",
+  "pattern": "stripe",
+  "colour": "green"
+ },
+ {
+  "id": "Q43",
+  "lang": "mixed",
+  "how": "codeswitch",
+  "type": "cushion",
+  "pattern": "dot",
+  "colour": "black"
+ },
+ {
+  "id": "Q44",
+  "lang": "mixed",
+  "how": "codeswitch",
+  "type": "rug",
+  "pattern": "triangle",
+  "colour": "orange"
+ },
+ {
+  "id": "Q45",
+  "lang": "mixed",
+  "how": "codeswitch",
+  "type": "headband",
+  "pattern": "stripe",
+  "colour": "green"
+ },
+ {
+  "id": "Q46",
+  "lang": "mixed",
+  "how": "codeswitch",
+  "type": "basket",
+  "pattern": "diamond",
+  "colour": "brown"
+ },
+ {
+  "id": "Q47",
+  "lang": "mixed",
+  "how": "arabizi",
+  "type": "bookmark",
+  "pattern": "stripe",
+  "colour": "orange"
+ },
+ {
+  "id": "Q48",
+  "lang": "mixed",
+  "how": "arabizi",
+  "type": "basket",
+  "pattern": "check",
+  "colour": "orange"
+ },
+ {
+  "id": "Q49",
+  "lang": "mixed",
+  "how": "arabizi",
+  "type": "basket",
+  "pattern": "diamond",
+  "colour": "black"
+ },
+ {
+  "id": "Q50",
+  "lang": "mixed",
+  "how": "arabizi",
+  "type": "placemat",
+  "pattern": "wave",
+  "colour": "blue"
+ }
+]

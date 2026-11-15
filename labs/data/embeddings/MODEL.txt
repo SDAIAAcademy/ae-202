@@ -1,0 +1,2 @@
+intfloat/multilingual-e5-small
+6108 texts, 384 dimensions, float16
