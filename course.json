@@ -1,0 +1,466 @@
+{
+  "$schema": "https://sdaiaacademy.github.io/engine/schemas/course.schema.json",
+  "engine": "1",
+  "id": "ae-202",
+  "code": "AE-202",
+  "version": "2027.1.0",
+  "lang": "en",
+  "title": {
+    "en": "Deep Learning and Generative AI Fundamentals",
+    "ar": "أساسيات التعلم العميق والذكاء الاصطناعي التوليدي"
+  },
+  "tagline": "REPLACE: one line under the title: what participants can do after the course",
+  "description": "Participants go from tensors to a working generative model and learn what each layer of the stack does. For a fictional crafts cooperative they write a training loop by hand, debug a network that will not learn, adapt a pretrained image model to synthetic textile images, implement attention for a toy sequence, build bilingual semantic search with sentence embeddings, and generate text with a small open-weight model while varying sampling settings. They finish by comparing model families on quality, size, latency, licence and cost for three of the cooperative's use cases.",
+  "track": "ai-engineering",
+  "level": 200,
+  "badge": {
+    "name": "AI Engineering",
+    "level": "Assistant"
+  },
+  "audience": "Practitioners. Graduates and early-career developers who have completed the FN courses or passed the placement test, and software engineers moving into AI work.",
+  "prerequisites": [
+    "AE-201 Machine Learning Foundations and Model Evaluation",
+    "FN-103 Mathematics for Machine Learning: Vectors, Gradients and Probability",
+    "Multiplies matrices and computes a derivative with the chain rule",
+    "Has trained and evaluated a model with a train, validation and test split"
+  ],
+  "site": {
+    "url": "https://sdaiaacademy.github.io/ae-202/",
+    "repo": "SDAIAAcademy/ae-202"
+  },
+  "outcomes": [
+    {
+      "id": "LO1",
+      "text": "Explain how a transformer turns input tokens into next-token probabilities, naming the role of embeddings, attention, the context window and sampling, given an annotated architecture diagram with five blanks and two generated outputs",
+      "level": "Awareness",
+      "evidence": "a completed diagram and a short written explanation scored against a rubric in the supervised check"
+    },
+    {
+      "id": "LO2",
+      "text": "Implement a training loop with a loss, an optimiser, mini-batches and validation checks, and use it to train a small network, given a tensor library, synthetic image tensors and a starter script with no training code",
+      "level": "Applied",
+      "evidence": "a script whose loss and validation curves match the reference behaviour within a stated tolerance"
+    },
+    {
+      "id": "LO3",
+      "text": "Apply a debugging checklist to a network whose loss does not fall and correct each fault found, given a training script with three seeded faults in the loss input, the learning rate and data shuffling",
+      "level": "Applied",
+      "evidence": "a log showing the overfit-one-batch test, each fault and the corrected learning curve"
+    },
+    {
+      "id": "LO4",
+      "text": "Use transfer learning to adapt a pretrained image model to a new label set with little data, and measure the improvement over training from scratch, given 800 labelled textile images in eight classes and a laptop CPU time budget",
+      "level": "Applied",
+      "evidence": "a results table comparing frozen features, partial fine-tuning and training from scratch on the same test set"
+    },
+    {
+      "id": "LO5",
+      "text": "Use sentence embeddings to build and test a bilingual semantic search over product descriptions, given 4,000 Arabic and English descriptions and 50 labelled queries",
+      "level": "Applied",
+      "evidence": "recall at 5 for Arabic, English and mixed queries, with three failure cases and a likely cause for each"
+    },
+    {
+      "id": "LO6",
+      "text": "Measure how temperature, nucleus sampling and the instruction change the outputs of a small open-weight language model, given a locally run model and 20 fixed prompts sampled five times each",
+      "level": "Applied",
+      "evidence": "a table of variation, length and rule violations per setting, with an explanation of one surprising result"
+    },
+    {
+      "id": "LO7",
+      "text": "Evaluate model families for three stated use cases on quality, size, latency, licence terms and cost, and recommend one per use case, given a supplied shortlist of open-weight and hosted models and results measured in the labs",
+      "level": "Performance",
+      "evidence": "a model-choice table with a two-line justification per use case, defended in the capstone"
+    }
+  ],
+  "case_study": {
+    "name": "REPLACE: the name of the fictional organisation every lab works on",
+    "summary": "REPLACE: two sentences on the case study and its synthetic data"
+  },
+  "format": "intensive",
+  "format_note": "Intensive: 4 teaching days of four sessions and a capstone day, with guided pre-work and a tracked follow-up task",
+  "hours": {
+    "instruction": 6,
+    "lab": 7,
+    "guided_self_study": 6,
+    "assessment": 1,
+    "capstone": 6
+  },
+  "unit": "day",
+  "days": [
+    {
+      "id": "day1",
+      "kind": "day",
+      "title": "Tensors and training",
+      "deck": "slides/day1.html",
+      "sessions": [
+        {
+          "title": "Tensors, shapes and gradients",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO2"
+          ],
+          "lab": {
+            "id": "1.1",
+            "title": "Compute a gradient by hand and with automatic differentiation for a two-layer network and compare the numbers",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D1_1_compute_gradient_hand.ipynb"
+          }
+        },
+        {
+          "title": "Writing the training loop",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO2"
+          ],
+          "lab": {
+            "id": "1.2",
+            "title": "Write a training loop with batching, a loss and an optimiser for the textile images and plot the loss curves",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D1_2_write_training_loop.ipynb"
+          }
+        },
+        {
+          "title": "Learning rates, batches and regularisation",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO2",
+            "LO3"
+          ],
+          "lab": {
+            "id": "1.3",
+            "title": "Run the same model at three learning rates, with and without dropout, and read the curves",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D1_3_run_same_model.ipynb"
+          }
+        },
+        {
+          "title": "When training goes wrong",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO3"
+          ],
+          "lab": {
+            "id": "1.4",
+            "title": "Find three seeded faults in a broken script, starting with an overfit-one-batch test",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D1_4_find_three_seeded.ipynb"
+          }
+        }
+      ]
+    },
+    {
+      "id": "day2",
+      "kind": "day",
+      "title": "Vision and transfer",
+      "deck": "slides/day2.html",
+      "sessions": [
+        {
+          "title": "Convolutions and what they detect",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO2"
+          ],
+          "lab": {
+            "id": "2.1",
+            "title": "Train a small convolutional network and visualise its first-layer filters",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D2_1_train_small_convolutional.ipynb"
+          }
+        },
+        {
+          "title": "Pretrained backbones",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO4"
+          ],
+          "lab": {
+            "id": "2.2",
+            "title": "Extract features with a pretrained image model and train a linear classifier on them",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D2_2_extract_features_pretrained.ipynb"
+          }
+        },
+        {
+          "title": "Fine-tuning with little data",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO4"
+          ],
+          "lab": {
+            "id": "2.3",
+            "title": "Fine-tune the last blocks with augmentation on 800 images and compare with supplied frozen-feature results",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D2_3_fine_tune_last.ipynb"
+          }
+        },
+        {
+          "title": "Evaluating a deep model",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO4"
+          ],
+          "lab": {
+            "id": "2.4",
+            "title": "Build a confusion matrix, inspect the ten most confident errors and check the splits for near-duplicates",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D2_4_build_confusion_matrix.ipynb"
+          }
+        }
+      ]
+    },
+    {
+      "id": "day3",
+      "kind": "day",
+      "title": "Transformers and embeddings",
+      "deck": "slides/day3.html",
+      "sessions": [
+        {
+          "title": "Tokens, including Arabic",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO1"
+          ],
+          "lab": {
+            "id": "3.1",
+            "title": "Tokenise the same Arabic and English sentences with three tokenisers and compare token counts",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D3_1_tokenise_same_arabic.ipynb"
+          }
+        },
+        {
+          "title": "Attention step by step",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO1"
+          ],
+          "lab": {
+            "id": "3.2",
+            "title": "Implement scaled dot-product attention for a toy sequence and check it against the library function",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D3_2_implement_scaled_dot.ipynb"
+          }
+        },
+        {
+          "title": "Sentence embeddings",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO5"
+          ],
+          "lab": {
+            "id": "3.3",
+            "title": "Embed the product descriptions and measure recall at 5 on 50 labelled queries",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D3_3_embed_product_descriptions.ipynb"
+          }
+        },
+        {
+          "title": "Multilingual search and its failures",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO5"
+          ],
+          "lab": {
+            "id": "3.4",
+            "title": "Compare Arabic, English and mixed queries and collect three failure cases with a likely cause",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D3_4_compare_arabic_english.ipynb"
+          }
+        }
+      ]
+    },
+    {
+      "id": "day4",
+      "kind": "day",
+      "title": "Generation and model choice",
+      "deck": "slides/day4.html",
+      "sessions": [
+        {
+          "title": "Next-token prediction and sampling",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO1",
+            "LO6"
+          ],
+          "lab": {
+            "id": "4.1",
+            "title": "Generate from a small local model at four temperatures and measure variation across five samples",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D4_1_generate_from_small.ipynb"
+          }
+        },
+        {
+          "title": "From base models to assistants",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO6"
+          ],
+          "lab": {
+            "id": "4.2",
+            "title": "Compare a base model and an instruction-tuned model of the same size on ten tasks",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D4_2_compare_base_model.ipynb"
+          }
+        },
+        {
+          "title": "Limits: fabrication, cut-off and context",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO6"
+          ],
+          "lab": {
+            "id": "4.3",
+            "title": "Probe the model with questions beyond its training cut-off and inputs beyond its context window and record the failures",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D4_3_probe_model_questions.ipynb"
+          }
+        },
+        {
+          "title": "Choosing a model family",
+          "outcomes": [
+            "REPLACE: what a participant can do after this session"
+          ],
+          "lo": [
+            "LO7"
+          ],
+          "lab": {
+            "id": "4.4",
+            "title": "Fill a model-choice table for three cooperative use cases from supplied lab measurements of latency, size and quality and each model's licence, then choose the capstone task",
+            "summary": "REPLACE: one line on what participants build and take away; then list the steps of the lab in course.json, their minutes adding up to 25",
+            "minutes": 25,
+            "href": "D4_4_fill_model_choice.ipynb"
+          }
+        }
+      ]
+    },
+    {
+      "id": "capstone",
+      "kind": "capstone",
+      "title": "Capstone project presentations",
+      "deck": "slides/capstone.html"
+    }
+  ],
+  "capstone": {
+    "summary": "A small model for one cooperative use case (image classifier, bilingual search or constrained text generation), submitted as a public repository whose README reports training curves, test results, a comparison with a simpler alternative, latency on a laptop and the licence of every model and dataset used, followed by an eight-minute defence and four minutes of questions",
+    "submission": "REPLACE: what participants submit and how: a public repository link, or a shared folder for a course without code",
+    "talk_minutes": 8,
+    "qa_minutes": 4,
+    "rubric": [
+      {
+        "criterion": "Working model and training",
+        "weight": 25
+      },
+      {
+        "criterion": "Evaluation against a simpler alternative",
+        "weight": 25
+      },
+      {
+        "criterion": "Measurement of latency and size",
+        "weight": 15
+      },
+      {
+        "criterion": "Licence and limits",
+        "weight": 15
+      },
+      {
+        "criterion": "Reproducibility",
+        "weight": 20
+      }
+    ]
+  },
+  "labs": {
+    "kind": "notebooks",
+    "base": "labs/"
+  },
+  "tools": [
+    {
+      "slot": "Tensor library with automatic differentiation",
+      "examples": [
+        "PyTorch",
+        "JAX"
+      ]
+    },
+    {
+      "slot": "Pretrained model loading",
+      "examples": [
+        "Transformers",
+        "timm",
+        "Sentence Transformers"
+      ]
+    },
+    {
+      "slot": "Local runtime for small open-weight language models",
+      "examples": [
+        "llama.cpp",
+        "Ollama",
+        "a free hosted open-weight endpoint"
+      ]
+    },
+    {
+      "slot": "Vector similarity search",
+      "examples": [
+        "FAISS",
+        "brute-force search in NumPy"
+      ]
+    },
+    {
+      "slot": "Experiment tracking",
+      "examples": [
+        "MLflow",
+        "TensorBoard"
+      ]
+    },
+    {
+      "slot": "Environment and notebook",
+      "examples": [
+        "uv with JupyterLab",
+        "marimo",
+        "a free hosted notebook service"
+      ]
+    }
+  ]
+}
