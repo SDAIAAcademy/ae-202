@@ -1,0 +1,17 @@
+{
+ "instruct": {
+  "right": 0.7,
+  "stopped": 0.9,
+  "clean": 0.7
+ },
+ "base": {
+  "right": 0.3,
+  "stopped": 0.7,
+  "clean": 0.2
+ },
+ "base few-shot": {
+  "right": 1.0,
+  "stopped": 0.0,
+  "clean": 0.0
+ }
+}

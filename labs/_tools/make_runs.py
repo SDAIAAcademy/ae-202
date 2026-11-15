@@ -68,7 +68,7 @@ def d4_2():
         for setting, kind, prompt in (("instruct", "instruct", task["prompt"]), ("base", "base", task["prompt"]),
                                       ("base few-shot", "base", task["few_shot"])):
             res = U.generate(prompt, kind=kind, temperature=0.0, max_new_tokens=40)
-            rows += record("d4_2", task["id"], setting, kind, prompt, res[:1], prompt=prompt)
+            rows += record("d4_2", task["id"], setting, kind, prompt, res[:1], prompt=prompt, rendered=U.render(prompt, kind))
     write("d4_2", rows)
 
 

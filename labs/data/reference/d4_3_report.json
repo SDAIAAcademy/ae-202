@@ -1,0 +1,27 @@
+{
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "cannot_know": {
+  "questions": 8,
+  "said_it_does_not_know": 6,
+  "answered_anyway": [
+   "U02",
+   "U08"
+  ]
+ },
+ "years_claimed": [
+  2023
+ ],
+ "context": {
+  "fits": 1.0,
+  "policy first, too long": 0.0,
+  "policy last, too long": 1.0,
+  "fits, arabic": 0.75
+ },
+ "limits_note": [
+  "This text was drafted by a small language model and is shown as a draft: a member of the shop team reads it before it is published.",
+  "The model invents facts it does not have (it gave the cooperative a founding year and founders): it is given the product's attributes and may state nothing else.",
+  "Its knowledge ends before its release and it does not know today's date: it is never asked about dates, prices, stock or delivery.",
+  "A prompt longer than its window loses its beginning without warning: prompts are counted in tokens before they are sent, and one that does not fit is refused.",
+  "Its Arabic answers were wrong more often than its English ones in a small test: Arabic output is checked on its own test set before use."
+ ]
+}

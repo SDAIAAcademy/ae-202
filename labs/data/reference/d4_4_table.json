@@ -1,0 +1,103 @@
+{
+ "table": {
+  "naqsh": [
+   {
+    "option": "naqsh-scratch",
+    "quality": 0.476,
+    "latency_ms": 1.9,
+    "file_mb": 0.1,
+    "licence": "the cooperative's own weights",
+    "sign_offs": []
+   },
+   {
+    "option": "naqsh-frozen",
+    "quality": 0.774,
+    "latency_ms": 35.2,
+    "file_mb": 45,
+    "licence": "BSD 3-Clause (code and weights file)",
+    "sign_offs": [
+     "licensing officer"
+    ]
+   },
+   {
+    "option": "naqsh-finetuned",
+    "quality": 0.788,
+    "latency_ms": 35.2,
+    "file_mb": 45,
+    "licence": "BSD 3-Clause (code and weights file)",
+    "sign_offs": [
+     "licensing officer"
+    ]
+   }
+  ],
+  "khayt": [
+   {
+    "option": "khayt-keywords",
+    "quality": 0.175,
+    "latency_ms": 3.7,
+    "file_mb": 0,
+    "licence": "the cooperative's own code",
+    "sign_offs": []
+   },
+   {
+    "option": "khayt-embeddings",
+    "quality": 0.225,
+    "latency_ms": 38.5,
+    "file_mb": 470,
+    "licence": "MIT",
+    "sign_offs": []
+   },
+   {
+    "option": "khayt-embeddings-paired",
+    "quality": 0.335,
+    "latency_ms": 38.5,
+    "file_mb": 470,
+    "licence": "MIT",
+    "sign_offs": []
+   }
+  ],
+  "wasf": [
+   {
+    "option": "wasf-template",
+    "quality": 1.0,
+    "latency_ms": 0.1,
+    "file_mb": 0,
+    "licence": "the cooperative's own code",
+    "sign_offs": []
+   },
+   {
+    "option": "wasf-small",
+    "quality": 0.56,
+    "latency_ms": 6536,
+    "file_mb": 990,
+    "licence": "Apache 2.0",
+    "sign_offs": []
+   },
+   {
+    "option": "wasf-small-strict",
+    "quality": 0.95,
+    "latency_ms": 6536,
+    "file_mb": 990,
+    "licence": "Apache 2.0",
+    "sign_offs": []
+   }
+  ]
+ },
+ "recommendation": {
+  "naqsh": {
+   "choice": "naqsh-frozen",
+   "because": "Frozen features reach 0.774 on the 1,000 test photographs against 0.476 for the small network trained from scratch, in a 45 MB file and well inside the latency budget. Fine-tuning adds 14 photographs in 1,000, which this test cannot tell from none.",
+   "but": "The backbone was trained on ImageNet photographs: the licensing officer signs off before the shop uses it, and the small network is the fallback. The accuracy is reported without the near-duplicates."
+  },
+  "khayt": {
+   "choice": "khayt-embeddings-paired",
+   "because": "Recall at 5 of 0.335 against 0.175 for keyword search, with an MIT licence, on the shop's server and inside the latency budget.",
+   "but": "Two searches in three still miss, Arabic queries do worse than English ones, and the pairing was designed on the same 50 queries: it is confirmed on new queries before launch."
+  },
+  "wasf": {
+   "choice": "wasf-small-strict",
+   "because": "With the strict instruction 95% of the drafts break no rule, against 56% without it, from a model of 1 GB with an Apache 2.0 licence that runs on the shop's server.",
+   "but": "The checks do not test whether a draft is true to the product, and Arabic was not measured: a member of the team reads every line, the limits note of Lab 4.3 goes with it, and the template is the fallback."
+  }
+ }
+}

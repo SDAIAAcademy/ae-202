@@ -1,0 +1,84 @@
+{
+ "table": {
+  "T=0": {
+   "words": 18.15,
+   "more than one sentence": 0.0,
+   "more than 20 words": 0.25,
+   "not English only": 0.0,
+   "mentions a price": 0.0,
+   "any_violation": 0.25,
+   "distinct_of_5": 1.0,
+   "shared_words": 1.0
+  },
+  "T=0.7": {
+   "words": 19.92,
+   "more than one sentence": 0.08,
+   "more than 20 words": 0.43,
+   "not English only": 0.01,
+   "mentions a price": 0.0,
+   "any_violation": 0.44,
+   "distinct_of_5": 5.0,
+   "shared_words": 0.20485531673499824
+  },
+  "T=1.0": {
+   "words": 19.57,
+   "more than one sentence": 0.16,
+   "more than 20 words": 0.35,
+   "not English only": 0.04,
+   "mentions a price": 0.0,
+   "any_violation": 0.45,
+   "distinct_of_5": 5.0,
+   "shared_words": 0.13153296176442103
+  },
+  "T=1.5": {
+   "words": 24.32,
+   "more than one sentence": 0.42,
+   "more than 20 words": 0.69,
+   "not English only": 0.89,
+   "mentions a price": 0.06,
+   "any_violation": 0.93,
+   "distinct_of_5": 5.0,
+   "shared_words": 0.008639115487259678
+  },
+  "T=1.5 p=0.9": {
+   "words": 25.61,
+   "more than one sentence": 0.41,
+   "more than 20 words": 0.72,
+   "not English only": 0.52,
+   "mentions a price": 0.01,
+   "any_violation": 0.87,
+   "distinct_of_5": 5.0,
+   "shared_words": 0.015979309270635095
+  },
+  "T=1.5 p=0.5": {
+   "words": 21.46,
+   "more than one sentence": 0.27,
+   "more than 20 words": 0.52,
+   "not English only": 0.05,
+   "mentions a price": 0.02,
+   "any_violation": 0.56,
+   "distinct_of_5": 5.0,
+   "shared_words": 0.107025795383014
+  },
+  "T=0.7 strict": {
+   "words": 11.24,
+   "more than one sentence": 0.01,
+   "more than 20 words": 0.01,
+   "not English only": 0.02,
+   "mentions a price": 0.01,
+   "any_violation": 0.05,
+   "distinct_of_5": 5.0,
+   "shared_words": 0.25364024390548656
+  },
+  "T=1.5 strict": {
+   "words": 21.83,
+   "more than one sentence": 0.38,
+   "more than 20 words": 0.55,
+   "not English only": 0.88,
+   "mentions a price": 0.06,
+   "any_violation": 0.95,
+   "distinct_of_5": 5.0,
+   "shared_words": 0.004934104811489244
+  }
+ }
+}

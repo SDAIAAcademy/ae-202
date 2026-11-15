@@ -1,158 +1,699 @@
 <section class="slide title" id="title" data-auto="title">
-  <aside class="notes">REPLACE: welcome; introduce yourself; one question to the room that calibrates the pace; the rhythm of the day</aside>
+  <aside class="notes"><p>The last teaching day. Yesterday stopped at station 3 of the five-station map; today is stations 4 and 5, then what tuning adds, where a small language model fails, and a model choice made from the week's own measurements. Every lab reads supplied logged runs of two small open-weight models, so nobody downloads a model to a laptop. Ask the room: who has changed a temperature setting before, and what did they expect it to do? Keep the answers for session 1.</p></aside>
 </section>
 
 <section class="slide" id="agenda" data-auto="agenda"></section>
+
+<section class="slide" id="review-day3" data-lo="LO5">
+  <div class="kicker">Review · Day 3</div>
+  <h2>Which sentence is safe in a README?</h2>
+  <div class="quiz" data-type="single" data-lo="LO5">
+    <p class="lead">Pairing each result with the same product's other description took recall at 5 from 0.225 to 0.335 on the 50 labelled queries. Which sentence reports that without claiming more?</p>
+    <div class="opts">
+      <div class="opt" data-why="The model still never crossed from one language to the other: the catalogue's own structure went around the wall">"Pairing fixed the model's cross-language search"</div>
+      <div class="opt" data-ok>"Pairing raised recall at 5 from 0.225 to 0.335 on the queries it was designed on; new queries will confirm it"</div>
+      <div class="opt" data-why="The average hides the groups: English reached 0.475 and Arabic 0.250">"The search now serves Arabic and English customers equally well"</div>
+      <div class="opt" data-why="No larger model was run on these queries: a claim without a measurement">"A larger embedding model would have done better still"</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> A fix designed and measured on the same 50 queries is a result to confirm. Say what was measured, on what, and what comes next.</div>
+  </div>
+  <aside class="notes"><p>Answer: the second option. The same discipline returns in Lab 4.4, where each recommendation has a "because" line with a number and a "but" line with a limit.</p></aside>
+</section>
+
+<section class="slide" id="stations-four-five" data-lo="LO1">
+  <div class="kicker">The map, second half</div>
+  <h2>Today: from the last vector to one chosen token</h2>
+  <div class="flow">
+    <div class="step c-teal"><b>1 · Tokens</b>Day 3</div>
+    <div class="arrow">→</div>
+    <div class="step c-cyan"><b>2 · Embeddings</b>Day 3</div>
+    <div class="arrow">→</div>
+    <div class="step c-purple"><b>3 · Attention</b>Day 3</div>
+    <div class="arrow">→</div>
+    <div class="step c-amber"><b>4 · Scores</b>one number for every token of the vocabulary</div>
+    <div class="arrow">→</div>
+    <div class="step c-coral"><b>5 · Sampling</b>one token is chosen and appended</div>
+  </div>
+  <p class="small muted mt">Everything must fit in the <b>context window</b>. Session 3 shows what happens when it does not.</p>
+  <aside class="notes"><p>The diagram of the supervised exit check, again. After today a participant can fill all five blanks and explain two generated outputs: why they differ (sampling) and why one of them is false (session 3).</p></aside>
+</section>
 
 <!-- Session 1 -->
 
 <section class="slide section" id="s1" data-auto="section" data-session="1"></section>
 
-<section class="slide" id="s1-idea" data-lo="LO1 LO6">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
-  <div class="cols cols-2">
-    <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
-    </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
+<section class="slide" id="one-token-at-a-time" data-lo="LO1">
+  <div class="kicker">Station 4</div>
+  <h2>A language model does not write a sentence; it scores the next token</h2>
+  <div class="flow">
+    <div class="step c-teal"><b>Read</b>all tokens so far, through every block</div>
+    <div class="arrow">→</div>
+    <div class="step c-amber"><b>Score</b>one number (a logit) for each of 151,936 tokens</div>
+    <div class="arrow">→</div>
+    <div class="step c-coral"><b>Choose</b>one token</div>
+    <div class="arrow">→</div>
+    <div class="step c-purple"><b>Append</b>and run the model again</div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <ul class="bullets mt">
+    <li>The last layer turns the vector at the <b>last position</b> into one score per token of the vocabulary</li>
+    <li>A product line of 19 tokens is 19 runs of the model, each on a text one token longer</li>
+    <li>Training was the same task: given real text, predict its next token. Cross-entropy loss, the five lines of Day 1</li>
+  </ul>
+  <aside class="notes"><p>151,936 is the size of the output layer of Qwen2.5-0.5B, printed by Lab 4.1. Nineteen tokens is the mean length of a draft with the strict instruction, measured for Lab 4.4. FN-105 said "the model predicts the next word" at awareness level; today participants hold the actual scores in an array.</p></aside>
 </section>
 
-<section class="slide" id="s1-steps" data-lo="LO1 LO6">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="scores-to-probabilities" data-lo="LO1 LO6">
+  <div class="kicker">What the lab loads</div>
+  <h2>The scores for the first token of one product line</h2>
+  <div class="cols cols-2">
+    <div>
+      <div class="bars">
+        <div class="row"><span>Co</span><div class="bar c-teal" style="--w:100%"></div><span class="val">0.296</span></div>
+        <div class="row"><span>"</span><div class="bar c-cyan" style="--w:43%"></div><span class="val">0.128</span></div>
+        <div class="row"><span>Explore</span><div class="bar c-purple" style="--w:33%"></div><span class="val">0.098</span></div>
+      </div>
+      <p class="small muted mt">Probabilities at temperature 1, for the product "coasters, check, blue, cotton".</p>
+    </div>
+    <ul class="bullets">
+      <li>The <b>softmax</b> turns scores into probabilities that add up to 1</li>
+      <li>The three most likely tokens hold about half of the probability</li>
+      <li>The 200 most likely hold 0.92; the other 151,736 tokens share the rest</li>
+      <li>That long, thin <b>tail</b> is what the sampling settings act on</li>
+    </ul>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <aside class="notes"><p>Lab 4.1, the setup cell and task 1: a real next-token distribution saved from the model, the 200 highest scores of 151,936. "Co" is the start of "Coasters". The quotation mark and "Explore" are other ways a product line can open. Nothing in this distribution is wrong; a choice has to be made.</p></aside>
+</section>
+
+<section class="slide" id="greedy-decoding" data-lo="LO6">
+  <div class="kicker">The simplest choice</div>
+  <h2>Greedy decoding takes the most likely token, every time</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>The same prompt gives the <b>same text</b>: five drafts of a product were one draft</li>
+      <li>"Temperature 0" is the usual name for it</li>
+      <li>Useful where a result must be repeatable: tests, extraction, the ten tasks of Lab 4.2</li>
+    </ul>
+    <div class="card c-coral"><h4>What the lab measured</h4><p class="small mb0">At temperature 0, 25 of 100 drafts still broke a rule: every one of them was longer than 20 words.</p></div>
+  </div>
+  <div class="callout warn mt"><b>What goes wrong.</b> "Temperature 0, so the model is right." Greedy decoding makes an output repeatable. It does not make it correct.</div>
+  <aside class="notes"><p>Lab 4.1, tasks 3 and 4, row T=0. Ask the room who expected temperature 0 to mean "accurate"; link to the answers collected at the title slide. The most likely token at each step is not the most likely sentence either, but do not go into search methods: the entry lists greedy decoding, temperature and nucleus sampling.</p></aside>
+</section>
+
+<section class="slide" id="temperature" data-lo="LO6">
+  <div class="kicker">Station 5</div>
+  <h2>Temperature divides the scores before the softmax</h2>
+  <div class="cols cols-2">
+    <div>
+      <pre class="code"><code class="language-python">z = (logits - logits.max()) / t
+p = np.exp(z) / np.exp(z).sum()</code></pre>
+      <ul class="bullets mt">
+        <li>The <b>order</b> of the tokens never changes</li>
+        <li>Below 1 the first tokens gain; above 1 the tail gains</li>
+      </ul>
+    </div>
+    <table class="t small">
+      <tr><th class="num">Temperature</th><th class="num">First token</th><th class="num">Tokens holding 90%</th></tr>
+      <tr><td class="num">0.2</td><td class="num">0.981</td><td class="num">1</td></tr>
+      <tr><td class="num">0.7</td><td class="num">0.529</td><td class="num">8</td></tr>
+      <tr><td class="num">1.0</td><td class="num">0.296</td><td class="num">53</td></tr>
+      <tr class="hl"><td class="num">1.5</td><td class="num">0.119</td><td class="num">126</td></tr>
+    </table>
+  </div>
+  <aside class="notes"><p>Lab 4.1, task 1: the participant writes these two lines and gets this table. Read the last column aloud: at 0.2 one token holds 90% of the probability, at 1.5 it takes 126. Subtracting the maximum changes nothing in the result and keeps the exponential from overflowing; FN-103 covered the softmax.</p></aside>
+</section>
+
+<section class="slide" id="nucleus-sampling" data-lo="LO6">
+  <div class="kicker">Station 5, second setting</div>
+  <h2>Nucleus sampling cuts the tail that temperature opens</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>Sort the tokens; keep the most likely until their probabilities add up to <code>top_p</code></li>
+      <li>Drop the rest and share the probability again among those kept</li>
+      <li>The two settings pull in opposite directions, and a request always carries both</li>
+    </ul>
+    <table class="t small">
+      <tr><th>At temperature 1.5</th><th class="num">Tokens that can be drawn</th><th class="num">First token</th></tr>
+      <tr><td>top_p 1.0</td><td class="num">all</td><td class="num">0.119</td></tr>
+      <tr><td>top_p 0.9</td><td class="num">126</td><td class="num">0.132</td></tr>
+      <tr class="hl"><td>top_p 0.5</td><td class="num">19</td><td class="num">0.233</td></tr>
+    </table>
+  </div>
+  <div class="callout tip mt"><b>Read the middle row.</b> At a high temperature a nucleus of 0.9 still holds more than a hundred tokens. It cuts little.</div>
+  <aside class="notes"><p>Lab 4.1, task 2. The lab works on the 200 highest scores, so its first row prints 200; in the model it is the whole vocabulary. Another common name is top-p; top-k keeps a fixed number of tokens instead and is not in the lab. Sources: Holtzman et al., The Curious Case of Neural Text Degeneration (2019).</p></aside>
+</section>
+
+<section class="slide" id="three-drafts" data-lo="LO6">
+  <div class="kicker">What the drafts look like</div>
+  <h2>A wide tail is not creative; it is noise</h2>
+  <table class="t small">
+    <tr><th>Setting</th><th>One draft for "coasters, check, blue, cotton, 35 x 150 cm"</th></tr>
+    <tr><td>Temperature 0</td><td>Coasters, check, blue, cotton, 35 x 150 cm, perfect for a cozy summer getaway.</td></tr>
+    <tr><td>Temperature 0.7</td><td>Coasters, a unique collection of blue blue cotton check coasters measuring 35 inches x 150 cm, perfect for adding a touch of nature to any room.</td></tr>
+    <tr class="hl"><td>Temperature 1.5</td><td>Coasters adorned in the muted blue color are coupé them beyond narrvcournoise vaccination strain elite align heading luminance</td></tr>
+  </table>
+  <ul class="bullets mt">
+    <li>Words shared by two drafts of one product: 1.00 at temperature 0, 0.20 at 0.7, 0.01 at 1.5</li>
+    <li>At 1.5, 89 of 100 drafts are no longer English only</li>
+  </ul>
+  <aside class="notes"><p>Lab 4.1, task 3, copied from the logged runs. The count of distinct drafts is 5 of 5 at every temperature above 0, a measure at its ceiling, which is why the lab adds the share of common words. Let someone read the third draft aloud. Then point at "35 inches" in the second: the product is 35 cm wide. Hold that for two slides.</p></aside>
+</section>
+
+<section class="slide" id="eight-settings" data-lo="LO6">
+  <div class="kicker">What the lab measured</div>
+  <h2>The instruction moved the numbers more than any sampling setting</h2>
+  <table class="t small">
+    <tr><th>100 drafts per setting</th><th class="num">Words per draft</th><th class="num">Over 20 words</th><th class="num">Not English only</th><th class="num">Break any rule</th></tr>
+    <tr><td>Temperature 0</td><td class="num">18.1</td><td class="num">0.25</td><td class="num">0.00</td><td class="num">0.25</td></tr>
+    <tr><td>Temperature 0.7</td><td class="num">19.9</td><td class="num">0.43</td><td class="num">0.01</td><td class="num">0.44</td></tr>
+    <tr><td>Temperature 1.5</td><td class="num">24.3</td><td class="num">0.69</td><td class="num">0.89</td><td class="num">0.93</td></tr>
+    <tr><td>Temperature 1.5, top_p 0.5</td><td class="num">21.5</td><td class="num">0.52</td><td class="num">0.05</td><td class="num">0.56</td></tr>
+    <tr class="hl"><td>Temperature 0.7, strict instruction</td><td class="num">11.2</td><td class="num">0.01</td><td class="num">0.02</td><td class="num">0.05</td></tr>
+    <tr><td>Temperature 1.5, strict instruction</td><td class="num">21.8</td><td class="num">0.55</td><td class="num">0.88</td><td class="num">0.95</td></tr>
+  </table>
+  <div class="callout tip mt"><b>Two readings.</b> The instruction changes which tokens are likely; sampling only chooses among them. And an instruction cannot repair a distribution that temperature has flattened.</div>
+  <aside class="notes"><p>Lab 4.1, task 4: six of the eight settings; the lab also has temperature 1.0 (0.45) and temperature 1.5 with top_p 0.9 (0.87). Twenty products, five samples each, four rules checked by code: one sentence, at most 20 words, English only, no price. The evidence of the outcome is this table "with an explanation of one surprising result": ask each participant which row surprised them before you say which one surprised you.</p></aside>
+</section>
+
+<section class="slide" id="what-checks-miss" data-lo="LO6">
+  <div class="kicker">The limit of the table</div>
+  <h2>A rule that code can check is not the same as a draft that is true</h2>
+  <div class="cols cols-2">
+    <div class="chat">
+      <div class="msg user"><span class="who">Product</span>coasters, check, blue, cotton, 35 x 150 cm</div>
+      <div class="msg ai bad"><span class="who">Draft at 0.7</span>... blue cotton check coasters measuring 35 inches x 150 cm ...</div>
+    </div>
+    <ul class="bullets">
+      <li>The four checks count sentences, words, scripts and price words</li>
+      <li>None of them reads the draft against the product</li>
+      <li>100 drafts of 20 English products say nothing about Arabic</li>
+    </ul>
+  </div>
+  <div class="callout note mt"><b>Carry forward.</b> "Share of drafts that break no rule" is Wasf's quality column in Lab 4.4. Know what it does not measure before you defend it.</div>
+  <aside class="notes"><p>This draft also breaks the length rule; a shorter one with the same "35 inches" would pass all four checks. Checking generated text against its source is evaluation of language-model applications, which AE-203 teaches with an evaluation set and a checked model grader. Here the point is narrower: name what your measure cannot see.</p></aside>
+</section>
+
+<section class="slide" id="check-sampling" data-lo="LO6">
+  <div class="kicker">Checkpoint</div>
+  <h2>Which change does the table support?</h2>
+  <div class="quiz" data-type="single" data-lo="LO6">
+    <p class="lead">Rayan runs Wasf at temperature 0.7 with the plain request, and 44 of 100 drafts break a rule. He wants fewer violations by tomorrow. Which change do the lab's measurements support first?</p>
+    <div class="opts">
+      <div class="opt" data-why="At temperature 0 a quarter of the drafts still broke a rule: repeatable is not the same as right">Set the temperature to 0, so that the output is fixed and correct</div>
+      <div class="opt" data-why="A larger nucleus keeps more of the tail, and the tail is where the violations come from">Raise top_p to 1.0, so that the model has more words to choose from</div>
+      <div class="opt" data-why="Length was the rule broken most often: keeping the longest draft selects for the fault">Sample five drafts for each product and keep the longest one</div>
+      <div class="opt" data-ok>Keep temperature 0.7 and add the strict instruction with the four rules</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> With the strict instruction the share of drafts breaking a rule fell from 0.44 to 0.05 at the same temperature. No sampling setting came close.</div>
+  </div>
+  <aside class="notes"><p>Answer: the last option. If someone proposes "sample five and keep one that passes the checks": good, that is a filter, and it is a design the capstone's text option may use; it costs five times the generation time.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-4-1" data-auto="lab" data-lab="4.1">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The lab reads 800 supplied logged drafts and one saved next-token distribution; it needs no model and no network. Task 5 runs only with a live model (Colab, where the model of about 1 GB loads in the notebook's runtime, or a key for a free hosted endpoint) and otherwise prints that it was skipped. Typical problems: dividing the probabilities by the temperature instead of the scores; a nucleus that drops the token which crosses top_p (the check names it). Whoever finishes early does the stretch item: 1,000 draws against 50.</p></aside>
 </section>
 
 <!-- Session 2 -->
 
 <section class="slide section" id="s2" data-auto="section" data-session="2"></section>
 
-<section class="slide" id="s2-idea" data-lo="LO6">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
+<section class="slide" id="base-model" data-lo="LO1">
+  <div class="kicker">Where an assistant starts</div>
+  <h2>A base model has learnt one thing: to continue text</h2>
   <div class="cols cols-2">
     <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
+      <li><b>Pretraining</b>: predict the next token over a very large amount of text. No questions, no answers, no roles</li>
+      <li>What comes out knows a great deal about language and the world as written</li>
+      <li>It has no notion that a question is addressed <b>to it</b></li>
     </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
+    <div class="chat">
+      <div class="msg user"><span class="who">Typed</span>Write this in capital letters: wool rug</div>
+      <div class="msg ai bad"><span class="who">Base model</span>WoRlG rug</div>
+      <div class="msg ai good"><span class="who">Instruction-tuned</span>WOOL RUG</div>
+    </div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <aside class="notes"><p>Lab 4.2, task 2, task T07 of the ten. Both models are Qwen2.5-0.5B: the same architecture, the same 494 million weights, published as a base model and as an instruction-tuned model. Zaid's story in the lab: he downloaded the base variant and concluded that the model was broken. It was doing what it was trained for.</p></aside>
 </section>
 
-<section class="slide" id="s2-steps" data-lo="LO6">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
+<section class="slide" id="chat-template" data-lo="LO1 LO6">
+  <div class="kicker">What each model receives</div>
+  <h2>You type the same prompt; the two models do not read the same text</h2>
+  <pre class="code l"><code>&lt;|im_start|&gt;system
+You are Qwen, created by Alibaba Cloud. You are a helpful assistant.&lt;|im_end|&gt;
+&lt;|im_start|&gt;user
+What is the capital of Saudi Arabia? Answer with one word.&lt;|im_end|&gt;
+&lt;|im_start|&gt;assistant</code></pre>
+  <ul class="bullets mt">
+    <li>The <b>chat template</b> wraps your prompt in turns marked by special tokens</li>
+    <li>The instruction-tuned model continues this text, and the continuation of "the assistant's turn starts here" is an answer</li>
+    <li>The base model receives the bare line</li>
+  </ul>
+  <aside class="notes"><p>Lab 4.2, task 1: the participant splits the logged "rendered" text around the typed prompt and prints what was added. The system line is the default of this model's template; an application replaces it with its own. A chat interface hides all of this. A model served with the wrong template, or none, behaves like the base model: a common fault when running open-weight models.</p></aside>
+</section>
+
+<section class="slide" id="instruction-tuning" data-lo="LO1">
+  <div class="kicker">Concept</div>
+  <h2>Instruction tuning is more training on conversations, with nothing added to the network</h2>
   <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+    <div class="step c-teal"><b>Base model</b>next-token training on text</div>
+    <div class="arrow">→</div>
+    <div class="step c-cyan"><b>Instruction tuning</b>the same training, on instructions with good answers, wrapped in the template</div>
+    <div class="arrow">→</div>
+    <div class="step c-purple"><b>Preference tuning</b>pushed toward the answers people rated better</div>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <ul class="bullets mt">
+    <li>Same architecture, same number of weights: only their <b>values</b> change</li>
+    <li>The model learns the turn structure, to answer the request, and to <b>end its turn</b></li>
+    <li>It is the fine-tuning of Day 2, applied to a language model</li>
+  </ul>
+  <aside class="notes"><p>Concept level, as the entry says: nobody tunes a language model in this course. Building tuning data and adapters is AE-301, Day 3. The link to Day 2 is exact: a pretrained backbone, further training on a smaller, more specific dataset, weights that start from what was learnt. Sources: Ouyang et al., Training language models to follow instructions with human feedback (2022).</p></aside>
+</section>
+
+<section class="slide" id="ten-tasks" data-lo="LO6">
+  <div class="kicker">What the lab measured</div>
+  <h2>On ten small tasks the base model fails, until the prompt is written for it</h2>
+  <table class="t">
+    <tr><th>Ten tasks, temperature 0, at most 40 new tokens</th><th class="num">Right</th><th class="num">Stopped by itself</th><th class="num">Clean</th></tr>
+    <tr><td>Instruction-tuned, plain prompt</td><td class="num">7 of 10</td><td class="num">9 of 10</td><td class="num">7 of 10</td></tr>
+    <tr><td>Base, plain prompt</td><td class="num">3 of 10</td><td class="num">7 of 10</td><td class="num">2 of 10</td></tr>
+    <tr class="hl"><td>Base, few-shot prompt</td><td class="num">10 of 10</td><td class="num">0 of 10</td><td class="num">0 of 10</td></tr>
+  </table>
+  <p class="small muted mt"><b>Right</b>: the expected answer is in the first line. <b>Clean</b>: right, stopped, one line only, so a program can use it as it is.</p>
+  <aside class="notes"><p>Lab 4.2, tasks 2 and 3. The tasks: name a colour, translate two words, name a language, write a small JSON object, answer yes or no, count, capitals, a capital city, a sentiment, a material in Arabic. Ten tasks with one wording each show two behaviours; they do not rank two models. Say it before someone quotes "base beats instruct 10 to 7".</p></aside>
+</section>
+
+<section class="slide" id="few-shot-prompt" data-lo="LO6">
+  <div class="kicker">Writing for a model that continues text</div>
+  <h2>A few-shot prompt is a text whose most likely continuation is the answer</h2>
+  <div class="cols cols-2">
+    <pre class="code"><code>Country: France
+Capital: Paris
+
+Country: Japan
+Capital: Tokyo
+
+Country: Saudi Arabia
+Capital:</code></pre>
+    <div>
+      <ul class="bullets">
+        <li>Two solved examples in a fixed layout, then the new case with the answer left open</li>
+        <li>The examples fix the <b>format</b> and show what kind of answer is wanted: three tasks the instruction-tuned model missed came out right</li>
+        <li>Examples help instruction-tuned models too, whenever the shape of the answer matters</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes"><p>Lab 4.2, task 3: the participant writes the function that builds this text and compares it, character by character, with the one in the logged run. Tasks T03, T04 and T05 were wrong for the instruction-tuned model on its plain prompt and right for the base model with examples. Prompts as versioned code, structured output and schemas are AE-203, Days 1 and 2: this slide only shows why examples work.</p></aside>
+</section>
+
+<section class="slide" id="when-to-stop" data-lo="LO1 LO6">
+  <div class="kicker">The other half of an answer</div>
+  <h2>Knowing the answer and knowing when to stop are learnt separately</h2>
+  <div class="cols cols-2">
+    <div class="trace s">
+      <div class="ev user"><b>prompt ends</b>Country: Saudi Arabia / Capital:</div>
+      <div class="ev final"><b>answer</b>Riyadh</div>
+      <div class="ev error"><b>runs on</b>Country: South Korea / Capital: Seoul / Country: Thailand / Capital: Bangkok / Country: Turkey ...</div>
+    </div>
+    <ul class="bullets">
+      <li>Generation ends when the model draws an <b>end token</b>, or at the limit of new tokens</li>
+      <li>An instruction-tuned model learnt to end its turn; after two examples, a base model's likeliest next text is a third example</li>
+      <li>The calling program sets a <b>stop sequence</b> or keeps the first line</li>
+    </ul>
+  </div>
+  <aside class="notes"><p>Lab 4.2, tasks 3 and 4: right on 10 of 10 and never clean. A program that takes the first line gets ten usable answers; one that takes the whole text gets none. This is also why the limit of new tokens matters for latency and cost: text after the answer is paid for.</p></aside>
+</section>
+
+<section class="slide" id="preference-tuning" data-lo="LO1">
+  <div class="kicker">Concept</div>
+  <h2>Preference tuning shapes how an assistant behaves, not what it knows</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>People, or a model trained on their ratings, compare answers; the model is pushed toward the preferred ones</li>
+      <li>This is where tone, helpfulness, refusals and "I'm sorry, but I don't have that information" come from</li>
+      <li>It adds <b>no facts</b>: a learnt habit of declining is not knowledge of what the model knows</li>
+    </ul>
+    <div class="card c-purple"><h4>Why it matters this afternoon</h4><p class="small mb0">In Lab 4.3 the model declines six questions it cannot know and answers two with invented facts. Both behaviours come from training, and neither is a check.</p></div>
+  </div>
+  <aside class="notes"><p>Concept level. The names participants will meet: reinforcement learning from human feedback, and direct preference optimisation; do not explain the algorithms. The practical consequence is what counts: two assistants built on similar base models can behave very differently, and behaviour changes between versions of the same model. Sources: Ouyang et al. (2022).</p></aside>
+</section>
+
+<section class="slide" id="reasoning-effort" data-lo="LO1">
+  <div class="kicker">Concept</div>
+  <h2>Reasoning effort buys quality on hard tasks with tokens you pay for and wait for</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>Some models write intermediate <b>reasoning tokens</b> before the answer; a setting says how much</li>
+      <li>They are generated like any other token: one run of the model each</li>
+      <li>They help on multi-step problems; a one-word extraction gains nothing</li>
+    </ul>
+    <div class="card c-amber"><h4>In the week's numbers</h4><p class="small mb0">The small model wrote about 3 tokens a second on a laptop processor. At that speed, 300 reasoning tokens before a 19-token product line are well over a minute of waiting.</p></div>
+  </div>
+  <div class="callout note mt"><b>Not measured here.</b> The lab's model has no reasoning setting. Treat effort as one more column of a model-choice table: quality gained against tokens spent.</div>
+  <aside class="notes"><p>Concept level, as in the entry; no lab measures it. The 3 tokens a second and the 19 tokens are from the measurements file of Lab 4.4 (one request at a time on a laptop processor). On hosted models reasoning tokens are billed as output tokens; say that the price list of the day decides, and give no figures.</p></aside>
+</section>
+
+<section class="slide" id="check-base" data-lo="LO6">
+  <div class="kicker">Checkpoint</div>
+  <h2>How do you get an answer out of a base model?</h2>
+  <div class="quiz" data-type="single" data-lo="LO6">
+    <p class="lead">Zaid sends "Which colour is this product? Answer with one word." to the base model at temperature 0 and gets nothing useful. He must keep this model. What should he change?</p>
+    <div class="opts">
+      <div class="opt" data-ok>Write two solved examples, leave the new answer open, and keep the first line of the output</div>
+      <div class="opt" data-why="The run was already at temperature 0: the fault is in the text being continued, not in the draw">Lower the temperature further</div>
+      <div class="opt" data-why="A base model was not trained on that convention: the sentence is just more text to continue">Put "You are a helpful assistant" in front of the question</div>
+      <div class="opt" data-why="The base model does not stop by itself: more tokens give more text after the answer, not a better answer">Raise the limit of new tokens</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> A base model continues text. Give it a text whose likeliest continuation is the answer, and cut where the answer ends.</div>
+  </div>
+  <aside class="notes"><p>Answer: the first option. With the few-shot prompt the base model was right on all ten tasks and stopped on none, hence "keep only the first line".</p></aside>
 </section>
 
 <section class="slide lab" id="lab-4-2" data-auto="lab" data-lab="4.2">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The lab reads 30 supplied logged runs: ten tasks, three settings, both models. No model and no network needed. Typical problems: in task 1, splitting on the wrong text (split the rendered text on the typed prompt, once); in task 3, a space after the last colon or a missing empty line between examples: the check compares the text character by character with the logged prompt. Participants who do not read Arabic skip the reading of task T10; its score is computed either way.</p></aside>
 </section>
 
 <!-- Session 3 -->
 
 <section class="slide section" id="s3" data-auto="section" data-session="3"></section>
 
-<section class="slide" id="s3-idea" data-lo="LO6">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
+<section class="slide" id="likely-is-not-true" data-lo="LO1 LO6">
+  <div class="kicker">Fabrication</div>
+  <h2>The model produces a likely continuation; nothing in it checks that the text is true</h2>
   <div class="cols cols-2">
+    <div class="chat">
+      <div class="msg user"><span class="who">Question</span>In which year was Al-Nawl Crafts Cooperative founded, and by whom?</div>
+      <div class="msg ai bad"><span class="who">Small model</span>Al-Nawl Crafts Cooperative was founded in 1998. The cooperative was established by the Al-Nawl family ... a prominent family in the textile industry of Iran.</div>
+    </div>
     <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
+      <li>The cooperative does not exist: no model has read a word about it</li>
+      <li>The answer is <b>fluent, specific and false</b>, and nothing in the text marks it as invented</li>
+      <li>Asked in Arabic: the same year, founded by "a group of engineers in Egypt"</li>
     </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <aside class="notes"><p>Lab 4.3, task 1, questions U02 and U08. Stations 4 and 5 explain it: a question about a founding year is most plausibly followed by a year and a founder, so that is what gets high scores. "Hallucination" is the common word; this course says fabricated answer, as the catalogue does. FN-105 named the phenomenon; here participants produce it and count it.</p></aside>
 </section>
 
-<section class="slide" id="s3-steps" data-lo="LO6">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="refuse-or-invent" data-lo="LO6">
+  <div class="kicker">What the lab measured</div>
+  <h2>Eight questions it cannot know: six declined, two answered anyway</h2>
+  <div class="cols cols-3">
+    <div class="stat center"><div class="big">6</div><div class="lbl">answers say "I don't have that information"</div></div>
+    <div class="stat center"><div class="big">2</div><div class="lbl">answers invent a year and founders</div></div>
+    <div class="stat center"><div class="big">8</div><div class="lbl">questions, one wording each: far too few for a rate</div></div>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <ul class="bullets mt">
+    <li>Declining is a habit from tuning. It held for a phone number and a price, and failed for a founding year</li>
+    <li>The lab's rule counts phrases: a polite refusal followed by invented "general information" passes it</li>
+  </ul>
+  <div class="callout warn mt"><b>What goes wrong.</b> "It refuses 75% of unanswerable questions" in a report. The lab shows that fabrication happens, not how often.</div>
+  <aside class="notes"><p>Lab 4.3, task 1 and the first check-yourself question. Read answer U01 with the room: it starts with "I don't have access" and then goes on to offer general return policies, which a hurried reader takes for the shop's own. The refusal detector is a list of phrases written by the participant: a second lesson in what a check does not see.</p></aside>
+</section>
+
+<section class="slide" id="knowledge-cut-off" data-lo="LO1 LO6">
+  <div class="kicker">The cut-off</div>
+  <h2>A model's present is where its training text ended</h2>
+  <table class="t small">
+    <tr><th>Asked</th><th>The small model answered</th></tr>
+    <tr><td>What is today's date?</td><td>It cannot see the date, and says so</td></tr>
+    <tr><td>Which team won the football World Cup held in 2026?</td><td>It cannot "predict future events"</td></tr>
+    <tr class="hl"><td>What is the most recent year you have information about?</td><td>"My last update was in 2023"</td></tr>
+  </table>
+  <ul class="bullets mt">
+    <li>Its weights were published in September 2024. The year it gives for itself is <b>generated text</b>, like any other answer</li>
+    <li>Anything newer than the cut-off, or private, has to arrive in the prompt</li>
+  </ul>
+  <aside class="notes"><p>Lab 4.3, task 2. The release month is from the model card. The reasons a self-reported cut-off is unreliable: the last months before a cut-off are thin in the training text, and the sentence "my last update was in" is itself a learnt phrase. Putting the missing fact into the prompt is the stretch item of the lab and the whole of AE-203, Day 3 (grounded answers).</p></aside>
+</section>
+
+<section class="slide" id="context-window" data-lo="LO1">
+  <div class="kicker">The window</div>
+  <h2>The context window counts everything: instructions, documents, question and answer</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>A fixed number of <b>tokens</b> the model can read at once; what is outside does not exist for it</li>
+      <li>The output is written into the same window</li>
+      <li>The model has a limit; the <b>runtime</b> is started with one too, often smaller, to save memory</li>
+    </ul>
+    <div class="card c-teal"><h4>In the lab</h4><p class="small mb0">The runtime's window is 2,048 tokens. The shop policy and a question are 164 tokens. The policy, 110 catalogue lines and the question are about 3,400.</p></div>
+  </div>
+  <aside class="notes"><p>The model card of Qwen2.5-0.5B gives a context length of 32,768 tokens; the lab's runtime is started with 2,048, as a small local runtime on a laptop often is. Yesterday's count applies: about 86 English or 62 Arabic descriptions fill it. Attention's cost grows with the square of the number of tokens (Day 3), which is why a window is a budget and not a free setting.</p></aside>
+</section>
+
+<section class="slide" id="silent-truncation" data-lo="LO6">
+  <div class="kicker">What the lab measured</div>
+  <h2>A prompt that did not fit lost its beginning, and nobody was told</h2>
+  <table class="t small">
+    <tr><th>Four questions on the shop policy</th><th class="num">Tokens dropped</th><th class="num">Right</th><th>Answers (expected 14, 10, 300, 2)</th></tr>
+    <tr><td>Policy, question: fits</td><td class="num">0</td><td class="num">4 of 4</td><td>14 days, 10 working days, 300 riyals, 2 working days</td></tr>
+    <tr class="hl"><td>Policy, long extract, question</td><td class="num">1,402</td><td class="num">0 of 4</td><td>60 days, 4, 1, 3</td></tr>
+    <tr><td>Long extract, policy, question</td><td class="num">1,402</td><td class="num">4 of 4</td><td>14 days, 10, 300, 2</td></tr>
+  </table>
+  <div class="callout warn mt"><b>What goes wrong.</b> The runtime kept the end of the prompt and dropped the start, policy included. The model answered each question with a confident number.</div>
+  <aside class="notes"><p>Lab 4.3, task 3. Same model, same questions, same document; only the position of the document in a prompt that did not fit differs. The third row is right because the policy sat inside the part that was kept, not because long prompts are harmless. The long prompts also took about 18 seconds each against 2 for the short one on a laptop processor: every token read costs time.</p></aside>
+</section>
+
+<section class="slide" id="count-before-sending" data-lo="LO6">
+  <div class="kicker">What to do about it</div>
+  <h2>Count the tokens before you send, and fail loudly</h2>
+  <div class="cols cols-3">
+    <div class="card c-teal"><h4>Count</h4><p class="small mb0">Tokenise the prompt with the model's own tokeniser (Lab 3.1) and compare with the window minus the room for the answer.</p></div>
+    <div class="card c-cyan"><h4>Refuse or shorten on purpose</h4><p class="small mb0">An error is a fault you can see. If you shorten, you choose what goes, not the runtime.</p></div>
+    <div class="card c-coral"><h4>Know your runtime</h4><p class="small mb0">Some return an error for a prompt that is too long; some cut silently, from the start or from the end. Test it once.</p></div>
+  </div>
+  <div class="callout tip mt"><b>A silent cut is worse than a crash.</b> It gives a confident wrong answer that nobody can trace.</div>
+  <aside class="notes"><p>The third check-yourself question of the lab. Do not name which products cut and which refuse: it differs by version and by setting. The habit is to test it with one prompt that is too long on purpose, as the lab does. Selecting what goes into the window (chunking, search, citations) is AE-203, Day 3.</p></aside>
+</section>
+
+<section class="slide" id="arabic-and-english" data-lo="LO6">
+  <div class="kicker">Two languages</div>
+  <h2>The same policy, the same questions: 4 of 4 in English, 3 of 4 in Arabic</h2>
+  <div class="cols cols-2">
+    <table class="t small">
+      <tr><th>Expected</th><th>English</th><th>Arabic</th></tr>
+      <tr><td>14</td><td>14 days</td><td class="ar">14 يوما</td></tr>
+      <tr><td>10</td><td>10 working days</td><td>10</td></tr>
+      <tr class="hl"><td>300</td><td>300 riyals</td><td class="ar">25 ريال</td></tr>
+      <tr><td>2</td><td>2 working days</td><td>2</td></tr>
+    </table>
+    <ul class="bullets">
+      <li>The Arabic miss is another number from the same paragraph of the policy</li>
+      <li>Four questions cannot put a figure on the gap; they can tell you to measure Arabic <b>by itself</b></li>
+      <li>Of the two invented founding stories, one was the Arabic question</li>
+    </ul>
+  </div>
+  <div class="callout note mt"><b>Responsible use.</b> A model that serves one language worse treats its users unequally. Per-language results go in the README, as for search.</div>
+  <aside class="notes"><p>Lab 4.3, task 4. The entry's responsible-use line: one lab probes the language model for fabricated answers and for different quality in Arabic and in English. Same point as yesterday's slide on multilingual models, now for generation. The SDAIA Principles of AI Ethics are the national reference for fairness: point to the document, do not paraphrase it.</p></aside>
+</section>
+
+<section class="slide" id="limits-note" data-lo="LO6 LO7">
+  <div class="kicker">Before a customer reads it</div>
+  <h2>Write the limits down, each with what is done about it</h2>
+  <table class="t small">
+    <tr><th>Measured limit</th><th>What is done about it</th></tr>
+    <tr><td>It invents facts it does not have</td><td>It is given the product's attributes and may state nothing else</td></tr>
+    <tr><td>It does not know the date or anything recent</td><td>It is never asked about dates, prices, stock or delivery</td></tr>
+    <tr><td>A prompt beyond the window loses its beginning</td><td>Prompts are counted first; one that does not fit is refused</td></tr>
+    <tr><td>Arabic answers were wrong more often</td><td>Arabic output gets its own test set</td></tr>
+  </table>
+  <div class="callout tip mt"><b>And say what it is.</b> A draft written by a language model, read by the shop team before it is published.</div>
+  <aside class="notes"><p>Lab 4.3, task 5: the note that travels with Wasf's output, owned by Bushra Al-Aqeel in the case. It is the "limits" half of the rubric criterion "Licence and limits" (15 points). On disclosure, point participants to the SDAIA generative AI guidelines listed in the course sources and ask them to read the passage on telling people when content is generated; do not quote it from memory.</p></aside>
+</section>
+
+<section class="slide" id="check-limits" data-lo="LO6">
+  <div class="kicker">Checkpoint</div>
+  <h2>Where did "60 days" come from?</h2>
+  <div class="quiz" data-type="single" data-lo="LO6">
+    <p class="lead">A script sends the shop policy, then 110 catalogue lines, then a question on returns, about 3,400 tokens in all, to a runtime with a window of 2,048 at temperature 0. The answer is "60 days"; the policy says 14. What happened?</p>
+    <div class="opts">
+      <div class="opt" data-why="The cut-off concerns what is in the weights; here the policy was supplied in the prompt as typed">The policy was written after the model's training cut-off</div>
+      <div class="opt" data-why="At temperature 0 there is no draw: the same wrong answer comes back every time">The sampling settings let an unlikely token through</div>
+      <div class="opt" data-ok>The runtime dropped the start of the prompt, the policy with it, and the model answered without it</div>
+      <div class="opt" data-why="With the policy placed last in an equally long prompt, all four answers were right">The model cannot read numbers reliably in a long text</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> About 1,400 tokens were cut from the start. The model never saw the policy and produced a plausible number.</div>
+  </div>
+  <aside class="notes"><p>Answer: the third option. Follow-up question for the room: what are the two fixes? Count and refuse; or put the document after the filler, which works here and is fragile. The durable fix is to send only the passages that matter, which is AE-203.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-4-3" data-auto="lab" data-lab="4.3">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The lab reads 28 supplied logged runs; no model and no network needed. Task 1 has participants write the refusal rule themselves: any rule that labels the eight answers as a careful reader would passes the check. Typical problems: forgetting to lower-case before matching; a year pattern that also matches product codes. Participants who do not read Arabic use the supplied Arabic phrases for the rule and read the English half of task 4. Task 5 is prose: three sentences at least, each a limit and a measure. Collect two notes and read them aloud.</p></aside>
 </section>
 
 <!-- Session 4 -->
 
 <section class="slide section" id="s4" data-auto="section" data-session="4"></section>
 
-<section class="slide" id="s4-idea" data-lo="LO7">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
-  <div class="cols cols-2">
-    <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
-    </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
-  </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+<section class="slide" id="families" data-lo="LO7">
+  <div class="kicker">Model families</div>
+  <h2>The family follows from what goes in and what must come out</h2>
+  <table class="t small">
+    <tr><th>Family</th><th>Reads</th><th>Produces</th><th>This week</th></tr>
+    <tr><td>Convolutional network</td><td>An image</td><td>A class or a feature vector</td><td>Naqsh: ResNet-18, 11.7 million weights</td></tr>
+    <tr><td>Encoder</td><td>A text</td><td>One vector, or a label</td><td>Khayt: multilingual-e5-small, 118 million</td></tr>
+    <tr><td>Decoder</td><td>A text</td><td>The next token, again and again</td><td>Wasf: Qwen2.5-0.5B, 494 million</td></tr>
+    <tr><td>Diffusion model</td><td>Noise and a text</td><td>An image</td><td>Not used</td></tr>
+    <tr><td>Vision-language model</td><td>Images and text</td><td>Text</td><td>Shortlisted for Naqsh, not measured</td></tr>
+  </table>
+  <div class="callout tip mt"><b>Start from the task, not from the newest model.</b> A search needs vectors; a classifier needs a label; only drafting needs generation.</div>
+  <aside class="notes"><p>The first screen of any model choice. Yesterday's slide on encoder, decoder and encoder-decoder was the text half of this table. The weight counts are from the model cards. Ask: which of the cooperative's three use cases could a large decoder do alone? All three, in principle, which is why the next slides are about what that would cost.</p></aside>
 </section>
 
-<section class="slide" id="s4-steps" data-lo="LO7">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
+<section class="slide" id="diffusion-models" data-lo="LO7">
+  <div class="kicker">Concept</div>
+  <h2>A diffusion model makes an image by removing noise, step by step</h2>
   <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+    <div class="step c-navy"><b>Start</b>an image of pure noise</div>
+    <div class="arrow">→</div>
+    <div class="step c-cyan"><b>Denoise</b>a network predicts the noise; a little is removed</div>
+    <div class="arrow">→</div>
+    <div class="step c-purple"><b>Repeat</b>tens of steps, each guided by the text</div>
+    <div class="arrow">→</div>
+    <div class="step c-coral"><b>Image</b>a new picture that matches the text</div>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <ul class="bullets mt">
+    <li>Trained on images with added noise: the task is to predict the noise, a regression loss</li>
+    <li>One image costs <b>many runs</b> of the network, as one sentence costs many runs of a decoder</li>
+    <li>For the cooperative: catalogue illustrations, never a photograph of a product that exists</li>
+  </ul>
+  <aside class="notes"><p>Concept level: no lab. Participants have met the parts: a convolutional or transformer network, a loss, a training loop, a text encoder that supplies the guidance. The responsible-use point is specific: a generated picture of a hand-made rug shows a rug nobody wove. Sources: Ho et al., Denoising Diffusion Probabilistic Models (2020).</p></aside>
+</section>
+
+<section class="slide" id="vision-language-models" data-lo="LO7">
+  <div class="kicker">Concept</div>
+  <h2>A vision-language model turns image patches into tokens a decoder can read</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>An <b>image encoder</b> cuts the picture into patches and gives a vector per patch</li>
+      <li>The vectors enter the language model beside the text tokens; attention does the rest</li>
+      <li>Image encoders of this kind are trained on pictures with their captions: matching pairs pulled together, as for yesterday's sentence embeddings</li>
+    </ul>
+    <div class="card c-purple"><h4>For Naqsh</h4><p class="small mb0">A hosted vision-language model could be asked "which pattern is this?" with no training at all. Nobody has measured it on the cooperative's photographs, and the photographs would leave the shop's server.</p></div>
+  </div>
+  <aside class="notes"><p>Concept level: no lab. The honest position on the shortlist is "not measured": it may well beat 0.774, and that is a test for next week with the data protection officer's sign-off. Vision engineering beyond classification is AE-309. Sources: Radford et al., Learning Transferable Visual Models From Natural Language Supervision (2021).</p></aside>
+</section>
+
+<section class="slide" id="open-weight-or-hosted" data-lo="LO7">
+  <div class="kicker">Where the model runs</div>
+  <h2>Open-weight or hosted: who runs it, and where the data goes</h2>
+  <div class="cols cols-2">
+    <div class="card c-teal"><h4>Open-weight, on your server</h4><p class="small mb0">You download the weights and run them. The data stays. The version never changes unless you change it. You pay for the machine and the work of running it, and the licence is yours to read.</p></div>
+    <div class="card c-coral"><h4>Hosted, behind an interface</h4><p class="small mb0">The provider runs it. Much larger models than your server holds. You pay per token. The text or image leaves your server, and the provider updates and retires versions on its own calendar.</p></div>
+  </div>
+  <div class="callout note mt"><b>In the case.</b> Anything that leaves the shop's server needs the sign-off of Bushra Al-Aqeel, the data protection officer, before a single test request.</div>
+  <aside class="notes"><p>Product descriptions are not personal data; customer queries and messages can be. The Personal Data Protection Law and its implementing regulation are the national references, listed in the course sources: point to them, and do not give legal advice from a slide. Serving an open-weight model as a monitored service is AE-205.</p></aside>
+</section>
+
+<section class="slide" id="size-and-latency" data-lo="LO7">
+  <div class="kicker">What the week measured</div>
+  <h2>Size and latency span four orders of magnitude across the three models</h2>
+  <table class="t">
+    <tr><th>One request on a laptop processor</th><th class="num">File</th><th class="num">Latency</th></tr>
+    <tr><td>Small convolutional network (Lab 2.1)</td><td class="num">0.1 MB</td><td class="num">1.9 ms</td></tr>
+    <tr><td>ResNet-18, one photograph</td><td class="num">45 MB</td><td class="num">35 ms</td></tr>
+    <tr><td>multilingual-e5-small, one query and the search</td><td class="num">470 MB</td><td class="num">39 ms</td></tr>
+    <tr class="hl"><td>Qwen2.5-0.5B, one product line of 19 tokens</td><td class="num">990 MB</td><td class="num">6,500 ms</td></tr>
+  </table>
+  <ul class="bullets mt">
+    <li>An encoder runs <b>once</b> per request; a decoder runs once per token written</li>
+    <li>A latency budget belongs to the use: a person waiting for a search, or a batch of 2,000 drafts overnight</li>
+  </ul>
+  <aside class="notes"><p>From the measurements file of Lab 4.4: medians of repeated single requests on the author's laptop processor, with other work running on it; your machine will give other figures, and the ratios are what to read. The decoder's time is nearly all generation: about 3 tokens a second. 2,000 drafts at 6.5 seconds are under four hours.</p></aside>
+</section>
+
+<section class="slide" id="licences-and-provenance" data-lo="LO7">
+  <div class="kicker">May we use it?</div>
+  <h2>Read the licence of each size, and ask what the model was trained on</h2>
+  <table class="t small">
+    <tr><th>Model</th><th>Licence of the weights</th><th>For a shop</th></tr>
+    <tr><td>multilingual-e5-small</td><td>MIT</td><td>Yes</td></tr>
+    <tr><td>Qwen2.5-0.5B-Instruct, Qwen2.5-7B-Instruct</td><td>Apache 2.0</td><td>Yes</td></tr>
+    <tr class="hl"><td>Qwen2.5-3B-Instruct</td><td>A research licence of its own</td><td>No</td></tr>
+    <tr><td>ResNet-18, ImageNet weights</td><td>BSD 3-Clause</td><td>Sign-off: trained on ImageNet, whose terms of access name non-commercial research and education</td></tr>
+  </table>
+  <div class="callout warn mt"><b>What goes wrong.</b> "Same family, same licence." One size of a family can carry other terms than its smaller and larger siblings.</div>
+  <aside class="notes"><p>Licences as read on the model cards this month; they are listed in the course sources and in the lab's shortlist with their addresses. Terms change: the habit is to open the card on the day of use and record the date. Provenance is the second question: a permissive licence on a weights file says nothing about the data behind it. The lab does not decide the ImageNet question; it routes it to the licensing officer, which is the right move for an engineer.</p></aside>
+</section>
+
+<section class="slide" id="screen-then-compare" data-lo="LO7">
+  <div class="kicker">The method</div>
+  <h2>Screen first, compare second, then write two lines</h2>
+  <div class="flow">
+    <div class="step c-coral"><b>1 · Screen</b>licence, data leaving the server, size, measured at all, inside the latency budget</div>
+    <div class="arrow">→</div>
+    <div class="step c-cyan"><b>2 · Compare</b>quality against the simpler alternative, latency, size, cost</div>
+    <div class="arrow">→</div>
+    <div class="step c-teal"><b>3 · Justify</b>"because": the numbers that decide. "But": the risk, and who signs</div>
+  </div>
+  <ul class="bullets mt">
+    <li>A model that may not be used cannot be chosen, so quality comes <b>after</b> the screen</li>
+    <li>"Not measured" removes an option from this week's table. It is not a verdict on the model</li>
+    <li>Cost: a model on your own server adds nothing per request; a hosted one is paid per token</li>
+  </ul>
+  <aside class="notes"><p>The three steps are tasks 2, 3 and 4 of Lab 4.4. Why the order matters: looking at quality first makes the best-scoring model the favourite, and then its licence becomes an obstacle to argue away. In the lab the hosted options would cost under one riyal at the stated volumes on an exercise price list, which is not any provider's: cost does not decide this case, and participants should notice that by themselves.</p></aside>
+</section>
+
+<section class="slide" id="what-decides" data-lo="LO7">
+  <div class="kicker">The table you fill</div>
+  <h2>In each use case something other than the top score decides</h2>
+  <table class="t small">
+    <tr><th>Use case</th><th>Eligible options and their quality</th><th>What decides</th></tr>
+    <tr><td><b>Naqsh</b> · test accuracy</td><td>From scratch 0.476 · frozen features 0.774 · fine-tuned 0.788</td><td>14 photographs in 1,000 separate the best two</td></tr>
+    <tr><td><b>Khayt</b> · recall at 5</td><td>Keywords 0.175 · embeddings 0.225 · paired by product 0.335</td><td>The best row still misses two searches in three</td></tr>
+    <tr><td><b>Wasf</b> · drafts breaking no rule</td><td>Template 1.00 · small model 0.56 · with strict instruction 0.95</td><td>The measure does not see that every template line reads alike</td></tr>
+  </table>
+  <div class="callout tip mt"><b>Keep the row without a model.</b> It is the simpler alternative the rubric asks for.</div>
+  <aside class="notes"><p>Lab 4.4, task 3, with the week's reference results. The reference recommendation is frozen features, paired embeddings and the small model with the strict instruction, each with a "but"; other choices pass when they are eligible and argued with numbers. Evidence of the outcome: the model-choice table with a two-line justification per use case, defended tomorrow.</p></aside>
+</section>
+
+<section class="slide" id="check-choice" data-lo="LO7">
+  <div class="kicker">Checkpoint</div>
+  <h2>What is the first reply?</h2>
+  <div class="quiz" data-type="single" data-lo="LO7">
+    <p class="lead">A colleague proposes Qwen2.5-3B-Instruct for Wasf: "six times the weights, same family, surely better lines". What do you say first?</p>
+    <div class="opts">
+      <div class="opt" data-why="Quality first makes it the favourite; a model the shop may not use cannot be chosen however well it writes">"Let us measure its drafts on the 20 products, then decide"</div>
+      <div class="opt" data-ok>"Licence first: this size has a research licence, unlike its siblings, so a shop may not use it"</div>
+      <div class="opt" data-why="This size carries other terms than the 0.5B and 7B models of the same family: each size is read separately">"Same family as our Apache 2.0 model, so only the file size needs checking"</div>
+      <div class="opt" data-why="It probably is slower, yet latency is measured, not assumed, and the licence settles the matter sooner">"A larger model is too slow for us, so there is no need to look further"</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> The screen comes before the comparison, and the licence is its first line. At 6,200 MB the file would not fit the shop's server either.</div>
+  </div>
+  <aside class="notes"><p>Answer: the second option. If the terms of that model have changed by the time you teach this, keep the question and change the model: the habit of reading each size's licence is the durable part.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-4-4" data-auto="lab" data-lab="4.4">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The lab reads two supplied files, the shortlist and the measurements, so it does not need any earlier lab to be finished. Task 4 is the one that counts: three choices, each with a "because" that names a number and a "but" that names a risk, and the name of who signs when a sign-off is needed (the check looks for it). Task 5 fixes the capstone task: make sure everyone leaves with one of the three chosen, the simpler alternative named, and the capstone folder opened once. Pair participants who chose the same task for two minutes at the end.</p></aside>
+</section>
+
+<section class="slide" id="capstone-brief" data-lo="LO7">
+  <div class="kicker">Tomorrow</div>
+  <h2>One small model for one use case, built alone and defended live</h2>
+  <div class="cols cols-3">
+    <div class="card c-teal"><h4>Naqsh</h4><p class="small mb0">An image classifier for the eight patterns, against the small network trained from scratch.</p></div>
+    <div class="card c-cyan"><h4>Khayt</h4><p class="small mb0">A bilingual search over the catalogue, against keyword search.</p></div>
+    <div class="card c-coral"><h4>Wasf</h4><p class="small mb0">Constrained text generation for product lines, against a sentence template.</p></div>
+  </div>
+  <ul class="bullets mt">
+    <li>A <b>public repository</b>: code, training logs, commit history, and a README from the supplied template</li>
+    <li>The README reports curves, test results, the simpler alternative, latency on a laptop, and every licence</li>
+    <li>Eight minutes of defence, four of questions; you change <b>one hyperparameter live</b> and explain what moves</li>
+  </ul>
+  <aside class="notes"><p>The brief, the starter script and the README template are in the capstone folder of the labs. AI assistance is fully allowed in the capstone; the defence is where the participant shows the work is theirs. Tell them tonight's only preparation: clone the repository, run the starter for their task once, and make the first commit.</p></aside>
 </section>
 
 <section class="slide" id="wrap-up">
   <div class="kicker">Day 4 · wrap-up</div>
   <h2>Three things to keep</h2>
   <div class="cols cols-3">
-    <div class="card c-teal"><h4>Remember</h4><p class="small mb0">REPLACE: one idea participants keep</p></div>
-    <div class="card c-coral"><h4>Remember</h4><p class="small mb0">REPLACE: one idea participants keep</p></div>
-    <div class="card c-purple"><h4>Remember</h4><p class="small mb0">REPLACE: one idea participants keep</p></div>
+    <div class="card c-teal"><h4>Generation is a draw</h4><p class="small mb0">Scores, then one token chosen. Temperature and the nucleus shape the draw; the instruction shapes the scores, and did more: 0.44 to 0.05.</p></div>
+    <div class="card c-coral"><h4>Likely is not true</h4><p class="small mb0">A founding year for a cooperative that does not exist; "60 days" from a policy the model never saw. Write the limits before a customer reads the output.</p></div>
+    <div class="card c-purple"><h4>Screen, compare, justify</h4><p class="small mb0">Licence and data first, then measured quality against the simpler alternative, then two lines you can defend.</p></div>
   </div>
+  <aside class="notes"><p>Return to the five-station map one last time and ask a participant to walk a product line through all five stations in a minute. That walk is the supervised exit check's diagram question.</p></aside>
 </section>
 
 <section class="slide dark" id="next" data-label="Next">
   <div class="kicker">Next</div>
-  <h2>Capstone: Capstone project presentations</h2>
-  <p class="lead">REPLACE: what participants prepare before then; unfinished labs can be finished at home</p>
-  <aside class="notes">REPLACE: accounts, installs or reading participants need before the next unit</aside>
+  <h2>Capstone day</h2>
+  <p class="lead">Build your model, write the README, and defend one curve or one failure the assessor chooses.</p>
+  <aside class="notes"><p>The supervised exit check, without AI assistance, sits on the capstone day before the presentations: shapes and gradients by hand, reading a learning curve, the transformer diagram, the effect of sampling settings. Remind participants that the follow-up task comes after the course: the capstone model re-run on a second dataset within two weeks.</p></aside>
 </section>

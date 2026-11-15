@@ -633,7 +633,7 @@
                 "minutes": 6
               },
               {
-                "text": "Length and rule violations per setting",
+                "text": "Length, rule violations and one surprise",
                 "minutes": 6
               },
               {
@@ -641,7 +641,7 @@
                 "minutes": 4
               }
             ],
-            "stretch": "Explain one surprising row of your table"
+            "stretch": "Draw 1,000 next tokens from your own distribution and compare the frequencies"
           }
         },
         {
