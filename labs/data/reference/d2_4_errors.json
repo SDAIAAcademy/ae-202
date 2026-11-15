@@ -1,0 +1,33 @@
+{
+ "accuracy": 0.7879999876022339,
+ "confusions": [
+  [
+   62,
+   "chevron",
+   "wave"
+  ],
+  [
+   30,
+   "dot",
+   "diamond"
+  ],
+  [
+   18,
+   "diamond",
+   "dot"
+  ],
+  [
+   15,
+   "wave",
+   "chevron"
+  ],
+  [
+   11,
+   "star",
+   "triangle"
+  ]
+ ],
+ "label_faults_in_top10": 5,
+ "mislabelled_total": 12,
+ "model_disagrees_with": 11
+}

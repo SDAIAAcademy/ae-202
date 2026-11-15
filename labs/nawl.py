@@ -126,7 +126,7 @@ def mlp(hidden: int = 64, dropout: float = 0.0, n_in: int = 576):
 
 
 def small_cnn():
-    """The compact convolutional network of Day 2: three convolutions, 24 thousand weights."""
+    """The compact convolutional network of Day 2: three convolutions, 25 thousand weights."""
     import torch.nn as nn
     return nn.Sequential(
         nn.Conv2d(3, 16, 5, padding=2), nn.BatchNorm2d(16), nn.ReLU(), nn.MaxPool2d(2),
@@ -483,3 +483,33 @@ EXTRA_TEXTS = [  # the sentences of the similarity warm-up in Lab 3.3
     "a red striped rug", "سجادة مخططة باللون الأحمر", "a crimson carpet with lines", "a blue dotted shawl",
     "how do I return an order?", "زولية حمراء مقلمة",
 ]
+
+
+def partial_backbone(m):
+    """Wrap a ResNet so that only its last block and its head are trained: the earlier blocks
+    run without gradients and stay in evaluation mode (their batch-norm statistics are kept)."""
+    import torch
+    import torch.nn as nn
+
+    class Partial(nn.Module):
+        def __init__(self, m):
+            super().__init__()
+            self.m = m
+
+        def forward(self, x):
+            m = self.m
+            for part in (m.conv1, m.bn1, m.layer1, m.layer2, m.layer3):
+                part.eval()
+            with torch.no_grad():
+                x = m.layer3(m.layer2(m.layer1(m.maxpool(m.relu(m.bn1(m.conv1(x)))))))
+            return m.fc(torch.flatten(m.avgpool(m.layer4(x)), 1))
+
+    return Partial(m)
+
+
+def thumbs(X):
+    """Colour 24 x 24 thumbnails of images (N x 3 x 48 x 48), each scaled to mean 0 and length 1:
+    a cheap fingerprint for finding the same photograph uploaded twice."""
+    g = X.reshape(len(X), 3, 24, 2, 24, 2).mean((3, 5)).reshape(len(X), -1)
+    g = g - g.mean(1, keepdim=True)
+    return g / g.norm(dim=1, keepdim=True)

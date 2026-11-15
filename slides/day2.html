@@ -1,158 +1,507 @@
 <section class="slide title" id="title" data-auto="title">
-  <aside class="notes">REPLACE: welcome; introduce yourself; one question to the room that calibrates the pace; the rhythm of the day</aside>
+  <aside class="notes"><p>Yesterday ended with a working loop and a debugging checklist. Today the data changes: the catalogue photographs. Ask who ran the setup-check notebook last night; Lab 2.2 downloads about 45 MB of backbone weights on first use.</p></aside>
 </section>
 
 <section class="slide" id="agenda" data-auto="agenda"></section>
+
+<section class="slide" id="review-day1" data-lo="LO3">
+  <div class="kicker">Review · Day 1</div>
+  <h2>A flat curve, one more time</h2>
+  <div class="quiz" data-type="single" data-lo="LO3">
+    <p class="lead">A new script trains an eight-class classifier. The loss stays at 2.08 for ten epochs. On 16 examples alone, with the same loss and learning rate, the loss also stays near 2.0 after 300 steps. What do you do next?</p>
+    <div class="opts">
+      <div class="opt" data-why="The one-batch test failed, so the fault is in the model, the loss or the update: the pipeline is not yet the suspect">Tag the rows and test the data pipeline</div>
+      <div class="opt" data-ok>Check the loss on a perfect prediction, then sweep the learning rate on the one batch</div>
+      <div class="opt" data-why="More data cannot help a model that cannot memorise 16 examples">Collect more labelled examples and train again</div>
+      <div class="opt" data-why="Regularisation makes memorising harder; the network is not memorising anything yet">Add dropout and weight decay to stabilise the training</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> A failed one-batch test points at the loss or the update. Both have a cheap check with a known answer.</div>
+  </div>
+  <aside class="notes"><p>Answer: the second option. This is yesterday's checklist, steps 3 and 4. Two minutes, then move on.</p></aside>
+</section>
 
 <!-- Session 1 -->
 
 <section class="slide section" id="s1" data-auto="section" data-session="1"></section>
 
-<section class="slide" id="s1-idea" data-lo="LO2">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
-  <div class="cols cols-2">
-    <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
-    </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
+<section class="slide" id="photographs" data-lo="LO4">
+  <div class="kicker">Today's data</div>
+  <h2>The catalogue photographs are turned, shifted and in colour</h2>
+  <div class="figure">
+    <img src="../assets/photographs.png" width="1000" alt="Three colour photographs for each of the eight pattern classes. The same class appears at different angles, scales, colours and lighting.">
+    <div class="caption">8,000 synthetic photographs, 48 by 48 pixels: 6,000 to train, 1,000 to validate, 1,000 to test. Colour says nothing about the class.</div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <aside class="notes"><p>Same eight classes as yesterday. What changed: every cloth is at its own angle and position, the weave and the lighting vary, and there are three colour channels. Ask the room which pairs they would confuse themselves: chevron and wave is the usual answer, and the model agrees (session 4).</p></aside>
 </section>
 
-<section class="slide" id="s1-steps" data-lo="LO2">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="mlp-fails" data-lo="LO4">
+  <div class="kicker">Yesterday's network on today's data</div>
+  <h2>One weight per pixel position cannot learn a pattern that moves</h2>
+  <div class="cols cols-2">
+    <div class="stat center"><div class="big">0.15</div><div class="lbl">validation accuracy of a two-layer network with 885,896 weights on the photographs (Lab 2.1). Chance is 0.125; on straight swatches it reached 0.79</div></div>
+    <ul class="bullets">
+      <li>A fully connected layer learns "bright at row 3, column 7"</li>
+      <li>Shift a stripe by three pixels and every one of those weights is wrong</li>
+      <li>It would need to see each pattern at <b>every</b> position and angle</li>
+    </ul>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <aside class="notes"><p>The number comes from the first cell of Lab 2.1: five epochs, Adam, the flattened colour photographs. More epochs raise the training accuracy, not the validation accuracy: it memorises positions.</p></aside>
+</section>
+
+<section class="slide" id="convolution-idea" data-lo="LO4">
+  <div class="kicker">Convolution</div>
+  <h2>A convolution slides one small detector over the whole image</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>A <b>kernel</b> is a small grid of weights: 3 by 3, 5 by 5</li>
+      <li>At each position: multiply kernel and pixels under it, add up</li>
+      <li>The result is a <b>feature map</b>: where in the image the kernel's pattern occurs</li>
+      <li>The same weights at every position: <b>a stripe is a stripe wherever it lies</b></li>
+    </ul>
+    <pre class="code"><code class="language-python">edge = torch.tensor([[-1., 0., 1.],
+                     [-1., 0., 1.],
+                     [-1., 0., 1.]])
+out[i, j] = (img[i:i+3, j:j+3] * edge).sum()
+# 48 x 48 in, 46 x 46 out</code></pre>
+  </div>
+  <aside class="notes"><p>The kernel on the slide responds where brightness rises from left to right: a vertical edge. Task 1 of the lab computes exactly this with two loops and checks it against the library (largest difference 2.4e-7, the 32-bit rounding of yesterday).</p></aside>
+</section>
+
+<section class="slide" id="weights-shared" data-lo="LO4">
+  <div class="kicker">Why it is small</div>
+  <h2>Sharing weights across positions cuts the first layer 700 times</h2>
+  <div class="bars">
+    <div class="row"><span>Fully connected, 6,912 inputs to 128 units</span><div class="bar c-coral" style="--w:100%"></div><span class="val">884,864</span></div>
+    <div class="row"><span>Convolution, 16 kernels of 5 by 5 by 3</span><div class="bar c-teal" style="--w:1%"></div><span class="val">1,216</span></div>
+  </div>
+  <ul class="bullets mt">
+    <li>Whole network of Lab 2.1: three convolution blocks and a head, <b>25,096 weights</b></li>
+    <li>Fewer weights to fit, and each one sees every position of every image</li>
+  </ul>
+  <aside class="notes"><p>Counts from Lab 2.1, task 2. 16 kernels times 5 times 5 times 3 colours is 1,200, plus 16 biases. The fully connected count is 6,912 times 128 plus 128.</p></aside>
+</section>
+
+<section class="slide" id="pooling-and-depth" data-lo="LO4">
+  <div class="kicker">The rest of the network</div>
+  <h2>Pooling shrinks the map; depth widens what a unit sees</h2>
+  <div class="flow">
+    <div class="step c-teal"><b>Conv 5×5, 16</b>edges and bars, 48 × 48</div>
+    <div class="arrow">→</div>
+    <div class="step c-cyan"><b>Pool, conv 3×3, 32</b>corners and crossings, 24 × 24</div>
+    <div class="arrow">→</div>
+    <div class="step c-purple"><b>Pool, conv 3×3, 64</b>motifs, 12 × 12</div>
+    <div class="arrow">→</div>
+    <div class="step c-coral"><b>Average, linear</b>64 numbers, then 8 scores</div>
+  </div>
+  <ul class="bullets mt">
+    <li><b>Max pooling</b> keeps the largest value of each 2 by 2 block: half the size, less sensitive to a small shift</li>
+    <li>After two poolings, one unit of the third layer looks at a 20-pixel patch of the photograph</li>
+    <li>The final <b>average over all positions</b> asks "does this motif occur?", not "where?"</li>
+  </ul>
+  <aside class="notes"><p>Do not derive receptive fields; the number 20 is for intuition (a 3 by 3 kernel on a map pooled twice covers 12 pixels, plus what the earlier kernels add). Batch normalisation sits after each convolution in the lab's network: it rescales each feature map with statistics of the batch during training and with stored statistics in evaluation mode, which is one more reason for model.eval().</p></aside>
+</section>
+
+<section class="slide" id="cnn-result" data-lo="LO4">
+  <div class="kicker">What the lab measured</div>
+  <h2>35 times fewer weights, and it learns the photographs</h2>
+  <table class="t">
+    <tr><th>Network, 6,000 training photographs</th><th class="num">Weights</th><th class="num">Validation accuracy</th></tr>
+    <tr><td>Two layers, fully connected, 5 epochs</td><td class="num">885,896</td><td class="num">0.15</td></tr>
+    <tr><td>Convolutional, supplied checkpoint (8 epochs)</td><td class="num">25,096</td><td class="num">0.71</td></tr>
+    <tr class="hl"><td>Convolutional, 2 more epochs in the lab</td><td class="num">25,096</td><td class="num">0.86</td></tr>
+  </table>
+  <div class="callout note mt"><b>Starting from a checkpoint</b> is how every lab today begins: someone else's training, saved as a file of weights, continued by you.</div>
+  <aside class="notes"><p>All three rows are from the reference run of Lab 2.1. The checkpoint took about two minutes on a laptop processor; the lab continues at a lower learning rate (0.0005), which is why two more epochs help so much: the noisy validation accuracy of the checkpoint settles.</p></aside>
+</section>
+
+<section class="slide" id="first-layer-filters" data-lo="LO4">
+  <div class="kicker">What the first layer learnt</div>
+  <h2>Nobody designed these filters; they are what lowered the loss</h2>
+  <div class="cols cols-21">
+    <div class="figure">
+      <img src="../assets/filters.png" width="820" alt="The sixteen first-layer filters of the trained network, each 5 by 5 pixels in colour. Several show a light bar next to a dark bar at different angles; others are blobs of one colour against another.">
+      <div class="caption">The 16 first-layer filters of the supplied checkpoint, each rescaled to its own range.</div>
+    </div>
+    <ul class="bullets small">
+      <li>Bars and edges at different angles</li>
+      <li>Colour contrasts: one yarn against another</li>
+      <li>Deeper layers combine them; those are too abstract to draw as pictures</li>
+    </ul>
+  </div>
+  <aside class="notes"><p>This is the picture task 4 of the lab produces. Edge and colour-contrast detectors appear in the first layer of almost every image network, whatever it was trained on. Hold that thought: it is the reason transfer learning works, next session.</p></aside>
+</section>
+
+<section class="slide" id="check-conv" data-lo="LO4">
+  <div class="kicker">Checkpoint</div>
+  <h2>What does the convolution buy?</h2>
+  <div class="quiz" data-type="single" data-lo="LO4">
+    <p class="lead">Shaima photographs the same striped rug twice; in the second photograph the rug sits four pixels to the right. Which statement about the first layer of each network is right?</p>
+    <div class="opts">
+      <div class="opt" data-why="The fully connected layer has a separate weight for every pixel position, so a shift changes its input to every unit">Both layers give the same output for the two photographs</div>
+      <div class="opt" data-why="Convolution is not blind to position: its feature map moves with the rug">The convolution gives the same feature map for the two photographs</div>
+      <div class="opt" data-why="Weight sharing concerns positions within one image; it does not reduce how many photographs are needed in general">The convolution needs both photographs in training to recognise the second</div>
+      <div class="opt" data-ok>The convolution's feature map shifts by four pixels; its values stay the same</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> The same kernel is applied everywhere, so a shifted input gives a shifted map. Pooling and the final average then make the result insensitive to where.</div>
+  </div>
+  <aside class="notes"><p>Answer: the last option (ignoring the borders). The second option is the common half-truth: convolution alone moves the map; it is the pooling and the average over positions that remove the "where". The lab's stretch item measures it.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-2-1" data-auto="lab" data-lab="2.1">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The image pack is drawn on first use, about 20 seconds. Task 3 takes about a minute in full mode. Watch for: the checkpoint loaded into a network built with a different layer order (the check compares the weight count and prints a clear message); a filter picture that is all grey because the weights were not rescaled per filter. Quick mode (AE202_QUICK=1) uses 1,500 photographs and one epoch.</p></aside>
 </section>
 
 <!-- Session 2 -->
 
 <section class="slide section" id="s2" data-auto="section" data-session="2"></section>
 
-<section class="slide" id="s2-idea" data-lo="LO4">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
+<section class="slide" id="eight-hundred-labels" data-lo="LO4">
+  <div class="kicker">The real constraint</div>
+  <h2>The cooperative has 800 labelled photographs, not 6,000</h2>
   <div class="cols cols-2">
     <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
+      <li>Labels cost an expert's time: Shaima named 100 photographs per pattern</li>
+      <li>The network of this morning, trained from scratch on those 800 for 20 epochs: <b>0.48</b> on the test set</li>
+      <li>Its validation accuracy jumps between 0.27 and 0.56 from epoch to epoch</li>
     </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
+    <div class="stat center"><div class="big">0.48</div><div class="lbl">test accuracy, small network from scratch on 800 photographs (supplied run, 60 seconds)</div></div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <div class="callout tip mt"><b>This is the baseline of the day.</b> Every result this afternoon is read against it, on the same 1,000 test photographs.</div>
+  <aside class="notes"><p>The supplied run is data/runs/day2_scratch.json, made by the course's tool with the same network and loop. From here on "little data" means these 800. The outcome is worded exactly so: adapt a pretrained model with little data and measure the improvement over training from scratch.</p></aside>
 </section>
 
-<section class="slide" id="s2-steps" data-lo="LO4">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="pretrained-backbone" data-lo="LO4">
+  <div class="kicker">Pretrained backbones</div>
+  <h2>Someone has already trained the filters on a million photographs</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>A <b>backbone</b> is a network trained on a large, general image set, published as a file of weights</li>
+      <li>Early layers: edges, colours. Middle: textures, repeated shapes. Last layer: that set's own classes</li>
+      <li>The early and middle layers <b>transfer</b>: every image task needs them</li>
+    </ul>
+    <div class="card c-teal"><h4>In the lab: ResNet-18</h4><p class="small mb0">11.2 million weights, trained on ImageNet-1k (1.28 million photographs, 1,000 everyday classes). A 45 MB download, loaded with one line (torchvision; the same weights are in timm).</p></div>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <aside class="notes"><p>ResNet-18 is from 2015 and is small on purpose: it runs on a laptop processor in seconds. Larger and newer backbones follow the same three steps. Sources: He et al., Deep Residual Learning (2015); Yosinski et al., How transferable are features (2014); torchvision models documentation.</p></aside>
+</section>
+
+<section class="slide" id="remove-head" data-lo="LO4">
+  <div class="kicker">Feature extraction</div>
+  <h2>Remove the last layer and the network returns 512 features</h2>
+  <div class="cols cols-2">
+    <pre class="code"><code class="language-python">m = torchvision.models.resnet18(
+        weights="IMAGENET1K_V1")
+m.fc = nn.Identity()   # was 512 -> 1000
+m.eval()
+with torch.no_grad():
+    features = m(prepare(X))   # (N, 512)</code></pre>
+    <ul class="bullets">
+      <li>The 1,000-class layer is the only part about ImageNet's classes</li>
+      <li>Everything before it becomes a fixed function: photograph in, 512 numbers out</li>
+      <li><b>Frozen</b>: evaluation mode, no gradients, nothing trained</li>
+    </ul>
+  </div>
+  <aside class="notes"><p>Tasks 1 and 3 of Lab 2.2. Extracting features for 2,800 photographs took 24 seconds in the reference run, 8.6 milliseconds per photograph on a laptop processor: a number that returns in the model-choice table of Day 4.</p></aside>
+</section>
+
+<section class="slide" id="prepare-as-trained" data-lo="LO4">
+  <div class="kicker">Preprocessing</div>
+  <h2>Feed a backbone what it was trained on</h2>
+  <ul class="bullets">
+    <li><b>Normalise</b> each colour channel with the mean and standard deviation of the backbone's training set</li>
+    <li><b>Resize</b> towards the size it was trained at: its filters expect motifs of a certain size in pixels</li>
+    <li>These numbers belong to the weights; they are published with them</li>
+  </ul>
+  <div class="callout warn mt"><b>What goes wrong.</b> Raw pixels in [0, 1] fed to a backbone raise no error. The features are just worse, by a little or by a lot. It is the quiet kind of fault from yesterday's list.</div>
+  <aside class="notes"><p>ImageNet means and standard deviations are in the helper module (U.IMAGENET_MEAN, U.IMAGENET_STD). The lab resizes from 48 to 64 pixels, not to 224: a deliberate trade for laptop speed. Features at 128 pixels were about five points better in a trial run while building the course, and about three times slower.</p></aside>
+</section>
+
+<section class="slide" id="linear-probe" data-lo="LO4">
+  <div class="kicker">The classifier</div>
+  <h2>One linear layer on frozen features is the cheapest transfer</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>Extract features once; they are a table of numbers now</li>
+      <li>Standardise with statistics of the <b>training</b> features</li>
+      <li>Train <code>Linear(512, 8)</code>: 4,104 weights, seconds</li>
+      <li>Nothing in the backbone can overfit, because nothing in it moves</li>
+    </ul>
+    <div class="bars">
+      <div class="row"><span>From scratch, 800 photographs</span><div class="bar c-coral" style="--w:48%"></div><span class="val">0.48</span></div>
+      <div class="row"><span>Frozen features + linear layer</span><div class="bar c-teal" style="--w:77%"></div><span class="val">0.77</span></div>
+    </div>
+  </div>
+  <aside class="notes"><p>Test accuracies from the supplied from-scratch run and the reference run of Lab 2.2 (0.476 and 0.774). Same 800 labelled photographs, same test set. The second approach trained 4,104 numbers. This is also called a linear probe.</p></aside>
+</section>
+
+<section class="slide" id="where-features-come-from" data-lo="LO4 LO7">
+  <div class="kicker">Provenance</div>
+  <h2>A backbone carries the terms of the data it was trained on</h2>
+  <div class="cols cols-2">
+    <div class="card c-teal"><h4>The code and the weights file</h4><p class="small mb0">torchvision is under a BSD 3-clause licence, and the model card of these ResNet-18 weights states the same licence.</p></div>
+    <div class="card c-coral"><h4>The training data</h4><p class="small mb0">ImageNet's terms of access allow non-commercial research and educational use. Whether weights trained on it may be used in a shop is a question for Bushra Al-Aqeel, not for the engineer alone.</p></div>
+  </div>
+  <div class="callout note mt"><b>The habit for the capstone.</b> For every model and dataset: its licence, where it came from, and who checked. Day 4 turns this into a column of the model-choice table.</div>
+  <aside class="notes"><p>Do not give legal advice and do not let the room settle the question: the point is that there are two layers of terms, and that the check is recorded. The entry's responsible-use line requires a licence and provenance check for every model and dataset in the capstone README. Sources: the timm/resnet18.tv_in1k model card; the ImageNet terms of access page.</p></aside>
+</section>
+
+<section class="slide" id="check-frozen" data-lo="LO4">
+  <div class="kicker">Checkpoint</div>
+  <h2>Which statistics?</h2>
+  <div class="quiz" data-type="single" data-lo="LO4">
+    <p class="lead">Zaid extracts features for 800 training and 1,000 test photographs. Before the linear layer he standardises them. Which mean and standard deviation does he use for the test features?</p>
+    <div class="opts">
+      <div class="opt" data-ok>Those of the 800 training features</div>
+      <div class="opt" data-why="Statistics of the test set are information that will not exist for one new photograph on the upload page">Those of the 1,000 test features</div>
+      <div class="opt" data-why="The ImageNet statistics belong to the pixels entering the backbone, not to the 512 features leaving it">The ImageNet mean and standard deviation of the backbone</div>
+      <div class="opt" data-why="Pooling the two sets lets the test data shape the preprocessing, which is a leak">Those of all 1,800 features together</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> Everything fitted, including a mean, is fitted on training data and then applied unchanged to new data.</div>
+  </div>
+  <aside class="notes"><p>Answer: the training features. AE-201 taught this as "fit the pipeline on the training split"; the third option is new here and tempting, because the word ImageNet statistics was on the previous slide.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-2-2" data-auto="lab" data-lab="2.2">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The 45 MB download happens in task 1; on a slow connection pair participants. Typical problems: the mean and standard deviation tensors not reshaped to (1, 3, 1, 1), which broadcasts wrongly or fails; extract returning a tensor that requires gradients because no_grad was left out (the check says so). Feature extraction takes about half a minute. Quick mode uses 240 photographs.</p></aside>
 </section>
 
 <!-- Session 3 -->
 
 <section class="slide section" id="s3" data-auto="section" data-session="3"></section>
 
-<section class="slide" id="s3-idea" data-lo="LO4">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
-  <div class="cols cols-2">
-    <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
-    </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
+<section class="slide" id="three-options" data-lo="LO4">
+  <div class="kicker">The choice</div>
+  <h2>Three ways to use 800 labels, from least to most trained</h2>
+  <div class="cols cols-3">
+    <div class="card c-teal"><h4>Frozen features</h4><p class="small mb0">Train only a new head. Seconds. Cannot damage the backbone, cannot adapt it either.</p></div>
+    <div class="card c-cyan"><h4>Partial fine-tuning</h4><p class="small mb0">Also train the last block or two. The most task-specific layers adapt; the general ones stay.</p></div>
+    <div class="card c-coral"><h4>Full fine-tuning</h4><p class="small mb0">Train everything at a small rate. The most capacity to adapt, and to overfit little data.</p></div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <div class="callout tip mt"><b>Rule of thumb.</b> The less data you have and the closer your images are to the backbone's, the more you freeze. Then measure: the rule is a starting point.</div>
+  <aside class="notes"><p>Woven patterns are far from ImageNet's everyday objects in content and close in low-level statistics (edges, textures), which is why even frozen features work. Full fine-tuning is not run in the lab: on a laptop processor it takes several times longer and overfits 800 photographs.</p></aside>
 </section>
 
-<section class="slide" id="s3-steps" data-lo="LO4">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="freezing-in-code" data-lo="LO4">
+  <div class="kicker">Freezing</div>
+  <h2>A frozen weight has no gradient and is never updated</h2>
+  <div class="cols cols-2">
+    <pre class="code"><code class="language-python">m.fc = nn.Linear(512, 8)
+for p in m.parameters():
+    p.requires_grad = False
+for p in m.layer4.parameters():
+    p.requires_grad = True
+for p in m.fc.parameters():
+    p.requires_grad = True</code></pre>
+    <div class="stack">
+      <div class="stat"><div class="big">75%</div><div class="lbl">of ResNet-18's weights sit in its last block: 8.4 of 11.2 million (Lab 2.3)</div></div>
+      <p class="small">"Only the last block" is still 8 million numbers fitted to 800 photographs.</p>
+    </div>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <aside class="notes"><p>Task 1 of the lab. Two more details the helper handles and you should say aloud: the frozen blocks run inside no_grad, which saves the time of computing gradients nobody uses; and they stay in evaluation mode so that their batch-normalisation statistics, learnt on a million photographs, are not overwritten by batches of 32.</p></aside>
+</section>
+
+<section class="slide" id="two-learning-rates" data-lo="LO4">
+  <div class="kicker">Learning rates</div>
+  <h2>Small steps for what is already good, larger steps for what is new</h2>
+  <div class="cols cols-2">
+    <pre class="code"><code class="language-python">optimiser = torch.optim.Adam([
+    {"params": m.layer4.parameters(),
+     "lr": 3e-4},
+    {"params": m.fc.parameters(),
+     "lr": 3e-3},
+])</code></pre>
+    <ul class="bullets">
+      <li>The pretrained block starts from useful weights: it is nudged</li>
+      <li>The new head starts from random numbers: it must travel</li>
+      <li>One large rate for both destroys the block in the first steps</li>
+    </ul>
+  </div>
+  <aside class="notes"><p>Parameter groups are the mechanism; the two values are a common starting pair, a factor of ten apart. Yesterday's sweep applies to each of them.</p></aside>
+</section>
+
+<section class="slide" id="augmentation" data-lo="LO4">
+  <div class="kicker">Augmentation</div>
+  <h2>Augmentation is extra data that costs no labels, if it keeps the label true</h2>
+  <div class="cols cols-2">
+    <div class="card c-teal"><h4>Safe for these patterns</h4><p class="small mb0">Flips, small shifts, a rotation, a change of colours: a flipped chevron is a chevron, and the class does not depend on colour.</p></div>
+    <div class="card c-coral"><h4>Not safe everywhere</h4><p class="small mb0">Flip a photograph of text or of a left-hand glove and the label is wrong. A heavy blur can turn a wave into a stripe.</p></div>
+  </div>
+  <ul class="bullets mt">
+    <li>Applied to each batch in <b>training</b> only, with new random choices every time</li>
+    <li>The validation and test photographs are never augmented</li>
+  </ul>
+  <aside class="notes"><p>The lab's augment function: a left-right flip and a top-bottom flip, each with probability one half, and a shift of up to four pixels. Ask the room for an augmentation that would break one of our classes: a strong blur along the stripes is a good answer.</p></aside>
+</section>
+
+<section class="slide" id="results-table" data-lo="LO4">
+  <div class="kicker">What the lab measured</div>
+  <h2>Transfer bought 30 points; fine-tuning added one more</h2>
+  <table class="t">
+    <tr><th>800 labelled photographs, same 1,000 test photographs</th><th class="num">Test accuracy</th><th class="num">Weights trained</th><th class="num">Seconds</th></tr>
+    <tr><td>Small network from scratch</td><td class="num">0.476</td><td class="num">25,096</td><td class="num">60</td></tr>
+    <tr><td>Frozen features + linear layer</td><td class="num">0.774</td><td class="num">4,104</td><td class="num">24</td></tr>
+    <tr class="hl"><td>Last block fine-tuned, with augmentation</td><td class="num">0.788</td><td class="num">8,397,832</td><td class="num">102</td></tr>
+  </table>
+  <div class="callout tip mt"><b>Read all three columns.</b> The last row is the best by 1.4 points, for four times the training time and 2,000 times the trained weights. On 1,000 test photographs, 1.4 points is 14 photographs.</div>
+  <aside class="notes"><p>Reference runs of Labs 2.2 and 2.3 on a laptop processor; the times will differ on other machines, the order will not. This table is the evidence the outcome asks for. Keep the finding honest: here fine-tuning one block barely beats a linear layer on frozen features. AE-201 taught intervals on a difference: 14 photographs in 1,000 is inside the noise of this test set, and a participant who says so in the capstone defence earns the marks. In the fine-tuning run the training loss fell to 0.37 while the validation loss stayed near 0.6 from the second epoch: the gap of yesterday, after four epochs.</p></aside>
+</section>
+
+<section class="slide" id="when-finetuning-pays" data-lo="LO4">
+  <div class="kicker">Beyond this table</div>
+  <h2>Fine-tuning pays more when the new images differ more</h2>
+  <ul class="bullets">
+    <li>Close to the backbone's data, little data: <b>frozen features</b> are hard to beat</li>
+    <li>Far from it (medical scans, satellite images, microscope slides), more data: <b>unfreeze more</b></li>
+    <li>Always keep the frozen-feature result as the row to beat: it costs seconds</li>
+    <li>A time budget is part of the task: this outcome says "a laptop CPU time budget"</li>
+  </ul>
+  <div class="callout note mt"><b>Going further.</b> Detection, segmentation, export and field tests of vision models are the subject of AE-309 Computer Vision Engineering.</div>
+  <aside class="notes"><p>The pointer is the hand-over to AE-309; nothing of it is taught here. If someone asks about vision transformers: same three options, a smaller learning rate, and AE-309 compares the two families by slice.</p></aside>
+</section>
+
+<section class="slide" id="check-finetune" data-lo="LO4">
+  <div class="kicker">Checkpoint</div>
+  <h2>What went wrong in the first epoch?</h2>
+  <div class="quiz" data-type="single" data-lo="LO4">
+    <p class="lead">Rayan unfreezes the last block of a pretrained backbone and trains it together with a new head, one Adam optimiser at a learning rate of 0.01 for everything. After one epoch the validation accuracy is below what frozen features gave. What is the most likely cause?</p>
+    <div class="opts">
+      <div class="opt" data-why="Augmentation makes training harder and validation better; it does not push a fine-tuned model below its frozen baseline in one epoch">The augmentation made the training images too different</div>
+      <div class="opt" data-why="Freezing fewer layers gives more capacity; by itself it cannot make the starting point worse than frozen features">Too few of the backbone's layers were left frozen</div>
+      <div class="opt" data-ok>The large steps overwrote the pretrained weights of the block</div>
+      <div class="opt" data-why="The head is new in both setups and trains in seconds; it is not what differs from the frozen baseline">The new head had too few weights to use the features</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> Pretrained weights are a good starting point that a large learning rate destroys. Use a small rate for the block and a larger one for the head.</div>
+  </div>
+  <aside class="notes"><p>Answer: the third option. A constructed scenario. If the room chooses the first, ask what augmentation does to the training loss and to the validation loss.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-2-3" data-auto="lab" data-lab="2.3">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The lab starts from supplied results (from scratch and frozen features), so nobody needs a finished Lab 2.2. Fine-tuning takes about two minutes for four epochs in full mode; start it, then discuss augmentation while it runs. Quick mode: 240 photographs, one epoch, and the assertion on the result is skipped. Watch for: requires_grad set before the new head is attached, which leaves the head frozen; a table read only by its first column.</p></aside>
 </section>
 
 <!-- Session 4 -->
 
 <section class="slide section" id="s4" data-auto="section" data-session="4"></section>
 
-<section class="slide" id="s4-idea" data-lo="LO4">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
-  <div class="cols cols-2">
-    <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
-    </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
+<section class="slide" id="one-number-hides" data-lo="LO4">
+  <div class="kicker">Evaluation</div>
+  <h2>"0.79" answers none of Mariam's next three questions</h2>
+  <div class="cols cols-3">
+    <div class="card c-teal"><h4>Which patterns?</h4><p class="small mb0">Is it 0.79 on every class, or perfect on six and guessing on two? The confusion matrix.</p></div>
+    <div class="card c-cyan"><h4>What kind of errors?</h4><p class="small mb0">Hard photographs, a systematic confusion, or labels that are wrong? The confident errors.</p></div>
+    <div class="card c-coral"><h4>Can I trust the test?</h4><p class="small mb0">Has the model seen some test photographs before? The duplicate check.</p></div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <aside class="notes"><p>Mariam Al-Hudaithi directs the cooperative and decides whether Naqsh goes on the upload page, where it suggests a pattern to the maker. AE-201 covered metrics, thresholds and error slices for tabular models; this session adds what is particular to deep models on images: confidently wrong predictions and near-duplicate images.</p></aside>
 </section>
 
-<section class="slide" id="s4-steps" data-lo="LO4">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="confusion-matrix" data-lo="LO4">
+  <div class="kicker">The confusion matrix</div>
+  <h2>Two pairs of classes hold most of the errors</h2>
+  <table class="t small">
+    <tr><th>Labelled as</th><th class="num">Photographs</th><th class="num">Right</th><th>Most often mistaken for</th></tr>
+    <tr class="hl"><td>chevron</td><td class="num">127</td><td class="num">0.50</td><td>wave (62 times)</td></tr>
+    <tr class="hl"><td>dot</td><td class="num">143</td><td class="num">0.69</td><td>diamond (30 times)</td></tr>
+    <tr><td>diamond</td><td class="num">138</td><td class="num">0.78</td><td>dot (18 times)</td></tr>
+    <tr><td>wave</td><td class="num">123</td><td class="num">0.86</td><td>chevron (15 times)</td></tr>
+    <tr><td>check</td><td class="num">118</td><td class="num">0.97</td><td>star (2 times)</td></tr>
+  </table>
+  <div class="callout tip mt"><b>Read the direction.</b> Chevrons are called waves four times as often as waves are called chevrons: at 48 pixels a zigzag's corners blur into curves, and the model's default between the two is "wave".</div>
+  <aside class="notes"><p>Five of the eight rows of the lab's matrix, for the fine-tuned model on the 1,000 test photographs. A model that is 0.79 overall is 0.50 on chevrons and 0.97 on checks. What would you tell the shop? One honest answer: the upload page may suggest a pattern, and must ask the maker to confirm when the suggestion is chevron or wave.</p></aside>
+</section>
+
+<section class="slide" id="confident-errors" data-lo="LO4">
+  <div class="kicker">Confident errors</div>
+  <h2>Five of the ten most confident errors were wrong labels</h2>
+  <div class="cols cols-21">
+    <div class="figure">
+      <img src="../assets/confident_errors.png" width="800" alt="The ten test photographs on which the model was most confidently wrong, each with its label and the model's prediction. In several the picture plainly shows the pattern the model named, not the one on the label.">
+    </div>
+    <ul class="bullets small">
+      <li>Sort the wrong predictions by the model's confidence</li>
+      <li>Look at the top ten, one by one</li>
+      <li>Either the model learnt something wrong, or <b>the label is wrong</b></li>
+      <li>The test set held 12 wrong labels; the model disagreed with 11 of them</li>
+    </ul>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <aside class="notes"><p>From Lab 2.4. The wrong labels were planted by the data generator; in a real project the ten photographs go back to the person who owns the labels, here Shaima Al-Wadaani. Two consequences: the accuracy you measured is slightly pessimistic, and confident errors are the cheapest label audit there is. The other five are the systematic confusions of the previous slide.</p></aside>
+</section>
+
+<section class="slide" id="near-duplicates" data-lo="LO4">
+  <div class="kicker">Near-duplicates</div>
+  <h2>The same photograph in training and in test is not a test</h2>
+  <div class="cols cols-21">
+    <div class="figure">
+      <img src="../assets/duplicates.png" width="800" alt="Six test photographs above their most similar training photograph. The first four pairs are the same photograph saved twice, with similarity 0.999; the last two pairs are different cloths of the same pattern, with similarity near 0.97.">
+      <div class="caption">Top: test. Bottom: its nearest training photograph. Four re-uploads, then two honest look-alikes.</div>
+    </div>
+    <ul class="bullets small">
+      <li>Makers upload a photograph twice; a random split puts one copy on each side</li>
+      <li>Fingerprint every image, compare test against training</li>
+      <li>Sorted similarities: 0.999, 0.998, 0.997, then a drop to 0.972</li>
+      <li><b>40</b> test photographs above 0.985</li>
+    </ul>
+  </div>
+  <aside class="notes"><p>From Lab 2.4. The fingerprint is a 24 by 24 colour thumbnail, centred and scaled to length 1; the comparison is one matrix product, 1,000 by 800. The threshold goes in the drop, and you verify it by looking at pairs on both sides. Exact file hashes would miss these: the copies were saved again, a little brighter, with new compression noise.</p></aside>
+</section>
+
+<section class="slide" id="report-without" data-lo="LO4">
+  <div class="kicker">What to report</div>
+  <h2>Report the accuracy without the photographs the model had seen</h2>
+  <div class="cols cols-3">
+    <div class="stat center"><div class="big">0.788</div><div class="lbl">all 1,000 test photographs</div></div>
+    <div class="stat center"><div class="big">1.000</div><div class="lbl">the 40 near-duplicates</div></div>
+    <div class="stat center"><div class="big">0.779</div><div class="lbl">the other 960: the number to report</div></div>
+  </div>
+  <div class="callout warn mt"><b>Here it moved the number by one point.</b> In a set where a quarter of the test images have a twin in training, the same check changes the decision. You do not know which case you are in until you look.</div>
+  <aside class="notes"><p>From Lab 2.4. The model is right on all 40 duplicates: it was fine-tuned on their twins. AE-201 taught grouped splits for rows that belong together; for images the group is "the same object or scene", and finding the groups is itself a similarity search, which is tomorrow's subject in another guise.</p></aside>
+</section>
+
+<section class="slide" id="evaluation-habits" data-lo="LO4">
+  <div class="kicker">The habits</div>
+  <h2>What stands behind a number in your capstone README</h2>
+  <ol class="bullets">
+    <li>The test set, its size, and how it was kept apart</li>
+    <li>The result of a <b>simpler alternative</b> on the same test set</li>
+    <li>The confusion matrix, and the two worst pairs in words</li>
+    <li>The confident errors you looked at, and what they were</li>
+    <li>The duplicate check, and the number without duplicates</li>
+  </ol>
+  <aside class="notes"><p>The capstone rubric: evaluation against a simpler alternative is 25 points, licence and limits 15. In the defence the assessor selects one curve or failure and asks for an explanation; items 3 to 5 are where those questions come from.</p></aside>
+</section>
+
+<section class="slide" id="check-evaluation" data-lo="LO4">
+  <div class="kicker">Checkpoint</div>
+  <h2>What do you do with this error?</h2>
+  <div class="quiz" data-type="single" data-lo="LO4">
+    <p class="lead">On a test photograph labelled "diamond" the model says "check" with a confidence of 0.999. You look at the photograph: it shows a checked cloth. What is the right next step?</p>
+    <div class="opts">
+      <div class="opt" data-why="The model was right; training it towards a wrong label would make it worse">Add the photograph to the training set with its label and fine-tune again</div>
+      <div class="opt" data-ok>Send it to the owner of the labels, and count how many such cases the top errors hold</div>
+      <div class="opt" data-why="Silently dropping test items you disagree with makes the test set a matter of opinion; the label owner decides, and the change is recorded">Delete the photograph from the test set and report the new accuracy</div>
+      <div class="opt" data-why="A threshold on confidence would hide exactly the cases that reveal label faults">Lower the model's confidence with a threshold so that it abstains here</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> A confident "error" against a wrong label is a finding about the data. The person who owns the labels corrects it, and the correction is recorded.</div>
+  </div>
+  <aside class="notes"><p>Answer: the second option. The third is tempting and half right: the item should not count against the model, but the engineer does not edit the test set alone.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-2-4" data-auto="lab" data-lab="2.4">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The lab starts from supplied predictions of the fine-tuned model, so nobody needs a finished Lab 2.3. In task 2, insist that participants judge the ten photographs by eye and write their count down before running the cell that reads the generator's record. The trainer's answer key (solutions/answer_key.md) lists the planted duplicates and wrong labels.</p></aside>
 </section>
 
 <section class="slide" id="wrap-up">
   <div class="kicker">Day 2 · wrap-up</div>
   <h2>Three things to keep</h2>
   <div class="cols cols-3">
-    <div class="card c-teal"><h4>Remember</h4><p class="small mb0">REPLACE: one idea participants keep</p></div>
-    <div class="card c-coral"><h4>Remember</h4><p class="small mb0">REPLACE: one idea participants keep</p></div>
-    <div class="card c-purple"><h4>Remember</h4><p class="small mb0">REPLACE: one idea participants keep</p></div>
+    <div class="card c-teal"><h4>Convolution shares weights</h4><p class="small mb0">One small detector at every position: 25 thousand weights learnt what 886 thousand could not.</p></div>
+    <div class="card c-coral"><h4>Start from someone's weights</h4><p class="small mb0">With 800 labels: 0.48 from scratch, 0.77 on frozen features, 0.79 fine-tuned. Keep the cheap row as the one to beat.</p></div>
+    <div class="card c-purple"><h4>Look behind the number</h4><p class="small mb0">Confusion pairs, confident errors, duplicates. Then report the number you can defend.</p></div>
   </div>
+  <aside class="notes"><p>Ask each participant for the one number from today they would put in front of Mariam, and the sentence that goes with it.</p></aside>
 </section>
 
 <section class="slide dark" id="next" data-label="Next">
   <div class="kicker">Next</div>
   <h2>Day 3: Transformers and embeddings</h2>
-  <p class="lead">REPLACE: what participants prepare before then; unfinished labs can be finished at home</p>
-  <aside class="notes">REPLACE: accounts, installs or reading participants need before the next unit</aside>
+  <p class="lead">From pixels to text: tokens, attention, and a search over the cooperative's bilingual catalogue. Unfinished labs can be finished at home.</p>
+  <aside class="notes"><p>For tomorrow: Lab 3.1 fetches three tokeniser vocabulary files, a few megabytes each. Labs 3.3 and 3.4 run on supplied vectors; in Colab they can also load the embedding model.</p></aside>
 </section>

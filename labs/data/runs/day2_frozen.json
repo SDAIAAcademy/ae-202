@@ -1,0 +1,9 @@
+{
+ "what": "linear classifier on frozen ResNet-18 features, 64-pixel input, 800 labelled photographs",
+ "test_accuracy": 0.7739999890327454,
+ "val_accuracy": 0.7839999794960022,
+ "train_loss": 0.027106999158859252,
+ "val_loss": 0.7956110835075378,
+ "seconds": 24.2,
+ "trained_weights": 4104
+}

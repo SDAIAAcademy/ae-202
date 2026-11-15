@@ -119,12 +119,14 @@ def make_images(style: int = 0) -> dict:
     labels = true.copy()
     planted = {"duplicates": [], "mislabelled": []}
     if style == 0:
-        # planted problem 1: near-duplicates. The same cloth photographed again (new noise,
-        # a shift of one pixel) sits in the test set.
+        # planted problem 1: near-duplicates. The same photograph, uploaded a second time
+        # (saved again: a little brighter or darker, with new compression noise), sits in the
+        # test set.
         src = r.choice(small, N_DUPLICATES, replace=False)
         slots = r.choice(test, N_DUPLICATES + N_MISLABELLED, replace=False)
         for s, t in zip(src, slots[:N_DUPLICATES]):
-            X[t] = draw(int(true[s]), int(s), int(t), shift=(2.0 / SIZE, 0.0))
+            again = X[s].astype(np.float32) * r.uniform(0.93, 1.07) + r.normal(0, 5, X[s].shape)
+            X[t] = np.clip(again, 0, 255).astype(np.uint8)
             true[t] = true[s]
             labels[t] = true[s]
             planted["duplicates"].append([int(t), int(s)])
