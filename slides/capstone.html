@@ -1,20 +1,65 @@
 <section class="slide title" id="title" data-auto="title">
-  <aside class="notes">Today is theirs: keep your own talking to the opening and the closing. Confirm the running order and the demo setup (screen sharing, accounts, a recorded backup) first.</aside>
+  <aside class="notes"><p>Capstone day: six hours of capstone work and the one-hour supervised exit check. Today is theirs: keep your own talking to the opening and the closing. Before the first defence, check that every participant has a public repository link, that the room's screen shows a notebook legibly, and that you have chosen, for each participant, one curve or one failure from their README to ask about.</p></aside>
 </section>
 
 <section class="slide" id="agenda" data-label="Agenda">
-  <div class="kicker">Capstone</div>
-  <h2>How the presentations run</h2>
+  <div class="kicker">Capstone day</div>
+  <h2>Check, build, publish, defend</h2>
   <div class="agenda">
-    <div class="item now"><div><b>Expectations and final prep</b><small>the rubric, a last rehearsal, then the first presentations</small></div></div>
-    <div class="item"><div><b>Presentations</b><small>each one timed, with questions after it</small></div></div>
-    <div class="item"><div><b>Review and closing</b><small>peer feedback, the trainer's review, what next</small></div></div>
+    <div class="item now"><div><b>The supervised exit check</b><small>one hour, on paper, without AI assistance</small></div></div>
+    <div class="item"><div><b>Build and measure</b><small>your model, the simpler alternative, the same test for both</small></div></div>
+    <div class="item"><div><b>Publish</b><small>the public repository, with logs and a README from the template</small></div></div>
+    <div class="item"><div><b>Defend</b><small>eight minutes each, then four minutes of questions with one live change</small></div></div>
   </div>
+  <aside class="notes"><p>Write the publishing deadline on the board. Participants who are behind cut scope (one fewer experiment, never the comparison with the simpler alternative) rather than miss it. The exit check comes first so that nobody sits it tired after a defence.</p></aside>
+</section>
+
+<section class="slide" id="exit-check" data-label="The exit check" data-lo="LO1 LO2 LO3 LO6">
+  <div class="kicker">20% of the result</div>
+  <h2>The supervised check: four things you can do with a pen</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li><b>Shapes and gradients by hand</b>: a small network, one step of the chain rule</li>
+      <li><b>Reading a learning curve</b>: what the curve says, and what you would change</li>
+      <li><b>The transformer diagram</b>: five blanks and two generated outputs to explain</li>
+      <li><b>Sampling settings</b>: what temperature and the nucleus do to an output</li>
+    </ul>
+    <div class="card c-coral"><h4>Conditions</h4><p class="small mb0">Proctored, on paper, no AI assistance, no notes. To pass the course: at least 60% on this check, at least 60% on the capstone rubric, and 70% overall.</p></div>
+  </div>
+  <aside class="notes"><p>The four parts are the entry's. The check itself and its key are not in the course repository: take the current paper from the programme office. The entry quiz before Day 1 used the same form for the first two parts, so each participant has a before and an after. Collect every device before you hand out the paper.</p></aside>
+</section>
+
+<section class="slide" id="the-brief" data-label="The brief" data-lo="LO7">
+  <div class="kicker">What you build</div>
+  <h2>One small model for one use case of the cooperative</h2>
+  <table class="t small">
+    <tr><th>Task</th><th>You build</th><th>The simpler alternative</th><th>Measured on</th></tr>
+    <tr><td><b>Naqsh</b></td><td>A classifier of the eight patterns from the 800 labelled photographs</td><td>The small network trained from scratch</td><td>The 1,000 test photographs, near-duplicates removed</td></tr>
+    <tr><td><b>Khayt</b></td><td>A search over the 4,000 descriptions</td><td>Keyword search</td><td>Recall at 5 per language: the 50 queries and 20 of your own</td></tr>
+    <tr><td><b>Wasf</b></td><td>One product line of at most 20 words from a small open-weight model</td><td>A sentence template</td><td>Rule violations and variation on 20 products, and 20 drafts you read yourself</td></tr>
+  </table>
+  <div class="callout note mt"><b>Alone, with any assistant.</b> AI assistance is fully allowed. The commit history, the logs and the defence show that the work is yours.</div>
+  <aside class="notes"><p>Each participant chose a task in Lab 4.4. The brief, the starter script and the README template are in the capstone folder of the labs; the starter prints the data and the simpler alternative of a task. Naqsh and Khayt run on a laptop processor. Wasf needs a live model: the notebook runtime in Colab, or a free hosted endpoint for a small open-weight model; make sure those participants tested it before today.</p></aside>
+</section>
+
+<section class="slide" id="readme-reports" data-label="The README" data-lo="LO4 LO5 LO6 LO7">
+  <div class="kicker">What the README reports</div>
+  <h2>Five things, each with a number and how it was measured</h2>
+  <div class="cols cols-3">
+    <div class="card c-teal"><h4>Training curves or runs</h4><p class="small mb0">At least two measured runs, and what you read from each.</p></div>
+    <div class="card c-cyan"><h4>Test results</h4><p class="small mb0">Per class or per language, on a test you can call fair, with three failures and a likely cause each.</p></div>
+    <div class="card c-coral"><h4>The simpler alternative</h4><p class="small mb0">The same test for both. The difference in items as well as in points.</p></div>
+  </div>
+  <div class="cols cols-2 mt">
+    <div class="card c-purple"><h4>Latency and size</h4><p class="small mb0">Median time of one request on a laptop processor, and the size of the model file.</p></div>
+    <div class="card c-amber"><h4>Licences and limits</h4><p class="small mb0">The licence and provenance of every model and dataset, with its address, and the limits written for the person who reads the output.</p></div>
+  </div>
+  <aside class="notes"><p>The template has nine sections that cover these five things, plus how to reproduce every number. "In items" means: 14 photographs, one query, five drafts, as practised all week. Every model and dataset goes through the licence and provenance check of Lab 4.4; text written by a model is shown as a draft with its limits note from Lab 4.3.</p></aside>
 </section>
 
 <section class="slide" id="rubric" data-label="The rubric">
-  <div class="kicker">How presentations are scored</div>
-  <h2>The rubric</h2>
+  <div class="kicker">How the repository is scored</div>
+  <h2>Five criteria, 100 points</h2>
   <div class="bars">
     <div class="row"><span>Working model and training</span><div class="bar c-teal" style="--w:100%"></div><span class="val">25%</span></div>
     <div class="row"><span>Evaluation against a simpler alternative</span><div class="bar c-cyan" style="--w:100%"></div><span class="val">25%</span></div>
@@ -22,74 +67,78 @@
     <div class="row"><span>Licence and limits</span><div class="bar c-purple" style="--w:60%"></div><span class="val">15%</span></div>
     <div class="row"><span>Reproducibility</span><div class="bar c-amber" style="--w:80%"></div><span class="val">20%</span></div>
   </div>
-  <div class="callout tip mt"><b>Show results from at least two measured runs.</b> A claim without a number is a plan, not a result.</div>
-  <aside class="notes">Walk through each criterion with one example of what full marks look like.</aside>
+  <div class="callout tip mt"><b>The result.</b> The repository is 60%, the live defence 20%, the supervised check 20%.</div>
+  <aside class="notes"><p>Full marks, criterion by criterion, are described in the capstone brief. Reproducibility: one command per number, fixed seeds, the lock file committed, and the reviewer's numbers within the tolerance the README states. Authenticity evidence: the training logs and the commit history.</p></aside>
 </section>
 
-<section class="slide" id="format" data-label="Format">
-  <div class="kicker">Format</div>
-  <h2>8 minutes to present, 4 to answer</h2>
+<section class="slide" id="format" data-label="The defence">
+  <div class="kicker">The defence</div>
+  <h2>8 minutes to present, 4 to answer, one change made live</h2>
   <div class="cols cols-3">
-    <div class="card c-teal"><h4>1 · The problem</h4><p class="small mb0">Who, what, why now. One slide.</p></div>
-    <div class="card c-cyan"><h4>2 · What you built</h4><p class="small mb0">Design, decisions, trade-offs. Then the live demo.</p></div>
-    <div class="card c-coral"><h4>3 · What you measured</h4><p class="small mb0">Baseline, improvement, failures found, what comes next.</p></div>
+    <div class="card c-teal"><h4>1 · The task and the model</h4><p class="small mb0">Which use case, what you built, one decision you rejected.</p></div>
+    <div class="card c-cyan"><h4>2 · What you measured</h4><p class="small mb0">Against the simpler alternative, on the same test. Latency, size, licences.</p></div>
+    <div class="card c-coral"><h4>3 · Where it fails</h4><p class="small mb0">Three failures with a likely cause, and the limits you wrote.</p></div>
   </div>
-  <div class="callout note mt"><b>Peer feedback.</b> After each talk, everyone writes one strength, one question and one suggestion.</div>
+  <div class="callout note mt"><b>In the questions.</b> The assessor picks one curve or one failure for you to explain, and names one hyperparameter. Say what will happen, change it, run, and explain what came out.</div>
+  <aside class="notes"><p>The live change is the authenticity check of the entry: a learning rate, the number of unfrozen blocks, a temperature, the number of results. Choose one whose effect shows within a minute in quick mode. A prediction that turns out wrong and is then explained well scores as high as a right one: what is assessed is the reading of the result.</p></aside>
 </section>
 
 <section class="slide order" id="running-order" data-label="Running order">
   <div class="kicker">Running order</div>
-  <h2>Who presents when</h2>
+  <h2>Who defends when</h2>
   <table class="t small">
-    <tr><th>#</th><th>Presenter</th><th>Project</th></tr>
-    <tr><td>1</td><td><input placeholder="name"></td><td><input placeholder="Project"></td></tr>
-    <tr><td>2</td><td><input placeholder="name"></td><td><input placeholder="Project"></td></tr>
-    <tr><td>3</td><td><input placeholder="name"></td><td><input placeholder="Project"></td></tr>
-    <tr><td>4</td><td><input placeholder="name"></td><td><input placeholder="Project"></td></tr>
-    <tr><td>5</td><td><input placeholder="name"></td><td><input placeholder="Project"></td></tr>
-    <tr><td>6</td><td><input placeholder="name"></td><td><input placeholder="Project"></td></tr>
-    <tr><td>7</td><td><input placeholder="name"></td><td><input placeholder="Project"></td></tr>
-    <tr><td>8</td><td><input placeholder="name"></td><td><input placeholder="Project"></td></tr>
+    <tr><th>#</th><th>Participant</th><th>Task and repository</th></tr>
+    <tr><td>1</td><td><input placeholder="Name"></td><td><input placeholder="Task · repository"></td></tr>
+    <tr><td>2</td><td><input placeholder="Name"></td><td><input placeholder="Task · repository"></td></tr>
+    <tr><td>3</td><td><input placeholder="Name"></td><td><input placeholder="Task · repository"></td></tr>
+    <tr><td>4</td><td><input placeholder="Name"></td><td><input placeholder="Task · repository"></td></tr>
+    <tr><td>5</td><td><input placeholder="Name"></td><td><input placeholder="Task · repository"></td></tr>
+    <tr><td>6</td><td><input placeholder="Name"></td><td><input placeholder="Task · repository"></td></tr>
+    <tr><td>7</td><td><input placeholder="Name"></td><td><input placeholder="Task · repository"></td></tr>
+    <tr><td>8</td><td><input placeholder="Name"></td><td><input placeholder="Task · repository"></td></tr>
   </table>
-  <aside class="notes">Type the names in at the start; the fields can be edited live and are not saved, so keep the list in your notes too.</aside>
+  <aside class="notes"><p>Type the names in while participants build; the fields can be edited live and are not saved, so keep the list in your notes too. Twelve minutes of defence and two of changeover per slot. Alternate the three tasks where you can.</p></aside>
 </section>
 
-<section class="slide dark" id="final-prep" data-label="Before the first presentation">
-  <div class="kicker">Before the first presentation</div>
-  <h1>Final prep · 20 minutes</h1>
-  <div class="timer" data-minutes="20"></div>
-  <p class="lead">Rehearse once, record a backup, try the demo on this screen.</p>
-  <aside class="notes">Press T to start the timer. Breaks are not slides: press B when the room needs one.</aside>
+<section class="slide dark" id="final-prep" data-label="Before the first defence">
+  <div class="kicker">Before the first defence</div>
+  <h1>Clone it clean · 15 minutes</h1>
+  <div class="timer" data-minutes="15"></div>
+  <p class="lead">Clone your public repository into a new folder and run one command from its README. If that fails here, it fails for the reviewer.</p>
+  <aside class="notes"><p>Press T to start the timer. The clean clone catches most reproducibility losses: a data file that was never committed, a path that exists on one laptop only, a seed that was not fixed. Breaks are not slides: press B when the room needs one.</p></aside>
 </section>
 
-<section class="slide dark presenting" id="now-presenting" data-label="Now presenting">
-  <div class="kicker center">Now presenting</div>
-  <div class="center"><input placeholder="Presenter · project"></div>
+<section class="slide dark presenting" id="now-presenting" data-label="Now defending">
+  <div class="kicker center">Now defending</div>
+  <div class="center"><input placeholder="Name · task"></div>
   <div class="timers mt">
-    <div><h3>Talk and demo</h3><div class="timer" data-minutes="8"></div></div>
-    <div><h3>Questions</h3><div class="timer" data-minutes="4"></div></div>
+    <div><h3>Defence</h3><div class="timer" data-minutes="8"></div></div>
+    <div><h3>Questions and the live change</h3><div class="timer" data-minutes="4"></div></div>
   </div>
-  <aside class="notes">Type the presenter's name and press T to start the talk timer; start the second timer for the questions. Reuse this slide for every presenter.</aside>
+  <aside class="notes"><p>Type the participant's name and press T to start the first timer; start the second for the questions. Reuse this slide for every participant. Ask your prepared question about a curve or a failure first, then name the hyperparameter.</p></aside>
 </section>
 
 <section class="slide" id="review" data-label="Trainer review">
-  <div class="kicker">Trainer review</div>
-  <h2>What the presentations showed</h2>
+  <div class="kicker">After the defences</div>
+  <h2>What the room learned</h2>
   <div class="cols cols-3">
-    <div class="card c-teal"><h4>Strongest patterns</h4><p class="small mb0">What several projects got right.</p></div>
-    <div class="card c-coral"><h4>Common gaps</h4><p class="small mb0">What most projects would fix next.</p></div>
-    <div class="card c-purple"><h4>One surprise</h4><p class="small mb0">Something nobody expected.</p></div>
+    <div class="card c-teal"><h4>The strongest comparison</h4><p class="small mb0">Whose simpler alternative was hardest to beat, and what did that show?</p></div>
+    <div class="card c-coral"><h4>The most common gap</h4><p class="small mb0">Which section of the README was thinnest across the room?</p></div>
+    <div class="card c-purple"><h4>One surprise</h4><p class="small mb0">Which live change did not do what its author predicted?</p></div>
   </div>
-  <aside class="notes">Fill these in from your scoring notes during the last break. Name projects for strengths; keep gaps anonymous.</aside>
+  <aside class="notes"><p>Fill these in from your scoring notes during the last defences. Name people for strengths; keep gaps anonymous. Ask each participant to name one decision of another that they would copy.</p></aside>
 </section>
 
 <section class="slide" id="what-next" data-label="After the course">
   <div class="kicker">After the course</div>
-  <h2>Keep going</h2>
+  <h2>The follow-up task, and where this leads</h2>
   <ul class="bullets">
-    <li><b>Your project stays yours:</b> keep it reproducible and add the next improvement you named today</li>
-    <li><b>Next Academy course:</b> REPLACE: the course that follows this one</li>
+    <li><b>Follow-up task, within two weeks.</b> Run your capstone model again on a second dataset, unchanged first, then with one change, and add both tables to your README</li>
+    <li><b>Write your expectation before you run.</b> The commit history shows the order</li>
+    <li><b>Next in the track.</b> AE-203 builds applications on language models: prompts, structured output, grounded answers. AE-205 serves and monitors a model</li>
+    <li><b>Later, for depth.</b> AE-301 for language engineering and tuning; AE-309 for vision</li>
   </ul>
+  <aside class="notes"><p>The second dataset per task is described in the follow-up folder of the labs: photographs from another workshop for Naqsh, 30 new queries written by a colleague for Khayt, products 21 to 40 and Arabic product lines for Wasf. The task is tracked: say how and by when participants send you the link. This repository is evidence towards the AE Assistant badge.</p></aside>
 </section>
 
 <section class="slide dark" id="thanks" data-label="Thank you">

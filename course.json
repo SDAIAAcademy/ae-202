@@ -922,6 +922,10 @@
         {
           "title": "openai-community/gpt2 (model card)",
           "url": "https://huggingface.co/openai-community/gpt2"
+        },
+        {
+          "title": "Qwen/Qwen2.5-7B-Instruct (model card)",
+          "url": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct"
         }
       ]
     },
@@ -959,6 +963,18 @@
         {
           "title": "Karpathy, A Recipe for Training Neural Networks (2019)",
           "url": "https://karpathy.github.io/2019/04/25/recipe/"
+        },
+        {
+          "title": "Ouyang et al., Training language models to follow instructions with human feedback (2022)",
+          "url": "https://arxiv.org/abs/2203.02155"
+        },
+        {
+          "title": "Ho et al., Denoising Diffusion Probabilistic Models (2020)",
+          "url": "https://arxiv.org/abs/2006.11239"
+        },
+        {
+          "title": "Radford et al., Learning Transferable Visual Models From Natural Language Supervision (2021)",
+          "url": "https://arxiv.org/abs/2103.00020"
         }
       ]
     },
