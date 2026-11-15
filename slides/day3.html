@@ -1,158 +1,526 @@
 <section class="slide title" id="title" data-auto="title">
-  <aside class="notes">REPLACE: welcome; introduce yourself; one question to the room that calibrates the pace; the rhythm of the day</aside>
+  <aside class="notes"><p>Two days on images. Today the input is text: the cooperative's 4,000 product descriptions, half in Arabic and half in English. The morning takes a transformer apart (tokens, then attention); the afternoon uses one as an embedding model and measures a search. Labs 3.3 and 3.4 run on supplied vectors, so no model download is needed on a laptop.</p></aside>
 </section>
 
 <section class="slide" id="agenda" data-auto="agenda"></section>
+
+<section class="slide" id="review-day2" data-lo="LO4">
+  <div class="kicker">Review · Day 2</div>
+  <h2>Which row would you keep?</h2>
+  <div class="quiz" data-type="single" data-lo="LO4">
+    <p class="lead">Frozen features reach 0.774 in 24 seconds; fine-tuning the last block reaches 0.788 in 102 seconds, on the same 1,000 test photographs. Which one goes on the upload page?</p>
+    <div class="opts">
+      <div class="opt" data-why="14 photographs in 1,000 is within the noise of this test set: the higher number alone does not settle it">The fine-tuned model, because its accuracy is higher</div>
+      <div class="opt" data-why="Training time is paid once; it is a reason to prefer the cheap row for experiments, not by itself a reason to ship it">The frozen-feature model, because it trains four times faster</div>
+      <div class="opt" data-ok>Either: the test cannot tell them apart, so decide on cost and simplicity, or test more</div>
+      <div class="opt" data-why="From scratch reached 0.476 on the same data: transfer is clearly worth it, the question is only how much to unfreeze">Neither: with 800 labels a model should be trained from scratch</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> A difference of 1.4 points on 1,000 photographs is 14 photographs. Say what the test can and cannot distinguish, then choose on other grounds.</div>
+  </div>
+  <aside class="notes"><p>Answer: the third option. This is the habit the capstone defence rewards: a number with its uncertainty and a decision that does not pretend otherwise.</p></aside>
+</section>
+
+<section class="slide" id="transformer-map" data-lo="LO1">
+  <div class="kicker">The map for two days</div>
+  <h2>From text in to one token out: five stations</h2>
+  <div class="flow">
+    <div class="step c-teal"><b>1 · Tokens</b>text cut into pieces, each a number</div>
+    <div class="arrow">→</div>
+    <div class="step c-cyan"><b>2 · Embeddings</b>a vector per token, plus its position</div>
+    <div class="arrow">→</div>
+    <div class="step c-purple"><b>3 · Attention</b>each token gathers from the others, layer after layer</div>
+    <div class="arrow">→</div>
+    <div class="step c-amber"><b>4 · Scores</b>one number for every token of the vocabulary</div>
+    <div class="arrow">→</div>
+    <div class="step c-coral"><b>5 · Sampling</b>one token is chosen and appended</div>
+  </div>
+  <p class="small muted mt">All of it must fit in the <b>context window</b>: the largest number of tokens the model reads at once. Today: stations 1 to 3. Tomorrow: 4 and 5.</p>
+  <aside class="notes"><p>This is the diagram of the supervised exit check: participants get it with five blanks and two generated outputs and explain the role of embeddings, attention, the context window and sampling. Come back to this slide at the start of every session today and tomorrow and say which station you are at.</p></aside>
+</section>
 
 <!-- Session 1 -->
 
 <section class="slide section" id="s1" data-auto="section" data-session="1"></section>
 
-<section class="slide" id="s1-idea" data-lo="LO1">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
-  <div class="cols cols-2">
-    <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
-    </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
+<section class="slide" id="model-reads-tokens" data-lo="LO1">
+  <div class="kicker">Station 1</div>
+  <h2>A model never sees text; it sees token numbers</h2>
+  <div class="stack">
+    <div><p class="small mb0">"A red striped rug" for Qwen2.5: 4 tokens</p><div class="tokens"><span>A</span><span> red</span><span> striped</span><span> rug</span></div></div>
+    <div><p class="small mb0">The same in Arabic, <span class="ar">سجادة مخططة حمراء</span>: 9 tokens</p><div class="tokens"><span class="ar">س</span><span class="ar">ج</span><span class="ar">ادة</span><span class="ar"> م</span><span class="ar">خط</span><span class="ar">طة</span><span class="ar"> ح</span><span class="ar">مر</span><span class="ar">اء</span></div></div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <ul class="bullets mt">
+    <li>A <b>tokeniser</b> cuts text into pieces from a fixed vocabulary and returns their numbers</li>
+    <li>Frequent words are one token; rare words are several pieces</li>
+    <li>The tokeniser is built before training and <b>belongs to the model</b></li>
+  </ul>
+  <aside class="notes"><p>Both lines are output of Lab 3.1, task 1. The Arabic pieces are shown in reading order, right to left. FN-105 introduced tokens at awareness level; here participants count them across tokenisers and languages.</p></aside>
 </section>
 
-<section class="slide" id="s1-steps" data-lo="LO1">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="subword-vocabulary" data-lo="LO1">
+  <div class="kicker">How the vocabulary is built</div>
+  <h2>Subword vocabularies are learnt from text by merging frequent pairs</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>Start from single bytes or characters</li>
+      <li>Merge the most frequent neighbouring pair into a new piece; repeat tens of thousands of times</li>
+      <li>What was frequent in the <b>training text</b> becomes one token</li>
+      <li>Anything can still be written: in the worst case, byte by byte</li>
+    </ul>
+    <table class="t small">
+      <tr><th>Tokeniser in the lab</th><th class="num">Vocabulary</th><th>Built from</th></tr>
+      <tr><td>GPT-2</td><td class="num">50,257</td><td>English web text</td></tr>
+      <tr><td>Qwen2.5</td><td class="num">151,665</td><td>Multilingual text</td></tr>
+      <tr><td>multilingual-e5</td><td class="num">250,002</td><td>About 100 languages</td></tr>
+    </table>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <aside class="notes"><p>Byte-pair encoding for GPT-2 and Qwen, SentencePiece for the e5 model (the vocabulary of XLM-RoBERTa). The vocabulary sizes are printed by the lab. Do not teach the merge algorithm step by step: the point is that the vocabulary mirrors its training text.</p></aside>
+</section>
+
+<section class="slide" id="arabic-costs-more" data-lo="LO1">
+  <div class="kicker">What the lab measured</div>
+  <h2>The same product costs more tokens in Arabic, by a factor that depends on the tokeniser</h2>
+  <table class="t">
+    <tr><th>Twelve products, each described in both languages</th><th class="num">Tokens per English word</th><th class="num">Tokens per Arabic word</th><th class="num">Arabic tokens ÷ English tokens</th></tr>
+    <tr><td>GPT-2 (built from English)</td><td class="num">1.54</td><td class="num">4.71</td><td class="num">3.14</td></tr>
+    <tr><td>Qwen2.5 (multilingual)</td><td class="num">1.86</td><td class="num">2.51</td><td class="num">1.39</td></tr>
+    <tr class="hl"><td>multilingual-e5</td><td class="num">1.68</td><td class="num">1.94</td><td class="num">1.18</td></tr>
+  </table>
+  <div class="callout tip mt"><b>Two causes.</b> A vocabulary with few Arabic pieces falls back to bytes, two per letter. And an Arabic word carries more: <span class="ar">باللون</span> is "in the colour" in one word.</div>
+  <aside class="notes"><p>Lab 3.1, tasks 2 and 3. The descriptions of one product say the same thing in both languages, so the last column compares like with like. GPT-2 is in the lab as the extreme case, not as a model anyone would use for Arabic.</p></aside>
+</section>
+
+<section class="slide" id="how-customers-write" data-lo="LO1">
+  <div class="kicker">Beyond the catalogue</div>
+  <h2>Customers do not write like the catalogue</h2>
+  <table class="t">
+    <tr><th>The same three words</th><th>Text</th><th class="num">GPT-2</th><th class="num">e5</th><th class="num">Qwen2.5</th></tr>
+    <tr><td>Catalogue Arabic</td><td class="ar">سجادة مخططة حمراء</td><td class="num">20</td><td class="num">7</td><td class="num">9</td></tr>
+    <tr class="hl"><td>With short vowels</td><td class="ar">سَجَّادَة مُخَطَّطَة حَمْرَاء</td><td class="num">35</td><td class="num">23</td><td class="num">25</td></tr>
+    <tr><td>Arabizi</td><td>sajjada mukhattata 7amra</td><td class="num">11</td><td class="num">8</td><td class="num">12</td></tr>
+    <tr><td>English</td><td>red striped rug</td><td class="num">3</td><td class="num">4</td><td class="num">3</td></tr>
+  </table>
+  <div class="callout warn mt"><b>What goes wrong.</b> Each short-vowel mark is a character of its own. Vowelled text is cut into single letters and marks: three times the tokens, in pieces the model has rarely seen.</div>
+  <aside class="notes"><p>Lab 3.1, task 4. The practical consequence: normalise Arabic text before the model (remove the vowel marks and tatweel, fold the hamza forms) unless the task needs them. The helper U.normalise_ar does that; the stretch items of Labs 3.1 and 3.4 measure it. Arabizi returns in Lab 3.4 as a search failure.</p></aside>
+</section>
+
+<section class="slide" id="three-bills" data-lo="LO1">
+  <div class="kicker">Why you count</div>
+  <h2>Three bills are paid in tokens</h2>
+  <div class="cols cols-3">
+    <div class="card c-teal"><h4>The window</h4><p class="small mb0">A model reads a limited number of tokens at once. A window of 2,048 holds about 86 English descriptions or 62 Arabic ones (Lab 3.1).</p></div>
+    <div class="card c-cyan"><h4>The time</h4><p class="small mb0">A generating model produces one token per step. More tokens for the same sentence is more waiting.</p></div>
+    <div class="card c-coral"><h4>The price</h4><p class="small mb0">Hosted models charge per token read and per token written. The same content can cost more in one language.</p></div>
+  </div>
+  <aside class="notes"><p>The window of 2,048 tokens is the one tomorrow's small model is run with; Lab 4.3 shows what happens to a prompt that does not fit. No prices on this slide on purpose: they change monthly, and Lab 4.4 treats cost as a column to fill from a price list on the day.</p></aside>
+</section>
+
+<section class="slide" id="embedding-and-position" data-lo="LO1">
+  <div class="kicker">Station 2</div>
+  <h2>Each token number becomes a vector, and gets its position added</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>The <b>embedding table</b> has one row per token of the vocabulary: a vector of a few hundred to a few thousand numbers</li>
+      <li>The rows are weights: learnt by the same five lines as everything else</li>
+      <li>A <b>position</b> signal is added, so that "rug" at position 4 differs from "rug" at position 1</li>
+    </ul>
+    <div class="card c-teal"><h4>In numbers</h4><p class="small mb0">Qwen2.5-0.5B: 151,665 rows of 896 numbers, 136 million of its 494 million weights. A small model spends a quarter of itself on the table.</p></div>
+  </div>
+  <aside class="notes"><p>The numbers are from the model's published configuration: a vocabulary of 151,665 or so entries and a hidden size of 896 (151,936 by 896 is 136 million; the table is slightly larger than the tokeniser's vocabulary). Why position is needed at all is shown in Lab 3.2, task 5: attention by itself treats its input as a bag of tokens. Sources: the Qwen2.5-0.5B model card.</p></aside>
+</section>
+
+<section class="slide" id="check-tokens" data-lo="LO1">
+  <div class="kicker">Checkpoint</div>
+  <h2>Why did the Arabic prompt not fit?</h2>
+  <div class="quiz" data-type="single" data-lo="LO1">
+    <p class="lead">Rayan pastes 70 product descriptions into a small model with a window of 2,048 tokens. The English batch is answered; the Arabic batch of the same 70 products loses its beginning. What explains it?</p>
+    <div class="opts">
+      <div class="opt" data-why="The window is counted in tokens, not characters; the Arabic descriptions are in fact shorter in characters">The Arabic descriptions have more characters than the English ones</div>
+      <div class="opt" data-ok>The Arabic descriptions need more tokens for the same content</div>
+      <div class="opt" data-why="A multilingual tokeniser can write any Arabic text; the issue is how many pieces it needs">The tokeniser has no Arabic pieces and skips unknown words</div>
+      <div class="opt" data-why="The window is a fixed number of tokens whatever the language of the text">The model's window is smaller for right-to-left languages</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> About 62 Arabic descriptions fit where 86 English ones do: the same content is cut into more tokens.</div>
+  </div>
+  <aside class="notes"><p>Answer: the second option, with the lab's own numbers. What "loses its beginning" means is tomorrow's Lab 4.3.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-3-1" data-auto="lab" data-lab="3.1">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The lab fetches three vocabulary files of a few megabytes each from a model hub on first use; it needs a network connection and downloads no model. Watch for: GPT-2's Arabic pieces printing as replacement characters, which is the finding and not a bug (half of a two-byte letter cannot be shown). On a terminal that cannot print Arabic, run the notebook in the browser.</p></aside>
 </section>
 
 <!-- Session 2 -->
 
 <section class="slide section" id="s2" data-auto="section" data-session="2"></section>
 
-<section class="slide" id="s2-idea" data-lo="LO1">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
+<section class="slide" id="why-attention" data-lo="LO1">
+  <div class="kicker">Station 3</div>
+  <h2>A word means what its neighbours make it mean</h2>
   <div class="cols cols-2">
     <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
+      <li>"red striped wool <b>rug</b>": the vector of "rug" should end up knowing its colour, pattern and material</li>
+      <li>A convolution looks at fixed neighbours; text needs to reach <b>any</b> other position</li>
+      <li>Attention lets every token collect from every other, with weights computed from the tokens themselves</li>
     </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
+    <div class="card c-purple"><h4>One sentence</h4><p class="small mb0">Attention replaces each token's vector by a weighted mean of all tokens' vectors, and learns where the weights should be large.</p></div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <aside class="notes"><p>Link to Day 2: a convolution also mixes neighbours, with fixed weights per offset. Attention's weights depend on content. Sources: Vaswani et al., Attention Is All You Need (2017).</p></aside>
 </section>
 
-<section class="slide" id="s2-steps" data-lo="LO1">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="query-key-value" data-lo="LO1">
+  <div class="kicker">Three views of one token</div>
+  <h2>Every token asks a question, offers a label and carries a content</h2>
+  <div class="cols cols-3">
+    <div class="card c-teal"><h4>Query</h4><p class="small mb0">What this token is looking for. <code>Q = X @ Wq</code></p></div>
+    <div class="card c-cyan"><h4>Key</h4><p class="small mb0">What this token can be found by. <code>K = X @ Wk</code></p></div>
+    <div class="card c-coral"><h4>Value</h4><p class="small mb0">What this token hands over when it is found. <code>V = X @ Wv</code></p></div>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <ul class="bullets mt">
+    <li>Three weight matrices, learnt; the rest of attention has <b>no weights at all</b></li>
+    <li>The score of token i for token j is the dot product of query i and key j</li>
+  </ul>
+  <aside class="notes"><p>The lab uses five tokens with vectors of 8 numbers and random matrices: the mechanics are the same as in a trained model, the pattern is not meaningful. Say so before someone reads meaning into it.</p></aside>
+</section>
+
+<section class="slide" id="four-lines" data-lo="LO1">
+  <div class="kicker">The mechanism</div>
+  <h2>Scaled dot-product attention is four lines</h2>
+  <pre class="code l"><code class="language-python">S = Q @ K.T / math.sqrt(d)          # 1 scores: every query against every key
+S = S.masked_fill(future, -inf)     # 2 the causal mask (decoders only)
+A = torch.softmax(S, dim=-1)        # 3 weights: each row adds up to 1
+out = A @ V                         # 4 a weighted mean of the values</code></pre>
+  <div class="callout tip mt"><b>Shapes.</b> Five tokens with vectors of 8: Q, K and V are (5, 8), the scores and weights (5, 5), the output (5, 8) again. A layer of attention keeps the shape of what it reads.</div>
+  <aside class="notes"><p>These are the four exercises of Lab 3.2, AI-off for the first attempt. Dividing by the square root of d keeps the scores at a steady scale as vectors get longer; without it the softmax saturates and gradients vanish. The lab's function matches the library's to about 1e-7.</p></aside>
+</section>
+
+<section class="slide" id="causal-mask" data-lo="LO1">
+  <div class="kicker">The mask</div>
+  <h2>A decoder may look back, never ahead</h2>
+  <div class="cols cols-2">
+    <table class="t small">
+      <tr><th></th><th class="num">red</th><th class="num">striped</th><th class="num">wool</th><th class="num">rug</th><th class="num">.</th></tr>
+      <tr><td>red</td><td class="num">1.00</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+      <tr><td>striped</td><td class="num">0.31</td><td class="num">0.69</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+      <tr><td>wool</td><td class="num">0.15</td><td class="num">0.09</td><td class="num">0.75</td><td class="num">0</td><td class="num">0</td></tr>
+      <tr><td>rug</td><td class="num">0.18</td><td class="num">0.19</td><td class="num">0.15</td><td class="num">0.48</td><td class="num">0</td></tr>
+      <tr><td>.</td><td class="num">0.18</td><td class="num">0.16</td><td class="num">0.38</td><td class="num">0.05</td><td class="num">0.22</td></tr>
+    </table>
+    <ul class="bullets">
+      <li>Rows: the token that looks. Columns: the token looked at</li>
+      <li>Scores above the diagonal are set to minus infinity; their weights become exactly 0</li>
+      <li>In training, the token after position i is the <b>answer</b> for position i: it must not be visible</li>
+    </ul>
+  </div>
+  <aside class="notes"><p>The table is the lab's output with the causal mask (random embeddings: read the zeros, not the values). Without the mask a model trained to predict the next token would learn to copy it and could generate nothing. An encoder has no mask: every token sees the whole text, which is right for understanding and wrong for generating.</p></aside>
+</section>
+
+<section class="slide" id="order-needs-position" data-lo="LO1">
+  <div class="kicker">A consequence</div>
+  <h2>Attention alone does not know the order of its tokens</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>Shuffle the five tokens: each token's output is unchanged, it only moves with its token (Lab 3.2)</li>
+      <li>"rug red" and "red rug" would be the same to it</li>
+      <li>Hence the <b>position signal</b> added to each embedding at station 2</li>
+    </ul>
+    <div class="callout note"><b>Two things put order back.</b> The position signal, and in a decoder the causal mask, which makes each output depend on what came before it.</div>
+  </div>
+  <aside class="notes"><p>Task 5 of the lab checks this with a permutation and an equality test. It answers the question participants ask at station 2: why would a model need to be told positions?</p></aside>
+</section>
+
+<section class="slide" id="block-and-stack" data-lo="LO1">
+  <div class="kicker">From one layer to a model</div>
+  <h2>A transformer repeats one block many times</h2>
+  <div class="flow">
+    <div class="step c-purple"><b>Attention</b>several heads side by side: tokens exchange information</div>
+    <div class="arrow">→</div>
+    <div class="step c-cyan"><b>Feed-forward</b>a small two-layer network on each token by itself</div>
+    <div class="arrow">→</div>
+    <div class="step c-teal"><b>Repeat</b>24 blocks in Qwen2.5-0.5B</div>
+  </div>
+  <ul class="bullets mt">
+    <li><b>Heads</b>: the vectors are split into parts that attend separately, so one token can look for several things at once</li>
+    <li>Around each part: a skip connection and a normalisation, as in yesterday's ResNet, for the same reason: depth that still trains</li>
+    <li>The cost of attention grows with the <b>square</b> of the number of tokens: one more reason windows are limited</li>
+  </ul>
+  <aside class="notes"><p>24 blocks and 14 heads are in the published configuration of Qwen2.5-0.5B. The feed-forward part is the two-layer network of Day 1, applied to each token. Nobody implements a full block in this course: the lab stops at the four lines, which are the part that is new.</p></aside>
+</section>
+
+<section class="slide" id="three-architectures" data-lo="LO1 LO7">
+  <div class="kicker">Three shapes of transformer</div>
+  <h2>Encoder, decoder, or both: the mask decides what the model is for</h2>
+  <div class="cols cols-3">
+    <div class="card c-teal"><h4>Encoder</h4><p class="small mb0">No mask: every token sees the whole text. Output: one vector per token or per text. For classifying, tagging, <b>embedding</b>. This afternoon's model.</p></div>
+    <div class="card c-coral"><h4>Decoder</h4><p class="small mb0">Causal mask: each token sees the past. Output: scores for the next token. For <b>generating</b>. Tomorrow's model, and every chat assistant.</p></div>
+    <div class="card c-purple"><h4>Encoder-decoder</h4><p class="small mb0">An encoder reads the input; a decoder writes the output while attending to it. For translation and summarising with a fixed input.</p></div>
+  </div>
+  <aside class="notes"><p>This slide is the first row of Thursday's model-choice table: the family follows from the task. The e5 model of Labs 3.3 and 3.4 is an encoder of 118 million weights; the Qwen model of Day 4 is a decoder of 494 million.</p></aside>
+</section>
+
+<section class="slide" id="check-attention" data-lo="LO1">
+  <div class="kicker">Checkpoint</div>
+  <h2>What does the mask protect?</h2>
+  <div class="quiz" data-type="single" data-lo="LO1">
+    <p class="lead">Zaid trains a small decoder to predict the next token of product descriptions and forgets the causal mask. The training loss falls to almost zero within one epoch. When he asks the model to write a description, it produces nonsense. Why?</p>
+    <div class="opts">
+      <div class="opt" data-why="Overfitting needs many passes over little data; a loss near zero in one epoch points at a shortcut, not at memorising">It memorised the training descriptions and cannot generalise</div>
+      <div class="opt" data-why="A missing position signal would make learning harder, not make the training loss collapse">It never learnt the order of the tokens in a sentence</div>
+      <div class="opt" data-why="A rate that is too high makes the loss jump or grow; here it fell smoothly to zero">Its learning rate was too high for a model of that size</div>
+      <div class="opt" data-ok>In training each position could read the token it had to predict</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> Without the mask the answer is in the input: the model learns to copy the next token, which does not exist when it generates.</div>
+  </div>
+  <aside class="notes"><p>Answer: the last option. Connect to Day 1: a loss that is too good too fast is a fault to investigate, like a loss that does not fall. AE-201 called the same thing a leak.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-3-2" data-auto="lab" data-lab="3.2">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>AI-off for the first attempt: say it again. The four exercises are one line each or two; the difficulty is the axes. Typical problems: softmax over the wrong axis (columns add up to 1, rows do not; the check says so); the mask applied after the softmax (the rows no longer add up to 1); K not transposed. The notebook needs no data and no download.</p></aside>
 </section>
 
 <!-- Session 3 -->
 
 <section class="slide section" id="s3" data-auto="section" data-session="3"></section>
 
-<section class="slide" id="s3-idea" data-lo="LO5">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
-  <div class="cols cols-2">
-    <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
-    </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
+<section class="slide" id="one-vector-per-text" data-lo="LO5">
+  <div class="kicker">Sentence embeddings</div>
+  <h2>An embedding model turns a whole text into one vector</h2>
+  <div class="flow">
+    <div class="step c-teal"><b>Text</b>a description or a query</div>
+    <div class="arrow">→</div>
+    <div class="step c-cyan"><b>Encoder</b>one vector per token</div>
+    <div class="arrow">→</div>
+    <div class="step c-purple"><b>Pool</b>the mean over the tokens</div>
+    <div class="arrow">→</div>
+    <div class="step c-coral"><b>One vector</b>384 numbers, scaled to length 1</div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <ul class="bullets mt">
+    <li>Trained on pairs of texts that belong together (a question and its answer, a sentence and its translation): <b>their vectors are pulled together, others pushed apart</b></li>
+    <li>Texts with similar meaning then lie close; you search by distance</li>
+  </ul>
+  <aside class="notes"><p>The lab's model is multilingual-e5-small: an encoder of 118 million weights, 384 numbers per text, MIT licence, trained on text pairs in about 100 languages. It expects the word "query: " before a query and "passage: " before a document; the helper adds them. Sources: Wang et al., Multilingual E5 Text Embeddings (2024); the model card.</p></aside>
 </section>
 
-<section class="slide" id="s3-steps" data-lo="LO5">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="cosine-similarity" data-lo="LO5">
+  <div class="kicker">Similarity</div>
+  <h2>Cosine similarity compares directions, not lengths</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li><code>cos(a, b) = a · b / (|a| |b|)</code>: 1 for the same direction, 0 for a right angle</li>
+      <li>For vectors of length 1 it is the <b>dot product</b>: one matrix product compares a query with every description</li>
+      <li>Other measures (dot product on raw vectors, Euclidean distance) rank the same when all vectors have length 1</li>
+    </ul>
+    <pre class="code"><code class="language-python">D = U.embed(texts, "passage: ")  # (4000, 384)
+q = U.embed([query])[0]          # (384,)
+sims = D @ q                     # (4000,)
+top = np.argsort(-sims)[:5]</code></pre>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <aside class="notes"><p>The four lines are the whole brute-force search of Lab 3.3. The chain rule and the dot product come from FN-103; nothing here is new mathematics.</p></aside>
+</section>
+
+<section class="slide" id="similarities-are-a-ranking" data-lo="LO5">
+  <div class="kicker">What the lab measured</div>
+  <h2>Read similarities as a ranking, not as a scale</h2>
+  <table class="t">
+    <tr><th>Compared with "a red striped rug"</th><th class="num">Cosine similarity</th></tr>
+    <tr><td>Its Arabic translation, <span class="ar">سجادة مخططة باللون الأحمر</span></td><td class="num">0.87</td></tr>
+    <tr><td>An English paraphrase, "a crimson carpet with lines"</td><td class="num">0.83</td></tr>
+    <tr><td>Another product, "a blue dotted shawl"</td><td class="num">0.79</td></tr>
+    <tr class="hl"><td>An unrelated question, "how do I return an order?"</td><td class="num">0.78</td></tr>
+  </table>
+  <div class="callout warn mt"><b>What goes wrong.</b> A threshold such as "similar above 0.7" copied from another model. Here everything is above 0.7; the whole ranking happens between 0.76 and 0.90.</div>
+  <aside class="notes"><p>Lab 3.3, task 1. The order is right: translation, paraphrase, other product, unrelated. The scale is compressed, which is a known property of this model family. A threshold must be chosen from your own data, for your own model.</p></aside>
+</section>
+
+<section class="slide" id="brute-force-and-indexes" data-lo="LO5">
+  <div class="kicker">Searching</div>
+  <h2>Brute force is exact and enough for thousands; an index trades exactness for speed</h2>
+  <div class="cols cols-2">
+    <div class="card c-teal"><h4>Brute force</h4><p class="small mb0">Compare the query with every vector: one matrix product. Exact. 4,000 descriptions take well under a millisecond in NumPy.</p></div>
+    <div class="card c-cyan"><h4>An approximate index</h4><p class="small mb0">Organise the vectors so that a query visits only some of them (FAISS is one example). Needed from millions; may miss a true neighbour, so recall must be measured again.</p></div>
+  </div>
+  <div class="callout tip mt"><b>Start exact.</b> Measure quality with brute force first. Then an index has something to be compared with.</div>
+  <aside class="notes"><p>The lab's stretch item times the search and extrapolates to a million descriptions. Vector databases, chunking and grounded answers built on retrieval belong to AE-203 and AE-302; this course stops at the search itself and its measurement.</p></aside>
+</section>
+
+<section class="slide" id="recall-at-k" data-lo="LO5">
+  <div class="kicker">The measure</div>
+  <h2>Recall at 5: of what should come back, how much is in the first five?</h2>
+  <div class="cols cols-2">
+    <ul class="bullets">
+      <li>Rayan's team wrote 50 queries and marked the <b>relevant</b> descriptions of each</li>
+      <li>Each query names a kind of product, a pattern and a colour: two products match, each described in both languages, so <b>four</b> relevant descriptions</li>
+      <li>Recall at 5 = relevant found in the first five ÷ 4, averaged over the queries</li>
+    </ul>
+    <div class="trace s">
+      <div class="ev user"><b>query</b>red wavy table runner</div>
+      <div class="ev final"><b>1 ✓</b>This table runner is wavy and red. Material: camel hair.</div>
+      <div class="ev final"><b>2 ✓</b>Wavy table runner made of linen. Colour: red.</div>
+      <div class="ev result"><b>3</b>Wavy table runner made of palm fibre. Colour: orange.</div>
+      <div class="ev result"><b>4</b>Wool table runner with a wavy design in white.</div>
+    </div>
+  </div>
+  <aside class="notes"><p>The trace is the first query of the lab: two of four relevant descriptions found, recall 0.5. Ask what is missing: the two Arabic descriptions of the same two products. Hold that; it is the subject of session 4. Why five: it is what fits on the first screen of a phone.</p></aside>
+</section>
+
+<section class="slide" id="recall-result" data-lo="LO5">
+  <div class="kicker">What the lab measured</div>
+  <h2>Recall at 5 is 0.23: better than keywords, and not good</h2>
+  <table class="t">
+    <tr><th>Recall at 5</th><th class="num">All 50</th><th class="num">English (20)</th><th class="num">Arabic (20)</th><th class="num">Mixed (10)</th></tr>
+    <tr><td>Keywords (the simpler alternative)</td><td class="num">0.175</td><td class="num">0.263</td><td class="num">0.113</td><td class="num">0.125</td></tr>
+    <tr class="hl"><td>Embeddings</td><td class="num">0.225</td><td class="num">0.300</td><td class="num">0.188</td><td class="num">0.150</td></tr>
+  </table>
+  <ul class="bullets mt">
+    <li>Embeddings better on 15 queries, keywords on 4, equal on 31</li>
+    <li>21 of 50 queries find nothing relevant in the first five</li>
+  </ul>
+  <div class="callout tip mt"><b>A number means something only next to an alternative</b> measured on the same queries. Then ask where it fails.</div>
+  <aside class="notes"><p>Lab 3.3, tasks 3 and 4. Do not soften it: a small multilingual model on a catalogue of near-identical descriptions is a hard case, and the low number is what makes the next session worth having. Keywords do well where the query uses the catalogue's own English words.</p></aside>
+</section>
+
+<section class="slide" id="check-recall" data-lo="LO5">
+  <div class="kicker">Checkpoint</div>
+  <h2>What does this recall mean?</h2>
+  <div class="quiz" data-type="single" data-lo="LO5">
+    <p class="lead">A query has four relevant descriptions. The search returns five results; two of them are relevant. A colleague says: "two out of five, so recall at 5 is 0.4". What is the right figure?</p>
+    <div class="opts">
+      <div class="opt" data-ok>0.5: two of the four relevant descriptions were found</div>
+      <div class="opt" data-why="Two of five is the share of results that are relevant, which is precision at 5, not recall">0.4: two of the five results are relevant</div>
+      <div class="opt" data-why="Recall counts every relevant description, not whether at least one was found">1.0: at least one relevant description is in the first five</div>
+      <div class="opt" data-why="The five results are what was retrieved; recall divides by what should have been">0.8: four relevant descriptions for five places</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> Recall divides by what should come back. Dividing by what did come back is precision.</div>
+  </div>
+  <aside class="notes"><p>Answer: 0.5. AE-201 taught precision and recall for classifiers; for search the same two words apply to the first k results. The third option describes another common measure, the hit rate; say its name so nobody confuses the two in a README.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-3-3" data-auto="lab" data-lab="3.3">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The lab runs on supplied vectors (data/embeddings), computed with multilingual-e5-small for every description and query. In Colab, or with AE202_MODELS=load on a laptop, it also loads the model (about 470 MB) and embeds 200 descriptions live, then compares them with the supplied ones. Watch for: argsort without the minus sign (the five least similar); a recall that divides by five.</p></aside>
 </section>
 
 <!-- Session 4 -->
 
 <section class="slide section" id="s4" data-auto="section" data-session="4"></section>
 
-<section class="slide" id="s4-idea" data-lo="LO5">
-  <div class="kicker">REPLACE: the question this slide answers</div>
-  <h2>REPLACE: one idea, stated as a sentence</h2>
-  <div class="cols cols-2">
-    <ul class="bullets">
-      <li>REPLACE: at most six bullets, each a complete thought</li>
-      <li>REPLACE: bold the key phrase; numbers come from the lab run, not from memory</li>
-    </ul>
-    <div class="card c-teal"><h4>In the case study</h4><p class="small mb0">REPLACE: tie the idea to the case study and its data</p></div>
+<section class="slide" id="split-the-number" data-lo="LO5">
+  <div class="kicker">Failure analysis</div>
+  <h2>A low number is a question: split it until it answers</h2>
+  <div class="flow">
+    <div class="step c-teal"><b>1 · Split</b>by query language, by how the query is worded</div>
+    <div class="arrow">→</div>
+    <div class="step c-cyan"><b>2 · Look</b>at what came back for the failed queries</div>
+    <div class="arrow">→</div>
+    <div class="step c-purple"><b>3 · Name</b>a likely cause for each kind of failure</div>
+    <div class="arrow">→</div>
+    <div class="step c-coral"><b>4 · Try</b>one small fix per cause, and measure it</div>
   </div>
-  <div class="callout warn mt"><b>What goes wrong.</b> REPLACE: the failure participants will hit, and how to recognise it</div>
-  <aside class="notes">REPLACE: what to say, the demo to run, the question to ask the room, the common failure and its fix</aside>
+  <div class="callout note mt"><b>Mind the group sizes.</b> 20, 20 and 10 queries: one query is 5 or 10 points of its group. These numbers rank the groups; they do not measure them finely.</div>
+  <aside class="notes"><p>The same method as yesterday's confident errors, for search. The evidence of this outcome is recall at 5 for Arabic, English and mixed queries with three failure cases and a likely cause for each.</p></aside>
 </section>
 
-<section class="slide" id="s4-steps" data-lo="LO5">
-  <div class="kicker">Step by step</div>
-  <h2>REPLACE: a process, shown one step per key press</h2>
-  <div class="flow">
-    <div class="step c-teal"><b>1 · REPLACE: name</b>REPLACE: what happens first</div>
-    <div class="arrow frag" data-frag="b">→</div><div class="step c-cyan frag" data-frag="b"><b>2 · REPLACE: name</b>REPLACE: the next piece</div>
-    <div class="arrow frag" data-frag="c">→</div><div class="step c-coral frag" data-frag="c"><b>3 · REPLACE: name</b>REPLACE: the result</div>
+<section class="slide" id="language-wall" data-lo="LO5">
+  <div class="kicker">What the lab measured</div>
+  <h2>The search never crossed from one language to the other</h2>
+  <div class="cols cols-3">
+    <div class="stat center"><div class="big">100%</div><div class="lbl">of the top-5 results are in the query's own language</div></div>
+    <div class="stat center"><div class="big">0.47</div><div class="lbl">of the same-language relevant descriptions were found</div></div>
+    <div class="stat center"><div class="big">0.00</div><div class="lbl">of the other-language relevant descriptions were found</div></div>
   </div>
-  <div class="callout tip mt frag"><b>Takeaway.</b> REPLACE: the one sentence to remember</div>
-  <aside class="notes">Press once per step and say what each step adds before the next one appears. REPLACE: the example to walk through</aside>
+  <ul class="bullets mt">
+    <li>The best other-language relevant description sits at a median rank of <b>1,988 of 4,000</b></li>
+    <li>Half of what should come back is behind a wall: recall at 5 could never pass 0.5</li>
+  </ul>
+  <aside class="notes"><p>Lab 3.4, task 2, on the 40 English and Arabic queries. The model is multilingual: a sentence and its translation were the closest pair on the six-sentence slide. But in a catalogue where thousands of descriptions differ by one or two words, the language of a text outweighs the attributes it mentions. A model card's "supports 100 languages" did not tell you this; 50 labelled queries did.</p></aside>
+</section>
+
+<section class="slide" id="two-fixes" data-lo="LO5">
+  <div class="kicker">Two fixes, both measured</div>
+  <h2>The fix that worked used a fact the catalogue already had</h2>
+  <table class="t">
+    <tr><th>Recall at 5</th><th class="num">All 50</th><th class="num">English</th><th class="num">Arabic</th><th class="num">Mixed</th></tr>
+    <tr><td>Plain search</td><td class="num">0.225</td><td class="num">0.300</td><td class="num">0.188</td><td class="num">0.150</td></tr>
+    <tr><td>A: three results from the query's language, two from the other</td><td class="num">0.210</td><td class="num">0.300</td><td class="num">0.150</td><td class="num">0.150</td></tr>
+    <tr class="hl"><td>B: after each result, add the same product's other description</td><td class="num">0.335</td><td class="num">0.475</td><td class="num">0.250</td><td class="num">0.225</td></tr>
+  </table>
+  <div class="callout tip mt"><b>Fix A asked the model to cross the wall and it could not.</b> Fix B did not ask: the catalogue knows which two descriptions are one product.</div>
+  <aside class="notes"><p>Lab 3.4, task 3. Fix A fails because the right description is not among the other language's best two either: cross-language matching finds the right kind of product, not the right pattern and colour. Fix B raises recall by half and still leaves 25 of 50 queries with nothing relevant: those are the failure cases of task 4. The general lesson: before reaching for a larger model, use the structure you already own.</p></aside>
+</section>
+
+<section class="slide" id="how-queries-fail" data-lo="LO5">
+  <div class="kicker">Reading the failures</div>
+  <h2>The remaining failures are gaps between how customers write and how the catalogue is written</h2>
+  <table class="t small">
+    <tr><th>Query</th><th>What came back</th><th>Likely cause</th></tr>
+    <tr><td>I am looking for a indigo pillow cover with a zigzag design</td><td>Cushion covers with dots and triangles, other colours</td><td>Synonyms: the catalogue says "chevron" and "blue"</td></tr>
+    <tr><td class="ar">ودي بجزدان بنقاط أخضر زينة</td><td>Green wall hangings, belts and blankets</td><td>A dialect word for the product; only the colour matched</td></tr>
+    <tr><td>abgha salla mu3ayyanat aswad</td><td>Shawls in other patterns and colours</td><td>Arabizi: Arabic in Latin letters and digits</td></tr>
+    <tr><td class="ar">أبحث عن فاصل كتاب بنقشة النجوم لونها أحمر</td><td>Star-patterned bookmarks in orange and black</td><td>Wrong attribute: right product and pattern, another colour</td></tr>
+  </table>
+  <aside class="notes"><p>Four of the 25 queries that still fail after fix B, from the lab's listing. The second query is Gulf dialect for "I would like a nice green dotted pouch". Each cause suggests a different small fix: expand queries with the catalogue's own words; a table from dialect words to catalogue words built from the shop's search log; transliterate Latin-script Arabic before embedding; filter on structured attributes (colour is a column, it need not be guessed from a vector).</p></aside>
+</section>
+
+<section class="slide" id="multilingual-is-uneven" data-lo="LO5">
+  <div class="kicker">Multilingual models</div>
+  <h2>"Multilingual" is a claim to test on your own languages and your own text</h2>
+  <ul class="bullets">
+    <li>Quality differs by language: by how much text of it was in training, and of which kind</li>
+    <li>Standard Arabic is covered far better than <b>dialects</b>; <b>Arabizi</b> and <b>code-switching</b> are rarer still</li>
+    <li>Spelling varies between writers: hamza forms, ta marbuta, short vowels. Normalise both the catalogue and the query, then measure</li>
+    <li>Report results <b>per language</b>; an average hides the group that is served worst</li>
+  </ul>
+  <div class="callout note mt"><b>Responsible use.</b> A service that works better in one language than in another treats its users unequally. Measuring it per language is the first step, and it goes in the README.</div>
+  <aside class="notes"><p>The entry's responsible-use line asks participants to probe for different quality in Arabic and in English; tomorrow's Lab 4.3 does the same for the language model. The SDAIA Principles of AI Ethics are the national reference to cite for fairness; do not paraphrase their text on a slide, point to the document.</p></aside>
+</section>
+
+<section class="slide" id="what-to-write-down" data-lo="LO5">
+  <div class="kicker">The write-up</div>
+  <h2>A failure case has four parts</h2>
+  <div class="cols cols-2">
+    <ol class="bullets">
+      <li><b>The query</b>, as the customer wrote it</li>
+      <li><b>What came back</b>, in your words</li>
+      <li><b>A likely cause</b>: say "likely", you have not proven it</li>
+      <li><b>One fix to try</b>, small enough to measure</li>
+    </ol>
+    <div class="card c-teal"><h4>Why "likely"</h4><p class="small mb0">One query does not prove a cause. The fix is the experiment: if recall on the queries of that kind rises, the cause was right.</p></div>
+  </div>
+  <aside class="notes"><p>This is the format of Lab 3.4, task 4, and of the capstone README for the search option. Three cases with three different causes: the check in the notebook enforces that.</p></aside>
+</section>
+
+<section class="slide" id="check-wall" data-lo="LO5">
+  <div class="kicker">Checkpoint</div>
+  <h2>What do you tell Rayan?</h2>
+  <div class="quiz" data-type="single" data-lo="LO5">
+    <p class="lead">Rayan reads "recall at 5: English 0.48, Arabic 0.25" after fix B and proposes to translate every Arabic query to English first. Which reply uses what the lab measured?</p>
+    <div class="opts">
+      <div class="opt" data-why="The difference is real, yet 20 queries per group and team-written queries are a reason to test the idea, not to reject it">"No need: the two numbers are within noise of each other"</div>
+      <div class="opt" data-why="A larger model may help, yet nothing measured so far says that size is the cause">"Better to replace the model by a larger one before anything else"</div>
+      <div class="opt" data-ok>"Worth a test: the Arabic failures were dialect, Arabizi and spelling, which translation may or may not fix"</div>
+      <div class="opt" data-why="The wall was handled by pairing products; the remaining Arabic failures have other causes">"It will work: the wall between the languages was the whole problem"</div>
+    </div>
+    <div class="callout tip why"><b>Why.</b> A fix is a hypothesis about a cause. The failure cases name the causes; the test on the labelled queries decides.</div>
+  </div>
+  <aside class="notes"><p>Answer: the third option. Whether a translation step handles Gulf dialect and Arabizi is itself something to measure; do not let the room decide it by opinion.</p></aside>
 </section>
 
 <section class="slide lab" id="lab-3-4" data-auto="lab" data-lab="3.4">
-  <aside class="notes">REPLACE: what to watch for while participants work, the typical problems, and the fallback for anyone who did not finish an earlier lab</aside>
+  <aside class="notes"><p>The lab starts from the supplied vectors, so nobody needs a finished Lab 3.3. Task 4 is the one that counts: three failed queries, three different causes, in the participant's own words. The solution notebook holds one possible answer; any three well-argued cases from the list pass. Participants who do not read Arabic pair with someone who does for the Arabic queries, or choose English and Arabizi cases.</p></aside>
 </section>
 
 <section class="slide" id="wrap-up">
   <div class="kicker">Day 3 · wrap-up</div>
   <h2>Three things to keep</h2>
   <div class="cols cols-3">
-    <div class="card c-teal"><h4>Remember</h4><p class="small mb0">REPLACE: one idea participants keep</p></div>
-    <div class="card c-coral"><h4>Remember</h4><p class="small mb0">REPLACE: one idea participants keep</p></div>
-    <div class="card c-purple"><h4>Remember</h4><p class="small mb0">REPLACE: one idea participants keep</p></div>
+    <div class="card c-teal"><h4>Count tokens</h4><p class="small mb0">The window, the time and the price are paid in tokens, and Arabic costs 1.2 to 3 times more depending on the tokeniser.</p></div>
+    <div class="card c-coral"><h4>Attention is four lines</h4><p class="small mb0">Scores, mask, softmax, weighted mean. The mask makes a decoder; the position signal gives it order.</p></div>
+    <div class="card c-purple"><h4>Measure search per language</h4><p class="small mb0">0.23 overall hid a wall between two languages. A baseline, a split and three failure cases found it.</p></div>
   </div>
+  <aside class="notes"><p>Return to the five-station map: stations 1 to 3 are done. Ask one participant to explain station 3 to the room in two sentences.</p></aside>
 </section>
 
 <section class="slide dark" id="next" data-label="Next">
   <div class="kicker">Next</div>
   <h2>Day 4: Generation and model choice</h2>
-  <p class="lead">REPLACE: what participants prepare before then; unfinished labs can be finished at home</p>
-  <aside class="notes">REPLACE: accounts, installs or reading participants need before the next unit</aside>
+  <p class="lead">Stations 4 and 5: scores over the vocabulary, and how one token is chosen. Then the limits of a small language model, and a model choice made from this week's measurements.</p>
+  <aside class="notes"><p>For tomorrow: the labs read supplied logged runs of a small open-weight model. Whoever wants live generations opens the notebooks in Colab, where the model (about 1 GB) loads in the notebook's runtime, or sets a key for a free hosted endpoint. Nothing needs to be downloaded to a laptop.</p></aside>
 </section>

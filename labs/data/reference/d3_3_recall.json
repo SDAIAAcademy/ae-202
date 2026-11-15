@@ -1,0 +1,17 @@
+{
+ "embeddings": {
+  "all": 0.225,
+  "en": 0.3,
+  "ar": 0.1875,
+  "mixed": 0.15
+ },
+ "keywords": {
+  "all": 0.175,
+  "en": 0.2625,
+  "ar": 0.1125,
+  "mixed": 0.125
+ },
+ "zero_recall_queries": 21,
+ "embeddings_better": 15,
+ "keywords_better": 4
+}

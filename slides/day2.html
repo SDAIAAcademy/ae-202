@@ -475,7 +475,7 @@ for p in m.fc.parameters():
     <p class="lead">On a test photograph labelled "diamond" the model says "check" with a confidence of 0.999. You look at the photograph: it shows a checked cloth. What is the right next step?</p>
     <div class="opts">
       <div class="opt" data-why="The model was right; training it towards a wrong label would make it worse">Add the photograph to the training set with its label and fine-tune again</div>
-      <div class="opt" data-ok>Send it to the owner of the labels, and count how many such cases the top errors hold</div>
+      <div class="opt" data-ok>Send it to the owner of the labels and count such cases</div>
       <div class="opt" data-why="Silently dropping test items you disagree with makes the test set a matter of opinion; the label owner decides, and the change is recorded">Delete the photograph from the test set and report the new accuracy</div>
       <div class="opt" data-why="A threshold on confidence would hide exactly the cases that reveal label faults">Lower the model's confidence with a threshold so that it abstains here</div>
     </div>

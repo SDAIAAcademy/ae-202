@@ -513,3 +513,34 @@ def thumbs(X):
     g = X.reshape(len(X), 3, 24, 2, 24, 2).mean((3, 5)).reshape(len(X), -1)
     g = g - g.mean(1, keepdim=True)
     return g / g.norm(dim=1, keepdim=True)
+
+
+def pairs(n: int = 12) -> list[dict]:
+    """The first n products of the catalogue with both of their descriptions:
+    {"product", "en", "ar"}: the same product described in two languages."""
+    by = {}
+    for d in descriptions():
+        by.setdefault(d["product"], {"product": d["product"]})[d["lang"]] = d["text"]
+    return [by[k] for k in sorted(by)[:n]]
+
+
+def keyword_index(texts: list[str]):
+    """A keyword baseline: every text as its set of lower-case words, and how rare each word is."""
+    import math
+    import re
+    sets = [set(re.findall(r"\w+", t.lower())) for t in texts]
+    df = {}
+    for s in sets:
+        for w in s:
+            df[w] = df.get(w, 0) + 1
+    idf = {w: math.log(len(texts) / n) for w, n in df.items()}
+    return sets, idf
+
+
+def keyword_top_k(query: str, index, k: int = 5) -> list[int]:
+    """The k texts that share the rarest words with the query (ties: the earlier text)."""
+    import re
+    sets, idf = index
+    q = set(re.findall(r"\w+", query.lower()))
+    scores = np.array([sum(idf[w] for w in q & s) for s in sets])
+    return np.argsort(-scores, kind="stable")[:k].tolist()
