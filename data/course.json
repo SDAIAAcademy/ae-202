@@ -2,9 +2,9 @@
   "v": 1,
   "engine": "1.0.0",
   "build": {
-    "at": "2026-11-15T10:19:58Z",
-    "version": "2027.1.0",
-    "commit": "c17dc34"
+    "at": "2026-11-24T15:44:18Z",
+    "version": "2027.2.0",
+    "commit": "c6f9bd5"
   },
   "lang": "en",
   "dir": "ltr",
@@ -15,7 +15,7 @@
   "course": {
     "id": "ae-202",
     "code": "AE-202",
-    "version": "2027.1.0",
+    "version": "2027.2.0",
     "title": "Deep Learning and Generative AI Fundamentals",
     "tagline": "Train, debug, adapt and measure small deep learning and generative models, and choose a model family with evidence",
     "description": "Participants go from tensors to a working generative model and learn what each layer of the stack does. For a fictional crafts cooperative they write a training loop by hand, debug a network that will not learn, adapt a pretrained image model to synthetic textile images, implement attention for a toy sequence, build bilingual semantic search with sentence embeddings, and generate text with a small open-weight model while varying sampling settings. They finish by comparing model families on quality, size, latency, licence and cost for three of the cooperative's use cases.",
@@ -340,7 +340,7 @@
                   "minutes": 6
                 }
               ],
-              "stretch": "Shift every test image by four pixels and compare the two networks"
+              "stretch": "Shift every test image by four pixels and compare the two networks; then count the last layer with the map flattened instead of averaged"
             }
           },
           {
@@ -958,6 +958,10 @@
           {
             "title": "PyTorch documentation: torch.nn.CrossEntropyLoss",
             "url": "https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html"
+          },
+          {
+            "title": "PyTorch documentation: torch.nn.BCEWithLogitsLoss",
+            "url": "https://docs.pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html"
           },
           {
             "title": "PyTorch documentation: the scaled dot-product attention function",

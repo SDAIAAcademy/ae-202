@@ -1,0 +1,340 @@
+{
+ "order": {
+  "stored_by_class": {
+   "epochs": [
+    {
+     "epoch": 1,
+     "val_loss": 2.093,
+     "val_acc": 0.136,
+     "most_predicted": "stripe",
+     "share_most_predicted": 0.87
+    },
+    {
+     "epoch": 2,
+     "val_loss": 2.061,
+     "val_acc": 0.164,
+     "most_predicted": "wave",
+     "share_most_predicted": 0.88
+    },
+    {
+     "epoch": 3,
+     "val_loss": 2.096,
+     "val_acc": 0.138,
+     "most_predicted": "dot",
+     "share_most_predicted": 0.904
+    }
+   ],
+   "class_runs": [
+    {
+     "class": "stripe",
+     "first_batch": 1,
+     "first_loss": 1.977,
+     "last_batch": 11,
+     "last_loss": 0.506
+    },
+    {
+     "class": "chevron",
+     "first_batch": 13,
+     "first_loss": 4.347,
+     "last_batch": 23,
+     "last_loss": 1.366
+    },
+    {
+     "class": "diamond",
+     "first_batch": 25,
+     "first_loss": 4.268,
+     "last_batch": 35,
+     "last_loss": 2.176
+    },
+    {
+     "class": "check",
+     "first_batch": 37,
+     "first_loss": 3.817,
+     "last_batch": 46,
+     "last_loss": 2.326
+    },
+    {
+     "class": "triangle",
+     "first_batch": 48,
+     "first_loss": 2.755,
+     "last_batch": 58,
+     "last_loss": 1.881
+    },
+    {
+     "class": "dot",
+     "first_batch": 60,
+     "first_loss": 2.688,
+     "last_batch": 70,
+     "last_loss": 2.31
+    },
+    {
+     "class": "wave",
+     "first_batch": 72,
+     "first_loss": 2.822,
+     "last_batch": 82,
+     "last_loss": 2.153
+    },
+    {
+     "class": "star",
+     "first_batch": 84,
+     "first_loss": 2.612,
+     "last_batch": 94,
+     "last_loss": 2.084
+    }
+   ],
+   "batch_loss_range_after_10": [
+    0.506,
+    4.347
+   ],
+   "batches_per_epoch": 94,
+   "one_class_batches": 87,
+   "mean_classes_per_batch": 1.07
+  },
+  "batches_shuffled": {
+   "epochs": [
+    {
+     "epoch": 1,
+     "val_loss": 2.06,
+     "val_acc": 0.146,
+     "most_predicted": "stripe",
+     "share_most_predicted": 0.64
+    },
+    {
+     "epoch": 2,
+     "val_loss": 2.019,
+     "val_acc": 0.188,
+     "most_predicted": "wave",
+     "share_most_predicted": 0.424
+    },
+    {
+     "epoch": 3,
+     "val_loss": 1.988,
+     "val_acc": 0.216,
+     "most_predicted": "stripe",
+     "share_most_predicted": 0.598
+    }
+   ],
+   "class_runs": [
+    {
+     "class": "stripe",
+     "first_batch": 8,
+     "first_loss": 2.16,
+     "last_batch": 94,
+     "last_loss": 1.832
+    },
+    {
+     "class": "chevron",
+     "first_batch": 4,
+     "first_loss": 1.979,
+     "last_batch": 85,
+     "last_loss": 2.081
+    },
+    {
+     "class": "diamond",
+     "first_batch": 1,
+     "first_loss": 2.164,
+     "last_batch": 88,
+     "last_loss": 2.355
+    },
+    {
+     "class": "check",
+     "first_batch": 19,
+     "first_loss": 2.766,
+     "last_batch": 71,
+     "last_loss": 2.052
+    },
+    {
+     "class": "triangle",
+     "first_batch": 5,
+     "first_loss": 2.262,
+     "last_batch": 92,
+     "last_loss": 2.024
+    },
+    {
+     "class": "dot",
+     "first_batch": 7,
+     "first_loss": 2.262,
+     "last_batch": 78,
+     "last_loss": 2.067
+    },
+    {
+     "class": "wave",
+     "first_batch": 3,
+     "first_loss": 2.106,
+     "last_batch": 91,
+     "last_loss": 2.025
+    },
+    {
+     "class": "star",
+     "first_batch": 16,
+     "first_loss": 2.389,
+     "last_batch": 82,
+     "last_loss": 2.159
+    }
+   ],
+   "batch_loss_range_after_10": [
+    1.736,
+    2.766
+   ],
+   "batches_per_epoch": 94,
+   "one_class_batches": 87,
+   "mean_classes_per_batch": 1.07
+  },
+  "examples_shuffled": {
+   "epochs": [
+    {
+     "epoch": 1,
+     "val_loss": 1.99,
+     "val_acc": 0.21,
+     "most_predicted": "stripe",
+     "share_most_predicted": 0.658
+    },
+    {
+     "epoch": 2,
+     "val_loss": 1.745,
+     "val_acc": 0.422,
+     "most_predicted": "diamond",
+     "share_most_predicted": 0.39
+    },
+    {
+     "epoch": 3,
+     "val_loss": 1.492,
+     "val_acc": 0.516,
+     "most_predicted": "check",
+     "share_most_predicted": 0.396
+    }
+   ],
+   "batch_loss_range_after_10": [
+    1.949,
+    2.158
+   ],
+   "batches_per_epoch": 94,
+   "one_class_batches": 0,
+   "mean_classes_per_batch": 7.84
+  },
+  "pairs_broken": {
+   "epochs": [
+    {
+     "epoch": 1,
+     "val_loss": 2.081,
+     "val_acc": 0.13,
+     "most_predicted": "wave",
+     "share_most_predicted": 0.418
+    },
+    {
+     "epoch": 2,
+     "val_loss": 2.086,
+     "val_acc": 0.124,
+     "most_predicted": "chevron",
+     "share_most_predicted": 0.352
+    },
+    {
+     "epoch": 3,
+     "val_loss": 2.085,
+     "val_acc": 0.12,
+     "most_predicted": "triangle",
+     "share_most_predicted": 0.522
+    }
+   ],
+   "batch_loss_range_after_10": [
+    2.064,
+    2.117
+   ],
+   "batches_per_epoch": 94,
+   "one_class_batches": 0,
+   "mean_classes_per_batch": 8.0
+  }
+ },
+ "heads": {
+  "average": {
+   "head": 264,
+   "body": 4800,
+   "total": 5064,
+   "head_share": 0.052,
+   "on_32x32": "runs"
+  },
+  "flatten": {
+   "head": 9224,
+   "body": 4800,
+   "total": 14024,
+   "head_share": 0.658,
+   "on_32x32": "fails: the layer expects a fixed number of inputs"
+  },
+  "swatch_network_formula": {
+   "map": "32 x 6 x 6",
+   "flatten_inputs": 1152,
+   "flatten": 9224,
+   "average": 264
+  },
+  "ratio_flatten_to_average": 34.9,
+  "question": {
+   "map": "128 x 4 x 4",
+   "flatten_inputs": 2048,
+   "flatten": 20490,
+   "average": 1290
+  }
+ },
+ "labels": {
+  "rows": [
+   {
+    "class": "stripe",
+    "score": 2.4,
+    "softmax": 0.55,
+    "sigmoid": 0.92
+   },
+   {
+    "class": "chevron",
+    "score": -1.5,
+    "softmax": 0.01,
+    "sigmoid": 0.18
+   },
+   {
+    "class": "diamond",
+    "score": -2.0,
+    "softmax": 0.01,
+    "sigmoid": 0.12
+   },
+   {
+    "class": "check",
+    "score": -0.8,
+    "softmax": 0.02,
+    "sigmoid": 0.31
+   },
+   {
+    "class": "triangle",
+    "score": -2.6,
+    "softmax": 0.0,
+    "sigmoid": 0.07
+   },
+   {
+    "class": "dot",
+    "score": -1.9,
+    "softmax": 0.01,
+    "sigmoid": 0.13
+   },
+   {
+    "class": "wave",
+    "score": -0.4,
+    "softmax": 0.03,
+    "sigmoid": 0.4
+   },
+   {
+    "class": "star",
+    "score": 2.0,
+    "softmax": 0.37,
+    "sigmoid": 0.88
+   }
+  ],
+  "softmax_sum": 1.0,
+  "sigmoid_sum": 3.01,
+  "above_half_softmax": [
+   "stripe"
+  ],
+  "above_half_sigmoid": [
+   "stripe",
+   "star"
+  ],
+  "bce_with_logits": 0.205,
+  "softmax_best_two_labels": 0.693
+ }
+}

@@ -1,7 +1,7 @@
 ---
 course: "Deep Learning and Generative AI Fundamentals"
 code: "AE-202"
-version: "2027.1.0"
+version: "2027.2.0"
 deck: "day2"
 day: 2
 language: "en"
@@ -111,6 +111,17 @@ out[i, j] = (img[i:i+3, j:j+3] * edge).sum()
 - After two poolings, one unit of the third layer looks at a 20-pixel patch of the photograph
 - The final **average over all positions** asks "does this motif occur?", not "where?"
 
+#### [day2#head-average-or-flatten] Average or flatten: count the layer that follows
+
+*The last map and the head*
+
+| Map 32 × 6 × 6, 8 classes | Inputs | Head weights |
+| --- | --- | --- |
+| Average, then linear | 32 | 264 |
+| Flatten, then linear | 1,152 | 9,224 |
+
+> **Count it.** Flatten: inputs = channels × height × width. Average: inputs = channels. Flattened, the head holds 66% of the network's weights (5% averaged) and accepts one image size only: on a 32 × 32 swatch it fails.
+
 #### [day2#cnn-result] 35 times fewer weights, and it learns the photographs
 
 *What the lab measured*
@@ -120,8 +131,6 @@ out[i, j] = (img[i:i+3, j:j+3] * edge).sum()
 | Two layers, fully connected, 5 epochs | 885,896 | 0.15 |
 | Convolutional, supplied checkpoint (8 epochs) | 25,096 | 0.71 |
 | Convolutional, 2 more epochs in the lab | 25,096 | 0.86 |
-
-> **Starting from a checkpoint** is how every lab today begins: someone else's training, saved as a file of weights, continued by you.
 
 #### [day2#first-layer-filters] Nobody designed these filters; they are what lowered the loss
 
@@ -156,7 +165,7 @@ Train a small convolutional network on the catalogue photographs from a supplied
 - [ ] Build the network and count its weights (6 min)
 - [ ] Train from the supplied checkpoint (8 min)
 - [ ] First-layer filters and feature maps (6 min)
-- [ ] ✱ Stretch: Shift every test image by four pixels and compare the two networks
+- [ ] ✱ Stretch: Shift every test image by four pixels and compare the two networks; then count the last layer with the map flattened instead of averaged
 
 ### Session 2: Pretrained backbones
 
@@ -174,7 +183,6 @@ Train a small convolutional network on the catalogue photographs from a supplied
 
 - Labels cost an expert's time: Shaima named 100 photographs per pattern
 - The network of this morning, trained from scratch on those 800 for 20 epochs: **0.48** on the test set
-- Its validation accuracy jumps between 0.27 and 0.56 from epoch to epoch
 
 **0.48** test accuracy, small network from scratch on 800 photographs (supplied run, 60 seconds)
 
@@ -230,6 +238,42 @@ with torch.no_grad():
 | --- | --- |
 | From scratch, 800 photographs | 0.48 |
 | Frozen features + linear layer | 0.77 |
+
+#### [day2#several-labels] A rug with stripes and stars needs a yes or no for each motif
+
+*One label or several*
+
+| Motif | Score, set by hand | Softmax | Sigmoid |
+| --- | --- | --- | --- |
+| stripe | 2.4 | 0.55 | 0.92 |
+| star | 2.0 | 0.37 | 0.88 |
+| wave | −0.4 | 0.03 | 0.40 |
+| check | −0.8 | 0.02 | 0.31 |
+| four others | −2.6 to −1.5 | 0.01 or less | 0.07 to 0.18 |
+| Sum |  | 1.00 | 3.01 |
+
+- Mariam wants every piece listed under **each** motif it carries
+- Softmax makes the motifs compete for one unit of probability: only stripe passes 0.5
+- A sigmoid per motif answers eight separate questions: stripe and star both pass
+
+#### [day2#sigmoid-per-label] Independent sigmoids with binary cross-entropy
+
+*The head for several labels*
+
+```python
+head = nn.Linear(512, 8)       # the same layer
+Y = torch.tensor(tags).float() # (N, 8) of 0 and 1
+loss = F.binary_cross_entropy_with_logits(
+    head(f), Y)
+chosen = torch.sigmoid(head(f)) > 0.5
+```
+
+| Each example has | Output | Loss |
+| --- | --- | --- |
+| Exactly one class | softmax | cross-entropy on class numbers |
+| Any number of labels, zero included | a sigmoid per label | binary cross-entropy on a 0/1 table |
+
+> **What goes wrong.** A softmax head with a 0.5 cut runs without an error, and two motifs can never both pass it.
 
 #### [day2#where-features-come-from] A backbone carries the terms of the data it was trained on
 

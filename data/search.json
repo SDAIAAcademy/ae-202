@@ -2,9 +2,9 @@
   "v": 1,
   "engine": "1.0.0",
   "build": {
-    "at": "2026-11-15T10:19:58Z",
-    "version": "2027.1.0",
-    "commit": "c17dc34"
+    "at": "2026-11-24T15:44:18Z",
+    "version": "2027.2.0",
+    "commit": "c6f9bd5"
   },
   "lang": "en",
   "dir": "ltr",
@@ -177,7 +177,7 @@
       "n": 19,
       "session": 2,
       "title": "A mini-batch is a noisy, cheap estimate of the full gradient",
-      "text": "Batches A mini-batch is a noisy, cheap estimate of the full gradient All 3,000 swatches per step: an exact gradient, one update per pass 32 swatches per step: a noisy gradient, 94 updates per pass An epoch is one pass over the training set in a new random order Shuffle every epoch, and keep each input with its own label What goes wrong. Data stored class by class and never shuffled gives batches of one class; inputs shuffled without their labels give a network nothing to learn.",
+      "text": "Batches A mini-batch is a noisy, cheap estimate of the full gradient All 3,000 swatches per step: an exact gradient, one update per pass 32 swatches per step: a noisy gradient, 94 updates per pass An epoch is one pass over the training set in a new random order Shuffle every epoch, and keep each input with its own label What goes wrong. Inputs shuffled without their labels give a network nothing to learn.",
       "href": "../slides/day1.html#mini-batches"
     },
     {
@@ -371,8 +371,26 @@
     },
     {
       "deck": "day1",
-      "id": "other-usual-suspects",
+      "id": "batches-by-class",
       "n": 41,
+      "session": 4,
+      "title": "A loss that falls within each class and jumps at the next",
+      "text": "Another data-order fault A loss that falls within each class and jumps at the next batch 1 32 stripes · loss 1.98 batch 11 32 stripes · loss 0.51 batch 13 32 chevrons · loss 4.35 batch 23 32 chevrons · loss 1.37 epoch 3 val acc 0.14 · 90% of validation swatches called \"dot\" The swatches stored class by class and never shuffled: 87 of 94 batches hold one class From the second class on, each class starts at 2.6 to 4.3 and ends its run at 1.4 to 2.3: the network learns \"say chevron\", and the next class punishes it Pairs broken (Lab 1.4) look different: every batch loss stays between 2.06 and 2.12, near ln 8",
+      "href": "../slides/day1.html#batches-by-class"
+    },
+    {
+      "deck": "day1",
+      "id": "batches-by-class-fix",
+      "n": 42,
+      "session": 4,
+      "title": "Shuffle the examples, not the batches",
+      "text": "The fix Shuffle the examples, not the batches Same swatches, same network, 3 epochs Classes per batch Validation accuracy Stored order, class by class 1.07 0.14 One-class batches, taken in a new order each epoch 1.07 0.22 Swatches in a new random order each epoch 7.84 0.52 The test. Print the labels of the first three batches. A representative batch looks like the whole training set: most classes, in about their usual shares.",
+      "href": "../slides/day1.html#batches-by-class-fix"
+    },
+    {
+      "deck": "day1",
+      "id": "other-usual-suspects",
+      "n": 43,
       "session": 4,
       "title": "The usual suspects, by where they sit",
       "text": "Beyond today's three The usual suspects, by where they sit Data Labels shifted or shuffled away; inputs not normalised as the model expects; the same preprocessing missing at validation. Model and loss Wrong loss input; an output layer with the wrong number of classes; a silent broadcast between (N,) and (N, 1). Update Rate too high or too low; gradients never cleared; weights frozen by mistake; evaluation mode left on.",
@@ -381,7 +399,7 @@
     {
       "deck": "day1",
       "id": "check-one-batch",
-      "n": 42,
+      "n": 44,
       "session": 4,
       "title": "Where is the fault?",
       "text": "Checkpoint Where is the fault? Rayan trains a classifier on ten product categories. On 16 examples the loss reaches 0.02 in 200 steps. On the full training set it stays at 2.30 for 20 epochs, at every learning rate he tries. Where should he look first? At the size of the network: it cannot hold ten categories At the data pipeline: inputs and labels no longer match At the loss function: it cannot reach zero At the learning rate: it needs a finer sweep",
@@ -390,7 +408,7 @@
     {
       "deck": "day1",
       "id": "lab-1-4",
-      "n": 43,
+      "n": 45,
       "session": 4,
       "title": "Three faults in a training script",
       "text": "Lab 1.4 · 25 min Three faults in a training script Find three seeded faults in a broken training script, starting with an overfit-one-batch test, and log each fix. D1_4_three_faults.ipynb Run the broken script and read its log 3 min The overfit-one-batch test 6 min Fault in the loss input 5 min Fault in the learning rate 4 min Fault in the data order, and the corrected curve 7 min ✱ Stretch: Plant a fourth fault for your neighbour",
@@ -399,7 +417,7 @@
     {
       "deck": "day1",
       "id": "wrap-up",
-      "n": 44,
+      "n": 46,
       "session": 4,
       "title": "Three things to keep",
       "text": "Day 1 · wrap-up Three things to keep Shapes and gradients Predict the shape first. A gradient has the shape of its weight, and autograd computes what you computed by hand. Five lines and two curves Forward, loss, clear, backward, update. Then read the training and validation losses together, against chance. Debug with known answers Overfit one batch first. Keep a correct fix even when the curve stays flat, and log every step.",
@@ -408,7 +426,7 @@
     {
       "deck": "day1",
       "id": "next",
-      "n": 45,
+      "n": 47,
       "session": 4,
       "title": "Day 2: Vision and transfer",
       "text": "Next Day 2: Vision and transfer The network that reached 0.79 on swatches meets the catalogue photographs. Unfinished labs can be finished at home; each one starts from supplied files.",
@@ -497,17 +515,26 @@
     },
     {
       "deck": "day2",
-      "id": "cnn-result",
+      "id": "head-average-or-flatten",
       "n": 10,
       "session": 1,
+      "title": "Average or flatten: count the layer that follows",
+      "text": "The last map and the head Average or flatten: count the layer that follows Map 32 × 6 × 6, 8 classes Inputs Head weights Average, then linear 32 264 Flatten, then linear 1,152 9,224 Count it. Flatten: inputs = channels × height × width. Average: inputs = channels. Flattened, the head holds 66% of the network's weights (5% averaged) and accepts one image size only: on a 32 × 32 swatch it fails.",
+      "href": "../slides/day2.html#head-average-or-flatten"
+    },
+    {
+      "deck": "day2",
+      "id": "cnn-result",
+      "n": 11,
+      "session": 1,
       "title": "35 times fewer weights, and it learns the photographs",
-      "text": "What the lab measured 35 times fewer weights, and it learns the photographs Network, 6,000 training photographs Weights Validation accuracy Two layers, fully connected, 5 epochs 885,896 0.15 Convolutional, supplied checkpoint (8 epochs) 25,096 0.71 Convolutional, 2 more epochs in the lab 25,096 0.86 Starting from a checkpoint is how every lab today begins: someone else's training, saved as a file of weights, continued by you.",
+      "text": "What the lab measured 35 times fewer weights, and it learns the photographs Network, 6,000 training photographs Weights Validation accuracy Two layers, fully connected, 5 epochs 885,896 0.15 Convolutional, supplied checkpoint (8 epochs) 25,096 0.71 Convolutional, 2 more epochs in the lab 25,096 0.86",
       "href": "../slides/day2.html#cnn-result"
     },
     {
       "deck": "day2",
       "id": "first-layer-filters",
-      "n": 11,
+      "n": 12,
       "session": 1,
       "title": "Nobody designed these filters; they are what lowered the loss",
       "text": "What the first layer learnt Nobody designed these filters; they are what lowered the loss The 16 first-layer filters of the supplied checkpoint, each rescaled to its own range. Bars and edges at different angles Colour contrasts: one yarn against another Deeper layers combine them; those are too abstract to draw as pictures",
@@ -516,7 +543,7 @@
     {
       "deck": "day2",
       "id": "check-conv",
-      "n": 12,
+      "n": 13,
       "session": 1,
       "title": "What does the convolution buy?",
       "text": "Checkpoint What does the convolution buy? Shaima photographs the same striped rug twice; in the second photograph the rug sits four pixels to the right. Which statement about the first layer of each network is right? Both layers give the same output for the two photographs The convolution gives the same feature map for the two photographs The convolution needs both photographs in training to recognise the second The convolution's feature map shifts by four pixels; its values stay the same",
@@ -525,16 +552,16 @@
     {
       "deck": "day2",
       "id": "lab-2-1",
-      "n": 13,
+      "n": 14,
       "session": 1,
       "title": "A small convolutional network",
-      "text": "Lab 2.1 · 25 min A small convolutional network Train a small convolutional network on the catalogue photographs from a supplied checkpoint and visualise its first-layer filters. D2_1_small_cnn.ipynb A convolution by hand 5 min Build the network and count its weights 6 min Train from the supplied checkpoint 8 min First-layer filters and feature maps 6 min ✱ Stretch: Shift every test image by four pixels and compare the two networks",
+      "text": "Lab 2.1 · 25 min A small convolutional network Train a small convolutional network on the catalogue photographs from a supplied checkpoint and visualise its first-layer filters. D2_1_small_cnn.ipynb A convolution by hand 5 min Build the network and count its weights 6 min Train from the supplied checkpoint 8 min First-layer filters and feature maps 6 min ✱ Stretch: Shift every test image by four pixels and compare the two networks; then count the last layer with the map flattened instead of averaged",
       "href": "../slides/day2.html#lab-2-1"
     },
     {
       "deck": "day2",
       "id": "s2",
-      "n": 14,
+      "n": 15,
       "session": 2,
       "title": "Pretrained backbones",
       "text": "Session 2 Pretrained backbones Remove the head of a pretrained network and extract features Prepare images the way the backbone was trained Train a linear classifier on frozen features 02",
@@ -543,16 +570,16 @@
     {
       "deck": "day2",
       "id": "eight-hundred-labels",
-      "n": 15,
+      "n": 16,
       "session": 2,
       "title": "The cooperative has 800 labelled photographs, not 6,000",
-      "text": "The real constraint The cooperative has 800 labelled photographs, not 6,000 Labels cost an expert's time: Shaima named 100 photographs per pattern The network of this morning, trained from scratch on those 800 for 20 epochs: 0.48 on the test set Its validation accuracy jumps between 0.27 and 0.56 from epoch to epoch 0.48 test accuracy, small network from scratch on 800 photographs (supplied run, 60 seconds) This is the baseline of the day. Every result this afternoon is read against it, on the same 1,000 test photographs.",
+      "text": "The real constraint The cooperative has 800 labelled photographs, not 6,000 Labels cost an expert's time: Shaima named 100 photographs per pattern The network of this morning, trained from scratch on those 800 for 20 epochs: 0.48 on the test set 0.48 test accuracy, small network from scratch on 800 photographs (supplied run, 60 seconds) This is the baseline of the day. Every result this afternoon is read against it, on the same 1,000 test photographs.",
       "href": "../slides/day2.html#eight-hundred-labels"
     },
     {
       "deck": "day2",
       "id": "pretrained-backbone",
-      "n": 16,
+      "n": 17,
       "session": 2,
       "title": "Someone has already trained the filters on a million photographs",
       "text": "Pretrained backbones Someone has already trained the filters on a million photographs A backbone is a network trained on a large, general image set, published as a file of weights Early layers: edges, colours. Middle: textures, repeated shapes. Last layer: that set's own classes The early and middle layers transfer: every image task needs them In the lab: ResNet-18 11.7 million weights, 11.2 million without its 1,000-class head, trained on ImageNet-1k (1.28 million photographs, 1,000 everyday classes). A 45 MB download, loaded with one line (torchvision; the same weights are in timm).",
@@ -561,7 +588,7 @@
     {
       "deck": "day2",
       "id": "remove-head",
-      "n": 17,
+      "n": 18,
       "session": 2,
       "title": "Remove the last layer and the network returns 512 features",
       "text": "Feature extraction Remove the last layer and the network returns 512 features m = torchvision.models.resnet18( weights=\"IMAGENET1K_V1\") m.fc = nn.Identity() # was 512 -> 1000 m.eval() with torch.no_grad(): features = m(prepare(X)) # (N, 512) The 1,000-class layer is the only part about ImageNet's classes Everything before it becomes a fixed function: photograph in, 512 numbers out Frozen : evaluation mode, no gradients, nothing trained",
@@ -570,7 +597,7 @@
     {
       "deck": "day2",
       "id": "prepare-as-trained",
-      "n": 18,
+      "n": 19,
       "session": 2,
       "title": "Feed a backbone what it was trained on",
       "text": "Preprocessing Feed a backbone what it was trained on Normalise each colour channel with the mean and standard deviation of the backbone's training set Resize towards the size it was trained at: its filters expect motifs of a certain size in pixels These numbers belong to the weights; they are published with them What goes wrong. Raw pixels in [0, 1] fed to a backbone raise no error. The features are just worse, by a little or by a lot. It is the quiet kind of fault from yesterday's list.",
@@ -579,7 +606,7 @@
     {
       "deck": "day2",
       "id": "linear-probe",
-      "n": 19,
+      "n": 20,
       "session": 2,
       "title": "One linear layer on frozen features is the cheapest transfer",
       "text": "The classifier One linear layer on frozen features is the cheapest transfer Extract features once; they are a table of numbers now Standardise with statistics of the training features Train Linear(512, 8): 4,104 weights, seconds Nothing in the backbone can overfit, because nothing in it moves From scratch, 800 photographs 0.48 Frozen features + linear layer 0.77",
@@ -587,8 +614,26 @@
     },
     {
       "deck": "day2",
+      "id": "several-labels",
+      "n": 21,
+      "session": 2,
+      "title": "A rug with stripes and stars needs a yes or no for each motif",
+      "text": "One label or several A rug with stripes and stars needs a yes or no for each motif Motif Score, set by hand Softmax Sigmoid stripe 2.4 0.55 0.92 star 2.0 0.37 0.88 wave −0.4 0.03 0.40 check −0.8 0.02 0.31 four others −2.6 to −1.5 0.01 or less 0.07 to 0.18 Sum 1.00 3.01 Mariam wants every piece listed under each motif it carries Softmax makes the motifs compete for one unit of probability: only stripe passes 0.5 A sigmoid per motif answers eight separate questions: stripe and star both pass",
+      "href": "../slides/day2.html#several-labels"
+    },
+    {
+      "deck": "day2",
+      "id": "sigmoid-per-label",
+      "n": 22,
+      "session": 2,
+      "title": "Independent sigmoids with binary cross-entropy",
+      "text": "The head for several labels Independent sigmoids with binary cross-entropy head = nn.Linear(512, 8) # the same layer Y = torch.tensor(tags).float() # (N, 8) of 0 and 1 loss = F.binary_cross_entropy_with_logits( head(f), Y) chosen = torch.sigmoid(head(f)) > 0.5 Each example has Output Loss Exactly one class softmax cross-entropy on class numbers Any number of labels, zero included a sigmoid per label binary cross-entropy on a 0/1 table What goes wrong. A softmax head with a 0.5 cut runs without an error, and two motifs can never both pass it.",
+      "href": "../slides/day2.html#sigmoid-per-label"
+    },
+    {
+      "deck": "day2",
       "id": "where-features-come-from",
-      "n": 20,
+      "n": 23,
       "session": 2,
       "title": "A backbone carries the terms of the data it was trained on",
       "text": "Provenance A backbone carries the terms of the data it was trained on The code and the weights file torchvision is under a BSD 3-clause licence, and the model card of these ResNet-18 weights states the same licence. The training data ImageNet's terms of access allow non-commercial research and educational use. Whether weights trained on it may be used in a shop is a question for Bushra Al-Aqeel, not for the engineer alone. The habit for the capstone. For every model and dataset: its licence, where it came from, and who checked. Day 4 turns this into a column of the model-choice table.",
@@ -597,7 +642,7 @@
     {
       "deck": "day2",
       "id": "check-frozen",
-      "n": 21,
+      "n": 24,
       "session": 2,
       "title": "Which statistics?",
       "text": "Checkpoint Which statistics? Zaid extracts features for 800 training and 1,000 test photographs. Before the linear layer he standardises them. Which mean and standard deviation does he use for the test features? Those of the 800 training features Those of the 1,000 test features The ImageNet mean and standard deviation of the backbone Those of all 1,800 features together",
@@ -606,7 +651,7 @@
     {
       "deck": "day2",
       "id": "lab-2-2",
-      "n": 22,
+      "n": 25,
       "session": 2,
       "title": "Frozen features",
       "text": "Lab 2.2 · 25 min Frozen features Extract features from the 800 labelled images with a pretrained image model and train a linear classifier on them. D2_2_frozen_features.ipynb Load the backbone and remove its head 4 min Resize and normalise as the backbone expects 4 min Extract features without gradients 7 min A linear classifier on the features 6 min Against training from scratch on the same 800 4 min ✱ Stretch: Take the features one block earlier and compare",
@@ -615,7 +660,7 @@
     {
       "deck": "day2",
       "id": "s3",
-      "n": 23,
+      "n": 26,
       "session": 3,
       "title": "Fine-tuning with little data",
       "text": "Session 3 Fine-tuning with little data Freeze and unfreeze chosen blocks of a network Apply augmentation that keeps the label true Compare frozen features, partial fine-tuning and training from scratch on one test set 03",
@@ -624,7 +669,7 @@
     {
       "deck": "day2",
       "id": "three-options",
-      "n": 24,
+      "n": 27,
       "session": 3,
       "title": "Three ways to use 800 labels, from least to most trained",
       "text": "The choice Three ways to use 800 labels, from least to most trained Frozen features Train only a new head. Seconds. Cannot damage the backbone, cannot adapt it either. Partial fine-tuning Also train the last block or two. The most task-specific layers adapt; the general ones stay. Full fine-tuning Train everything at a small rate. The most capacity to adapt, and to overfit little data. Rule of thumb. The less data you have and the closer your images are to the backbone's, the more you freeze. Then measure: the rule is a starting point.",
@@ -633,7 +678,7 @@
     {
       "deck": "day2",
       "id": "freezing-in-code",
-      "n": 25,
+      "n": 28,
       "session": 3,
       "title": "A frozen weight has no gradient and is never updated",
       "text": "Freezing A frozen weight has no gradient and is never updated m.fc = nn.Linear(512, 8) for p in m.parameters(): p.requires_grad = False for p in m.layer4.parameters(): p.requires_grad = True for p in m.fc.parameters(): p.requires_grad = True 75% of ResNet-18's weights, without the head, sit in its last block: 8.4 of 11.2 million (Lab 2.3) \"Only the last block\" is still 8 million numbers fitted to 800 photographs.",
@@ -642,7 +687,7 @@
     {
       "deck": "day2",
       "id": "two-learning-rates",
-      "n": 26,
+      "n": 29,
       "session": 3,
       "title": "Small steps for what is already good, larger steps for what is new",
       "text": "Learning rates Small steps for what is already good, larger steps for what is new optimiser = torch.optim.Adam([ {\"params\": m.layer4.parameters(), \"lr\": 3e-4}, {\"params\": m.fc.parameters(), \"lr\": 3e-3}, ]) The pretrained block starts from useful weights: it is nudged The new head starts from random numbers: it must travel One large rate for both destroys the block in the first steps",
@@ -651,7 +696,7 @@
     {
       "deck": "day2",
       "id": "augmentation",
-      "n": 27,
+      "n": 30,
       "session": 3,
       "title": "Augmentation is extra data that costs no labels, if it keeps the label true",
       "text": "Augmentation Augmentation is extra data that costs no labels, if it keeps the label true Safe for these patterns Flips, small shifts, a rotation, a change of colours: a flipped chevron is a chevron, and the class does not depend on colour. Not safe everywhere Flip a photograph of text or of a left-hand glove and the label is wrong. A heavy blur can turn a wave into a stripe. Applied to each batch in training only, with new random choices every time The validation and test photographs are never augmented",
@@ -660,7 +705,7 @@
     {
       "deck": "day2",
       "id": "results-table",
-      "n": 28,
+      "n": 31,
       "session": 3,
       "title": "Transfer bought 30 points; fine-tuning added one more",
       "text": "What the lab measured Transfer bought 30 points; fine-tuning added one more 800 labelled photographs, same 1,000 test photographs Test accuracy Weights trained Seconds Small network from scratch 0.476 25,096 60 Frozen features + linear layer 0.774 4,104 24 Last block fine-tuned, with augmentation 0.788 8,397,832 102 Read all three columns. The last row is the best by 1.4 points, for four times the training time and 2,000 times the trained weights. On 1,000 test photographs, 1.4 points is 14 photographs.",
@@ -669,7 +714,7 @@
     {
       "deck": "day2",
       "id": "when-finetuning-pays",
-      "n": 29,
+      "n": 32,
       "session": 3,
       "title": "Fine-tuning pays more when the new images differ more",
       "text": "Beyond this table Fine-tuning pays more when the new images differ more Close to the backbone's data, little data: frozen features are hard to beat Far from it (medical scans, satellite images, microscope slides), more data: unfreeze more Always keep the frozen-feature result as the row to beat: it costs seconds A time budget is part of the task: this outcome says \"a laptop CPU time budget\" Going further. Detection, segmentation, export and field tests of vision models are the subject of AE-309 Computer Vision Engineering.",
@@ -678,7 +723,7 @@
     {
       "deck": "day2",
       "id": "check-finetune",
-      "n": 30,
+      "n": 33,
       "session": 3,
       "title": "What went wrong in the first epoch?",
       "text": "Checkpoint What went wrong in the first epoch? Rayan unfreezes the last block of a pretrained backbone and trains it together with a new head, one Adam optimiser at a learning rate of 0.01 for everything. After one epoch the validation accuracy is below what frozen features gave. What is the most likely cause? The augmentation made the training images too different Too few of the backbone's layers were left frozen The large steps overwrote the pretrained weights of the block The new head had too few weights to use the features",
@@ -687,7 +732,7 @@
     {
       "deck": "day2",
       "id": "lab-2-3",
-      "n": 31,
+      "n": 34,
       "session": 3,
       "title": "Fine-tune the last block",
       "text": "Lab 2.3 · 25 min Fine-tune the last block Fine-tune the last block with augmentation on 800 images and compare with the supplied frozen-feature and from-scratch results. D2_3_fine_tune.ipynb Freeze all but the last block and the head 5 min Augmentation that keeps the label true 5 min Fine-tune with two learning rates 9 min The results table on one test set 6 min ✱ Stretch: Unfreeze one more block and measure the cost in time",
@@ -696,7 +741,7 @@
     {
       "deck": "day2",
       "id": "s4",
-      "n": 32,
+      "n": 35,
       "session": 4,
       "title": "Evaluating a deep model",
       "text": "Session 4 Evaluating a deep model Read a confusion matrix by class Inspect the most confident errors and sort them by cause Find near-duplicates between training and test images and report accuracy without them 04",
@@ -705,7 +750,7 @@
     {
       "deck": "day2",
       "id": "one-number-hides",
-      "n": 33,
+      "n": 36,
       "session": 4,
       "title": "\"0.79\" answers none of Mariam's next three questions",
       "text": "Evaluation \"0.79\" answers none of Mariam's next three questions Which patterns? Is it 0.79 on every class, or perfect on six and guessing on two? The confusion matrix. What kind of errors? Hard photographs, a systematic confusion, or labels that are wrong? The confident errors. Can I trust the test? Has the model seen some test photographs before? The duplicate check.",
@@ -714,7 +759,7 @@
     {
       "deck": "day2",
       "id": "confusion-matrix",
-      "n": 34,
+      "n": 37,
       "session": 4,
       "title": "Two pairs of classes hold most of the errors",
       "text": "The confusion matrix Two pairs of classes hold most of the errors Labelled as Photographs Right Most often mistaken for chevron 127 0.50 wave (62 times) dot 143 0.69 diamond (30 times) diamond 138 0.78 dot (18 times) wave 123 0.86 chevron (15 times) check 118 0.97 star (2 times) Read the direction. Chevrons are called waves four times as often as waves are called chevrons: at 48 pixels a zigzag's corners blur into curves, and the model's default between the two is \"wave\".",
@@ -723,7 +768,7 @@
     {
       "deck": "day2",
       "id": "confident-errors",
-      "n": 35,
+      "n": 38,
       "session": 4,
       "title": "Five of the ten most confident errors were wrong labels",
       "text": "Confident errors Five of the ten most confident errors were wrong labels Sort the wrong predictions by the model's confidence Look at the top ten, one by one Either the model learnt something wrong, or the label is wrong The test set held 12 wrong labels; the model disagreed with 11 of them",
@@ -732,7 +777,7 @@
     {
       "deck": "day2",
       "id": "near-duplicates",
-      "n": 36,
+      "n": 39,
       "session": 4,
       "title": "The same photograph in training and in test is not a test",
       "text": "Near-duplicates The same photograph in training and in test is not a test Top: test. Bottom: its nearest training photograph. Four re-uploads, then two honest look-alikes. Makers upload a photograph twice; a random split puts one copy on each side Fingerprint every image, compare test against training Sorted similarities: 0.999, 0.998, 0.997, then a drop to 0.972 40 test photographs above 0.985",
@@ -741,7 +786,7 @@
     {
       "deck": "day2",
       "id": "report-without",
-      "n": 37,
+      "n": 40,
       "session": 4,
       "title": "Report the accuracy without the photographs the model had seen",
       "text": "What to report Report the accuracy without the photographs the model had seen 0.788 all 1,000 test photographs 1.000 the 40 near-duplicates 0.779 the other 960: the number to report Here it moved the number by one point. In a set where a quarter of the test images have a twin in training, the same check changes the decision. You do not know which case you are in until you look.",
@@ -750,7 +795,7 @@
     {
       "deck": "day2",
       "id": "evaluation-habits",
-      "n": 38,
+      "n": 41,
       "session": 4,
       "title": "What stands behind a number in your capstone README",
       "text": "The habits What stands behind a number in your capstone README The test set, its size, and how it was kept apart The result of a simpler alternative on the same test set The confusion matrix, and the two worst pairs in words The confident errors you looked at, and what they were The duplicate check, and the number without duplicates",
@@ -759,7 +804,7 @@
     {
       "deck": "day2",
       "id": "check-evaluation",
-      "n": 39,
+      "n": 42,
       "session": 4,
       "title": "What do you do with this error?",
       "text": "Checkpoint What do you do with this error? On a test photograph labelled \"diamond\" the model says \"check\" with a confidence of 0.999. You look at the photograph: it shows a checked cloth. What is the right next step? Add the photograph to the training set with its label and fine-tune again Send it to the owner of the labels and count such cases Delete the photograph from the test set and report the new accuracy Lower the model's confidence with a threshold so that it abstains here",
@@ -768,7 +813,7 @@
     {
       "deck": "day2",
       "id": "lab-2-4",
-      "n": 40,
+      "n": 43,
       "session": 4,
       "title": "Errors and near-duplicates",
       "text": "Lab 2.4 · 25 min Errors and near-duplicates Build a confusion matrix for the fine-tuned model, inspect its ten most confident errors and check the splits for near-duplicates. D2_4_errors_duplicates.ipynb The confusion matrix 6 min The ten most confident errors 7 min Near-duplicates between training and test 8 min Accuracy with and without them 4 min ✱ Stretch: Precision and recall per class",
@@ -777,7 +822,7 @@
     {
       "deck": "day2",
       "id": "wrap-up",
-      "n": 41,
+      "n": 44,
       "session": 4,
       "title": "Three things to keep",
       "text": "Day 2 · wrap-up Three things to keep Convolution shares weights One small detector at every position: 25 thousand weights learnt what 886 thousand could not. Start from someone's weights With 800 labels: 0.48 from scratch, 0.77 on frozen features, 0.79 fine-tuned. Keep the cheap row as the one to beat. Look behind the number Confusion pairs, confident errors, duplicates. Then report the number you can defend.",
@@ -786,7 +831,7 @@
     {
       "deck": "day2",
       "id": "next",
-      "n": 42,
+      "n": 45,
       "session": 4,
       "title": "Day 3: Transformers and embeddings",
       "text": "Next Day 3: Transformers and embeddings From pixels to text: tokens, attention, and a search over the cooperative's bilingual catalogue. Unfinished labs can be finished at home.",

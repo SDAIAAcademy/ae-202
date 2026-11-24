@@ -1,7 +1,7 @@
 ---
 course: "Deep Learning and Generative AI Fundamentals"
 code: "AE-202"
-version: "2027.1.0"
+version: "2027.2.0"
 deck: "day1"
 day: 1
 language: "en"
@@ -233,7 +233,7 @@ optimiser.step()                    # 5 update the weights
 - An **epoch** is one pass over the training set in a new random order
 - Shuffle every epoch, and keep each input with its own label
 
-> **What goes wrong.** Data stored class by class and never shuffled gives batches of one class; inputs shuffled without their labels give a network nothing to learn.
+> **What goes wrong.** Inputs shuffled without their labels give a network nothing to learn.
 
 #### [day1#validation-pass] The validation pass measures and must not learn
 
@@ -485,6 +485,32 @@ for xb, yb in make_batches(X, tag, 8, g):
 - Passing the one-batch test and sitting at exactly ln 8 on full data points here
 
 **2.08 → 1.23** validation loss with two fixes, and with the third (the data order), after 8 epochs (Lab 1.4)
+
+#### [day1#batches-by-class] A loss that falls within each class and jumps at the next
+
+*Another data-order fault*
+
+- batch 1: 32 stripes · loss 1.98
+- batch 11: 32 stripes · loss 0.51
+- batch 13: 32 chevrons · loss 4.35
+- batch 23: 32 chevrons · loss 1.37
+- epoch 3: val acc 0.14 · 90% of validation swatches called "dot"
+
+- The swatches stored class by class and never shuffled: **87 of 94 batches hold one class**
+- From the second class on, each class starts at 2.6 to 4.3 and ends its run at 1.4 to 2.3: the network learns "say chevron", and the next class punishes it
+- Pairs broken (Lab 1.4) look different: every batch loss stays between 2.06 and 2.12, near ln 8
+
+#### [day1#batches-by-class-fix] Shuffle the examples, not the batches
+
+*The fix*
+
+| Same swatches, same network, 3 epochs | Classes per batch | Validation accuracy |
+| --- | --- | --- |
+| Stored order, class by class | 1.07 | 0.14 |
+| One-class batches, taken in a new order each epoch | 1.07 | 0.22 |
+| Swatches in a new random order each epoch | 7.84 | 0.52 |
+
+> **The test.** Print the labels of the first three batches. A representative batch looks like the whole training set: most classes, in about their usual shares.
 
 #### [day1#other-usual-suspects] The usual suspects, by where they sit
 

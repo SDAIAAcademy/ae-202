@@ -1,7 +1,7 @@
 ---
 course: "Deep Learning and Generative AI Fundamentals"
 code: "AE-202"
-version: "2027.1.0"
+version: "2027.2.0"
 deck: "day3"
 day: 3
 language: "en"

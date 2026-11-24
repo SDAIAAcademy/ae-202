@@ -1,7 +1,7 @@
 ---
 course: "Deep Learning and Generative AI Fundamentals"
 code: "AE-202"
-version: "2027.1.0"
+version: "2027.2.0"
 language: "en"
 view: "trainee"
 source: "https://sdaiaacademy.github.io/ae-202/index.html"
@@ -177,6 +177,7 @@ A small model for one cooperative use case (image classifier, bilingual search o
 
 - [PyTorch documentation: automatic differentiation with torch.autograd](https://docs.pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html)
 - [PyTorch documentation: torch.nn.CrossEntropyLoss](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html)
+- [PyTorch documentation: torch.nn.BCEWithLogitsLoss](https://docs.pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html)
 - [PyTorch documentation: the scaled dot-product attention function](https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html)
 - [torchvision: models and pretrained weights](https://docs.pytorch.org/vision/stable/models.html)
 - [Sentence Transformers documentation](https://sbert.net/)
@@ -220,4 +221,4 @@ A small model for one cooperative use case (image classifier, bilingual search o
 
 SDAIA Academy · AI Engineering Track · Deep Learning and Generative AI Fundamentals
 
-Course version 2027.1.0 · engine 1.0.0 · built 2026-11-15 · commit c17dc34
+Course version 2027.2.0 · engine 1.0.0 · built 2026-11-24 · commit c6f9bd5
