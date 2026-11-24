@@ -497,17 +497,17 @@ for xb, yb in make_batches(X, tag, 8, g):
     <div class="trace s">
       <div class="ev user"><b>batch 1</b>32 stripes · loss 1.98</div>
       <div class="ev result"><b>batch 11</b>32 stripes · loss 0.51</div>
-      <div class="ev error"><b>batch 36</b>first checks · loss 3.52</div>
-      <div class="ev result"><b>batch 46</b>32 checks · loss 2.33</div>
+      <div class="ev error"><b>batch 13</b>32 chevrons · loss 4.35</div>
+      <div class="ev result"><b>batch 23</b>32 chevrons · loss 1.37</div>
       <div class="ev error"><b>epoch 3</b>val acc 0.14 · 90% of validation swatches called "dot"</div>
     </div>
     <ul class="bullets">
       <li>The swatches stored class by class and never shuffled: <b>87 of 94 batches hold one class</b></li>
-      <li>Within a class the network learns "say stripe"; the next class punishes it</li>
-      <li>Pairs broken (Lab 1.4) look different: every batch near ln 8, no swings, predictions spread like the classes</li>
+      <li>From the second class on, each class starts at 2.6 to 4.3 and ends its run at 1.4 to 2.3: the network learns "say chevron", and the next class punishes it</li>
+      <li>Pairs broken (Lab 1.4) look different: every batch loss stays between 2.06 and 2.12, near ln 8</li>
     </ul>
   </div>
-  <aside class="notes"><p>Run of labs/_tools/make_heads_and_order.py: the Day 1 network (37,448 weights, Adam at 0.001, batches of 32) on the 3,000 training swatches sorted by class. Read the log top to bottom and ask what each line says before revealing the bullets. The validation loss alone (2.06 to 2.10) would not tell the two faults apart; the batch losses and the spread of the predictions do. Which class wins changes from epoch to epoch (stripe, wave, dot): it is whichever the last batches pushed hardest.</p></aside>
+  <aside class="notes"><p>Run of labs/_tools/make_heads_and_order.py: the Day 1 network (37,448 weights, Adam at 0.001, batches of 32) on the 3,000 training swatches sorted by class. Read the log top to bottom and ask what each line says before revealing the bullets. Batch 12 holds the last stripes and the first chevrons, so the log shows the first batch of chevrons only. The validation loss alone would not tell the two faults apart: 2.06 to 2.10 here, 2.08 to 2.09 with the pairs broken (same script). The batch losses do, and so does the share of the most predicted class: 87% to 90% here, 35% to 52% with the pairs broken. Which class wins changes from epoch to epoch (stripe, wave, dot).</p></aside>
 </section>
 
 <section class="slide" id="batches-by-class-fix" data-lo="LO3">
@@ -520,7 +520,7 @@ for xb, yb in make_batches(X, tag, 8, g):
     <tr class="hl"><td>Swatches in a new random order each epoch</td><td class="num">7.84</td><td class="num">0.52</td></tr>
   </table>
   <div class="callout tip mt"><b>The test.</b> Print the labels of the first three batches. A representative batch looks like the whole training set: most classes, in about their usual shares.</div>
-  <aside class="notes"><p>Numbers from the same script. The middle row is the tempting half-fix: the order of the batches changes, but each batch still holds one class. A parallel case: Rayan exports the shop's product photographs folder by folder, one folder per category, and trains on the files as listed; the same test on his first three batches shows one category each. When a class is rare, a sampler that draws every class in its share (stratified batches) keeps it in most batches.</p></aside>
+  <aside class="notes"><p>Numbers from the same script. The middle row is the tempting half-fix: the order of the batches changes, but each batch still holds one class. A parallel case: Shaima scans new swatches one pattern at a time and appends each scan to the training file; trained on the file as it stands, the same test on its first three batches shows one pattern each. When a class is rare, a sampler that draws every class in its share (stratified batches) keeps it in most batches.</p></aside>
 </section>
 
 <section class="slide" id="other-usual-suspects" data-lo="LO3">

@@ -4,8 +4,8 @@ and one label against several labels per photograph.
     uv run python _tools/make_heads_and_order.py      (from labs/)
 
 Writes data/reference/heads_and_order.json. Every number on the slides `batches-by-class`,
-`batches-by-class-fix`, `head-average-or-flatten`, `head-count-table`, `several-labels` and
-`sigmoid-per-label` comes from that file.
+`batches-by-class-fix`, `head-average-or-flatten`, `several-labels` and `sigmoid-per-label`
+comes from that file.
 """
 
 from __future__ import annotations
@@ -30,10 +30,13 @@ import nawl as U
 def run_order(mode: str, epochs: int = 3, bs: int = 32, lr: float = 1e-3):
     """The Day 1 network on the swatches, stored class by class. mode "stored": every batch holds
     one class, in the stored order; "batch_order": the same one-class batches, taken in a new
-    random order each epoch; "examples": the swatches themselves in a new random order each epoch."""
+    random order each epoch; "examples": the swatches themselves in a new random order each epoch;
+    "pairs_broken": for comparison, the swatches in their usual mixed order with the inputs shuffled
+    each epoch and the labels left in place (inputs and labels no longer match)."""
     Xtr, ytr, Xva, yva, _, _ = U.swatches()
-    order = torch.argsort(ytr, stable=True)          # stored class by class: 375 stripes, then 375 chevrons, ...
-    Xtr, ytr = Xtr[order], ytr[order]
+    if mode != "pairs_broken":
+        order = torch.argsort(ytr, stable=True)      # stored class by class: 375 stripes, then 375 chevrons, ...
+        Xtr, ytr = Xtr[order], ytr[order]
     torch.manual_seed(0)
     model = U.mlp(64)
     opt = torch.optim.Adam(model.parameters(), lr=lr)
@@ -43,17 +46,18 @@ def run_order(mode: str, epochs: int = 3, bs: int = 32, lr: float = 1e-3):
         model.train()
         if mode == "examples":
             batches = list(torch.randperm(len(Xtr), generator=g).split(bs))
+        elif mode == "pairs_broken":
+            batches = list(torch.arange(len(Xtr)).split(bs))
+            shuffled = torch.randperm(len(Xtr), generator=g)
         else:
             batches = list(torch.arange(len(Xtr)).split(bs))
             if mode == "batch_order":
                 batches = [batches[j] for j in torch.randperm(len(batches), generator=g).tolist()]
         if epoch == 0:
-            first_batch = {}
-            for j, b in enumerate(batches):
-                for c in set(ytr[b].tolist()):
-                    first_batch.setdefault(c, j)
+            pure = [ytr[b].unique().tolist() for b in batches]
         for b in batches:
-            loss = F.cross_entropy(model(Xtr[b]), ytr[b])
+            xb = Xtr[shuffled[b]] if mode == "pairs_broken" else Xtr[b]
+            loss = F.cross_entropy(model(xb), ytr[b])
             opt.zero_grad()
             loss.backward()
             opt.step()
@@ -66,15 +70,17 @@ def run_order(mode: str, epochs: int = 3, bs: int = 32, lr: float = 1e-3):
         top = int(torch.tensor(counts).argmax())
         log["epochs"].append({"epoch": epoch + 1, "val_loss": round(vl, 3), "val_acc": round(va, 3),
                               "most_predicted": U.CLASSES[top], "share_most_predicted": round(counts[top] / len(pred), 3)})
-    # the first batch of each class in epoch 1 (the loss jumps when the class changes); only
-    # meaningful when batches hold one class
-    if mode != "examples":
-        starts = []
+    # for each class, its one-class batches of epoch 1 in the order they were taken: the loss of
+    # the first and of the last of them (when batches hold one class)
+    if mode in ("stored", "batch_order"):
+        runs = []
         for c in range(8):
-            first = first_batch[c]
-            starts.append({"batch": first + 1, "class": U.CLASSES[c], "loss": log["batch_loss"][first],
-                           "loss_10_batches_later": log["batch_loss"][min(first + 10, len(log["batch_loss"]) - 1)]})
-        log["class_starts"] = starts
+            mine = [j for j, u in enumerate(pure) if u == [c]]
+            runs.append({"class": U.CLASSES[c], "first_batch": mine[0] + 1, "first_loss": log["batch_loss"][mine[0]],
+                         "last_batch": mine[-1] + 1, "last_loss": log["batch_loss"][mine[-1]]})
+        log["class_runs"] = runs
+    later = log["batch_loss"][10:]
+    log["batch_loss_range_after_10"] = [min(later), max(later)]
     log["batches_per_epoch"] = len(log["batch_loss"])
     log["one_class_batches"] = sum(1 for m in log["batch_class_mix"] if m == 1)
     log["mean_classes_per_batch"] = round(sum(log["batch_class_mix"]) / len(log["batch_class_mix"]), 2)
@@ -143,10 +149,11 @@ def labels():
 
 if __name__ == "__main__":
     result = {"order": {"stored_by_class": run_order("stored"), "batches_shuffled": run_order("batch_order"),
-                        "examples_shuffled": run_order("examples")},
+                        "examples_shuffled": run_order("examples"), "pairs_broken": run_order("pairs_broken")},
               "heads": heads(), "labels": labels()}
     for k in result["order"]:
         result["order"][k].pop("batch_loss")
     path = U.REF / "heads_and_order.json"
-    path.write_text(json.dumps(result, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    with open(path, "w", encoding="utf-8", newline="\n") as f:   # LF on every platform, as git stores it
+        f.write(json.dumps(result, indent=1, ensure_ascii=False) + "\n")
     print(json.dumps(result, indent=1, ensure_ascii=False))

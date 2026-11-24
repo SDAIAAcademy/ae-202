@@ -114,6 +114,7 @@ Each line is a capability; the examples are interchangeable.
 
 - [PyTorch documentation: automatic differentiation with torch.autograd](https://docs.pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html)
 - [PyTorch documentation: torch.nn.CrossEntropyLoss](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html)
+- [PyTorch documentation: torch.nn.BCEWithLogitsLoss](https://docs.pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html)
 - [PyTorch documentation: the scaled dot-product attention function](https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html)
 - [torchvision: models and pretrained weights](https://docs.pytorch.org/vision/stable/models.html)
 - [Sentence Transformers documentation](https://sbert.net/)

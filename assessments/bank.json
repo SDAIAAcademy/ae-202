@@ -399,7 +399,7 @@
     {
       "id": "q-order-01",
       "type": "single",
-      "prompt": "Rayan trains a classifier on ten product categories. His log shows the batch loss falling to about 0.4 over a run of batches, then jumping to 3.1, again and again. Each jump comes where the category of the batch changes. After every epoch, 85% of the validation products get the same category. What is the fault, and what fixes it?",
+      "prompt": "Rayan trains a classifier on ten product categories. In his log the batch loss falls over a run of batches, then jumps up, again and again, and each jump comes where the category of the batch changes. After each epoch most validation products get the same category. What is the fault, and what fixes it?",
       "options": [
         "The examples arrive sorted by category; draw each batch from a new random order of the examples",
         "The inputs were shuffled without their labels; shuffle inputs and labels with the same indices",
@@ -412,7 +412,7 @@
       "explanation": "Batches of one category teach the network to predict that category, until the next category punishes it. Only a new random order of the examples makes each batch look like the whole training set.",
       "misconceptions": [
         "",
-        "Broken pairs give a flat loss near ln 10, without runs and jumps",
+        "Broken pairs give a flat batch loss near ln 10, without runs and jumps",
         "The jumps line up with the category changes, not with the step size",
         "Each batch still holds a single category, whatever their order"
       ],

@@ -24,55 +24,67 @@
      "share_most_predicted": 0.904
     }
    ],
-   "class_starts": [
+   "class_runs": [
     {
-     "batch": 1,
      "class": "stripe",
-     "loss": 1.977,
-     "loss_10_batches_later": 0.506
+     "first_batch": 1,
+     "first_loss": 1.977,
+     "last_batch": 11,
+     "last_loss": 0.506
     },
     {
-     "batch": 12,
      "class": "chevron",
-     "loss": 1.482,
-     "loss_10_batches_later": 1.696
+     "first_batch": 13,
+     "first_loss": 4.347,
+     "last_batch": 23,
+     "last_loss": 1.366
     },
     {
-     "batch": 24,
      "class": "diamond",
-     "loss": 2.857,
-     "loss_10_batches_later": 2.289
+     "first_batch": 25,
+     "first_loss": 4.268,
+     "last_batch": 35,
+     "last_loss": 2.176
     },
     {
-     "batch": 36,
      "class": "check",
-     "loss": 3.52,
-     "loss_10_batches_later": 2.326
+     "first_batch": 37,
+     "first_loss": 3.817,
+     "last_batch": 46,
+     "last_loss": 2.326
     },
     {
-     "batch": 47,
      "class": "triangle",
-     "loss": 2.215,
-     "loss_10_batches_later": 1.934
+     "first_batch": 48,
+     "first_loss": 2.755,
+     "last_batch": 58,
+     "last_loss": 1.881
     },
     {
-     "batch": 59,
      "class": "dot",
-     "loss": 2.088,
-     "loss_10_batches_later": 2.384
+     "first_batch": 60,
+     "first_loss": 2.688,
+     "last_batch": 70,
+     "last_loss": 2.31
     },
     {
-     "batch": 71,
      "class": "wave",
-     "loss": 2.617,
-     "loss_10_batches_later": 2.2
+     "first_batch": 72,
+     "first_loss": 2.822,
+     "last_batch": 82,
+     "last_loss": 2.153
     },
     {
-     "batch": 83,
      "class": "star",
-     "loss": 2.657,
-     "loss_10_batches_later": 2.145
+     "first_batch": 84,
+     "first_loss": 2.612,
+     "last_batch": 94,
+     "last_loss": 2.084
     }
+   ],
+   "batch_loss_range_after_10": [
+    0.506,
+    4.347
    ],
    "batches_per_epoch": 94,
    "one_class_batches": 87,
@@ -102,55 +114,67 @@
      "share_most_predicted": 0.598
     }
    ],
-   "class_starts": [
+   "class_runs": [
     {
-     "batch": 8,
      "class": "stripe",
-     "loss": 2.16,
-     "loss_10_batches_later": 1.989
+     "first_batch": 8,
+     "first_loss": 2.16,
+     "last_batch": 94,
+     "last_loss": 1.832
     },
     {
-     "batch": 4,
      "class": "chevron",
-     "loss": 1.979,
-     "loss_10_batches_later": 2.202
+     "first_batch": 4,
+     "first_loss": 1.979,
+     "last_batch": 85,
+     "last_loss": 2.081
     },
     {
-     "batch": 1,
      "class": "diamond",
-     "loss": 2.164,
-     "loss_10_batches_later": 2.086
+     "first_batch": 1,
+     "first_loss": 2.164,
+     "last_batch": 88,
+     "last_loss": 2.355
     },
     {
-     "batch": 19,
      "class": "check",
-     "loss": 2.766,
-     "loss_10_batches_later": 2.598
+     "first_batch": 19,
+     "first_loss": 2.766,
+     "last_batch": 71,
+     "last_loss": 2.052
     },
     {
-     "batch": 5,
      "class": "triangle",
-     "loss": 2.262,
-     "loss_10_batches_later": 2.015
+     "first_batch": 5,
+     "first_loss": 2.262,
+     "last_batch": 92,
+     "last_loss": 2.024
     },
     {
-     "batch": 7,
      "class": "dot",
-     "loss": 2.262,
-     "loss_10_batches_later": 2.015
+     "first_batch": 7,
+     "first_loss": 2.262,
+     "last_batch": 78,
+     "last_loss": 2.067
     },
     {
-     "batch": 3,
      "class": "wave",
-     "loss": 2.106,
-     "loss_10_batches_later": 1.978
+     "first_batch": 3,
+     "first_loss": 2.106,
+     "last_batch": 91,
+     "last_loss": 2.025
     },
     {
-     "batch": 10,
      "class": "star",
-     "loss": 2.425,
-     "loss_10_batches_later": 2.051
+     "first_batch": 16,
+     "first_loss": 2.389,
+     "last_batch": 82,
+     "last_loss": 2.159
     }
+   ],
+   "batch_loss_range_after_10": [
+    1.736,
+    2.766
    ],
    "batches_per_epoch": 94,
    "one_class_batches": 87,
@@ -180,9 +204,45 @@
      "share_most_predicted": 0.396
     }
    ],
+   "batch_loss_range_after_10": [
+    1.949,
+    2.158
+   ],
    "batches_per_epoch": 94,
    "one_class_batches": 0,
    "mean_classes_per_batch": 7.84
+  },
+  "pairs_broken": {
+   "epochs": [
+    {
+     "epoch": 1,
+     "val_loss": 2.081,
+     "val_acc": 0.13,
+     "most_predicted": "wave",
+     "share_most_predicted": 0.418
+    },
+    {
+     "epoch": 2,
+     "val_loss": 2.086,
+     "val_acc": 0.124,
+     "most_predicted": "chevron",
+     "share_most_predicted": 0.352
+    },
+    {
+     "epoch": 3,
+     "val_loss": 2.085,
+     "val_acc": 0.12,
+     "most_predicted": "triangle",
+     "share_most_predicted": 0.522
+    }
+   ],
+   "batch_loss_range_after_10": [
+    2.064,
+    2.117
+   ],
+   "batches_per_epoch": 94,
+   "one_class_batches": 0,
+   "mean_classes_per_batch": 8.0
   }
  },
  "heads": {
