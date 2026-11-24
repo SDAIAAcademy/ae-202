@@ -212,8 +212,8 @@ optimiser.step()                    # 5 update the weights</code></pre>
     <li>An <b>epoch</b> is one pass over the training set in a new random order</li>
     <li>Shuffle every epoch, and keep each input with its own label</li>
   </ul>
-  <div class="callout warn mt"><b>What goes wrong.</b> Data stored class by class and never shuffled gives batches of one class; inputs shuffled without their labels give a network nothing to learn.</div>
-  <aside class="notes"><p>3,000 divided by 32 is 93.75, so 94 batches, the last one smaller. The warning is the third fault of Lab 1.4 (inputs shuffled, labels not). Ask: what does a batch of 32 stripes teach the network?</p></aside>
+  <div class="callout warn mt"><b>What goes wrong.</b> Inputs shuffled without their labels give a network nothing to learn.</div>
+  <aside class="notes"><p>3,000 divided by 32 is 93.75, so 94 batches, the last one smaller. The warning is the third fault of Lab 1.4 (inputs shuffled, labels not). Data stored class by class waits for session 4; if someone asks what a batch of 32 stripes teaches the network, say "we will read its log this afternoon".</p></aside>
 </section>
 
 <section class="slide" id="validation-pass" data-lo="LO2">
@@ -490,6 +490,39 @@ for xb, yb in make_batches(X, tag, 8, g):
   <aside class="notes"><p>With two fixes the full run sits at 2.08 for every epoch; with the third it falls to 1.23 and accuracy reaches 0.62 in 8 epochs. Exactly ln 8, not above it, is the fingerprint of inputs that carry no information about the labels: the best the network can do is predict the class frequencies.</p></aside>
 </section>
 
+<section class="slide" id="batches-by-class" data-lo="LO3">
+  <div class="kicker">Another data-order fault</div>
+  <h2>A loss that falls within each class and jumps at the next</h2>
+  <div class="cols cols-2">
+    <div class="trace s">
+      <div class="ev user"><b>batch 1</b>32 stripes · loss 1.98</div>
+      <div class="ev result"><b>batch 11</b>32 stripes · loss 0.51</div>
+      <div class="ev error"><b>batch 36</b>first checks · loss 3.52</div>
+      <div class="ev result"><b>batch 46</b>32 checks · loss 2.33</div>
+      <div class="ev error"><b>epoch 3</b>val acc 0.14 · 90% of validation swatches called "dot"</div>
+    </div>
+    <ul class="bullets">
+      <li>The swatches stored class by class and never shuffled: <b>87 of 94 batches hold one class</b></li>
+      <li>Within a class the network learns "say stripe"; the next class punishes it</li>
+      <li>Pairs broken (Lab 1.4) look different: every batch near ln 8, no swings, predictions spread like the classes</li>
+    </ul>
+  </div>
+  <aside class="notes"><p>Run of labs/_tools/make_heads_and_order.py: the Day 1 network (37,448 weights, Adam at 0.001, batches of 32) on the 3,000 training swatches sorted by class. Read the log top to bottom and ask what each line says before revealing the bullets. The validation loss alone (2.06 to 2.10) would not tell the two faults apart; the batch losses and the spread of the predictions do. Which class wins changes from epoch to epoch (stripe, wave, dot): it is whichever the last batches pushed hardest.</p></aside>
+</section>
+
+<section class="slide" id="batches-by-class-fix" data-lo="LO3">
+  <div class="kicker">The fix</div>
+  <h2>Shuffle the examples, not the batches</h2>
+  <table class="t">
+    <tr><th>Same swatches, same network, 3 epochs</th><th class="num">Classes per batch</th><th class="num">Validation accuracy</th></tr>
+    <tr><td>Stored order, class by class</td><td class="num">1.07</td><td class="num">0.14</td></tr>
+    <tr><td>One-class batches, taken in a new order each epoch</td><td class="num">1.07</td><td class="num">0.22</td></tr>
+    <tr class="hl"><td>Swatches in a new random order each epoch</td><td class="num">7.84</td><td class="num">0.52</td></tr>
+  </table>
+  <div class="callout tip mt"><b>The test.</b> Print the labels of the first three batches. A representative batch looks like the whole training set: most classes, in about their usual shares.</div>
+  <aside class="notes"><p>Numbers from the same script. The middle row is the tempting half-fix: the order of the batches changes, but each batch still holds one class. A parallel case: Rayan exports the shop's product photographs folder by folder, one folder per category, and trains on the files as listed; the same test on his first three batches shows one category each. When a class is rare, a sampler that draws every class in its share (stratified batches) keeps it in most batches.</p></aside>
+</section>
+
 <section class="slide" id="other-usual-suspects" data-lo="LO3">
   <div class="kicker">Beyond today's three</div>
   <h2>The usual suspects, by where they sit</h2>
@@ -498,7 +531,7 @@ for xb, yb in make_batches(X, tag, 8, g):
     <div class="card c-cyan"><h4>Model and loss</h4><p class="small mb0">Wrong loss input; an output layer with the wrong number of classes; a silent broadcast between (N,) and (N, 1).</p></div>
     <div class="card c-coral"><h4>Update</h4><p class="small mb0">Rate too high or too low; gradients never cleared; weights frozen by mistake; evaluation mode left on.</p></div>
   </div>
-  <aside class="notes"><p>"Inputs not normalised as the model expects" returns tomorrow: a pretrained backbone expects images scaled with the statistics it was trained with, and feeding it raw pixels is a quiet fault of exactly this kind.</p></aside>
+  <aside class="notes"><p>A reference slide: name the three cards in a minute and leave it for reading. "Inputs not normalised as the model expects" returns tomorrow: a pretrained backbone expects images scaled with the statistics it was trained with, and feeding it raw pixels is a quiet fault of exactly this kind.</p></aside>
 </section>
 
 <section class="slide" id="check-one-batch" data-lo="LO3">

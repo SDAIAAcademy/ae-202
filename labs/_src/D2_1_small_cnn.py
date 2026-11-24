@@ -14,6 +14,7 @@
 # - [ ] Train from the supplied checkpoint · 8 min
 # - [ ] First-layer filters and feature maps · 6 min
 # - [ ] ✱ Stretch · Shift every test image by four pixels and compare the two networks
+# - [ ] ✱ Stretch · Count the last layer if the map were flattened instead of averaged
 #
 # AI policy for this lab: an assistant may explain and hint, one step at a time.
 
@@ -213,6 +214,43 @@ fig = U.show_images([(x[0] + 0.5).mean(0).numpy()] + [maps[i].numpy() for i in s
 # Roll every validation photograph by four pixels (`torch.roll(Xva, 4, dims=3)`) and measure
 # both networks again. Which one loses more? Why is the convolutional network not perfectly
 # unchanged either (think of the pooling grid and of the borders)?
+
+# %% [markdown]
+# ## ✱ Stretch · Flatten instead of averaging
+#
+# Your network averages its last map over all positions before the linear layer. Suppose
+# `AdaptiveAvgPool2d(1)` were removed, so that `Flatten` passes the whole last map on.
+#
+# ✏️ **Exercise** · Return `(average, flatten)`: the number of weights, biases included, of
+# the last linear layer in each version. Work it out from the shape of the last map: run the
+# layers before the head on one photograph and read the shape (`cnn[:-3]`).
+
+# %%
+def head_weights(cnn):
+    # BEGIN SOLUTION
+    body = cnn[:-3].eval()                 # evaluation mode: reading a shape must not move the batch statistics
+    with torch.no_grad():
+        c, h, w = body(Xva[:1]).shape[1:]
+    return c * 8 + 8, c * h * w * 8 + 8
+    # END SOLUTION
+
+# %%
+try:
+    avg_head, flat_head = head_weights(cnn)
+except NotImplementedError:
+    avg_head = flat_head = None
+flat_cnn = nn.Sequential(*list(U.small_cnn())[:-3], nn.Flatten(), nn.LazyLinear(8))
+with torch.no_grad():
+    flat_cnn.eval()(Xva[:1])                         # the lazy layer learns its input size here
+expected = (U.n_params(cnn[-1]), U.n_params(flat_cnn[-1]))
+if avg_head is not None:
+    assert (avg_head, flat_head) == expected, f"compare with the two built heads: {expected}"
+print(f"last linear layer: {expected[0]:,} weights after the average, {expected[1]:,} after flattening;"
+      f" the flattened head would be {expected[1] / U.n_params(flat_cnn):.0%} of its network")
+
+# %% [markdown]
+# **Look at** the share. Which version would still run on a photograph of 64 x 64 pixels, and
+# why does that matter for a shop where photographs arrive at different sizes?
 
 # %% [markdown]
 # ## Check yourself

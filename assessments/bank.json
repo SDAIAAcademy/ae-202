@@ -397,6 +397,36 @@
       "weight": 1
     },
     {
+      "id": "q-order-01",
+      "type": "single",
+      "prompt": "Rayan trains a classifier on ten product categories. His log shows the batch loss falling to about 0.4 over a run of batches, then jumping to 3.1, again and again. Each jump comes where the category of the batch changes. After every epoch, 85% of the validation products get the same category. What is the fault, and what fixes it?",
+      "options": [
+        "The examples arrive sorted by category; draw each batch from a new random order of the examples",
+        "The inputs were shuffled without their labels; shuffle inputs and labels with the same indices",
+        "The learning rate is too high for this network; lower it tenfold and train for longer",
+        "Each epoch repeats the same order of batches; take the batches in a new random order"
+      ],
+      "correct": [
+        0
+      ],
+      "explanation": "Batches of one category teach the network to predict that category, until the next category punishes it. Only a new random order of the examples makes each batch look like the whole training set.",
+      "misconceptions": [
+        "",
+        "Broken pairs give a flat loss near ln 10, without runs and jumps",
+        "The jumps line up with the category changes, not with the step size",
+        "Each batch still holds a single category, whatever their order"
+      ],
+      "lo": [
+        "LO3"
+      ],
+      "day": "day1",
+      "session": 4,
+      "level": "analyze",
+      "pool": "practice",
+      "weight": 1,
+      "timer": 90
+    },
+    {
       "id": "q-conv-01",
       "type": "numeric",
       "prompt": "A convolutional layer has 16 filters. Each filter is 3 by 3 and reads 3 input channels. Each filter has one bias. How many weights does the layer have, biases included?",
@@ -473,6 +503,36 @@
       "weight": 1
     },
     {
+      "id": "q-head-01",
+      "type": "single",
+      "prompt": "The last convolution of a network gives 128 maps of 4 by 4 for each image. Zaid compares two heads for ten product categories: an average over all positions and then a linear layer, or flattening the maps and then a linear layer. How many weights, biases included, does the linear layer have in each head?",
+      "options": [
+        "20,490 after averaging; 1,290 after flattening",
+        "1,280 after averaging; 20,480 after flattening",
+        "1,290 after averaging; 1,290 after flattening",
+        "1,290 after averaging; 20,490 after flattening"
+      ],
+      "correct": [
+        3
+      ],
+      "explanation": "Averaging leaves 128 numbers: 128 × 10 + 10 = 1,290. Flattening passes 128 × 4 × 4 = 2,048 numbers: 2,048 × 10 + 10 = 20,490.",
+      "misconceptions": [
+        "Swaps the two heads",
+        "Leaves out the ten biases",
+        "Thinks flattening keeps one number per map",
+        ""
+      ],
+      "lo": [
+        "LO4"
+      ],
+      "day": "day2",
+      "session": 1,
+      "level": "apply",
+      "pool": "practice",
+      "weight": 1,
+      "timer": 90
+    },
+    {
       "id": "q-frozen-01",
       "type": "numeric",
       "prompt": "Zaid loads a pretrained network that turns a photograph into 512 features, and freezes all of it. He adds one linear layer from the 512 features to 8 classes, with biases. How many weights are trained?",
@@ -547,6 +607,36 @@
       "level": "understand",
       "pool": "practice",
       "weight": 1
+    },
+    {
+      "id": "q-labels-01",
+      "type": "single",
+      "prompt": "The shop's baskets are to be tagged with every material they use: palm leaf, wool, cotton and leather. One basket can use two or three. Zaid puts a linear layer with four outputs on frozen features. Which output and loss fit this task?",
+      "options": [
+        "A sigmoid on each output, binary cross-entropy, one threshold per material",
+        "A softmax over the four outputs, cross-entropy, and the largest one kept",
+        "A softmax over the four outputs, cross-entropy, and every output above 0.5 kept",
+        "A sigmoid on each output, and cross-entropy on the number of the material"
+      ],
+      "correct": [
+        0
+      ],
+      "explanation": "Each material is its own yes or no question, so each output gets its own sigmoid and the loss compares it with a 0 or 1 for that material. A softmax makes the materials compete for one unit of probability.",
+      "misconceptions": [
+        "",
+        "Gives each basket one material",
+        "Softmax outputs add up to 1, so two materials can never both pass 0.5",
+        "The labels must be a 0 or 1 for each material, not one class number"
+      ],
+      "lo": [
+        "LO4"
+      ],
+      "day": "day2",
+      "session": 2,
+      "level": "apply",
+      "pool": "practice",
+      "weight": 1,
+      "timer": 75
     },
     {
       "id": "q-finetune-01",

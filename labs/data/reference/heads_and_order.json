@@ -1,0 +1,280 @@
+{
+ "order": {
+  "stored_by_class": {
+   "epochs": [
+    {
+     "epoch": 1,
+     "val_loss": 2.093,
+     "val_acc": 0.136,
+     "most_predicted": "stripe",
+     "share_most_predicted": 0.87
+    },
+    {
+     "epoch": 2,
+     "val_loss": 2.061,
+     "val_acc": 0.164,
+     "most_predicted": "wave",
+     "share_most_predicted": 0.88
+    },
+    {
+     "epoch": 3,
+     "val_loss": 2.096,
+     "val_acc": 0.138,
+     "most_predicted": "dot",
+     "share_most_predicted": 0.904
+    }
+   ],
+   "class_starts": [
+    {
+     "batch": 1,
+     "class": "stripe",
+     "loss": 1.977,
+     "loss_10_batches_later": 0.506
+    },
+    {
+     "batch": 12,
+     "class": "chevron",
+     "loss": 1.482,
+     "loss_10_batches_later": 1.696
+    },
+    {
+     "batch": 24,
+     "class": "diamond",
+     "loss": 2.857,
+     "loss_10_batches_later": 2.289
+    },
+    {
+     "batch": 36,
+     "class": "check",
+     "loss": 3.52,
+     "loss_10_batches_later": 2.326
+    },
+    {
+     "batch": 47,
+     "class": "triangle",
+     "loss": 2.215,
+     "loss_10_batches_later": 1.934
+    },
+    {
+     "batch": 59,
+     "class": "dot",
+     "loss": 2.088,
+     "loss_10_batches_later": 2.384
+    },
+    {
+     "batch": 71,
+     "class": "wave",
+     "loss": 2.617,
+     "loss_10_batches_later": 2.2
+    },
+    {
+     "batch": 83,
+     "class": "star",
+     "loss": 2.657,
+     "loss_10_batches_later": 2.145
+    }
+   ],
+   "batches_per_epoch": 94,
+   "one_class_batches": 87,
+   "mean_classes_per_batch": 1.07
+  },
+  "batches_shuffled": {
+   "epochs": [
+    {
+     "epoch": 1,
+     "val_loss": 2.06,
+     "val_acc": 0.146,
+     "most_predicted": "stripe",
+     "share_most_predicted": 0.64
+    },
+    {
+     "epoch": 2,
+     "val_loss": 2.019,
+     "val_acc": 0.188,
+     "most_predicted": "wave",
+     "share_most_predicted": 0.424
+    },
+    {
+     "epoch": 3,
+     "val_loss": 1.988,
+     "val_acc": 0.216,
+     "most_predicted": "stripe",
+     "share_most_predicted": 0.598
+    }
+   ],
+   "class_starts": [
+    {
+     "batch": 8,
+     "class": "stripe",
+     "loss": 2.16,
+     "loss_10_batches_later": 1.989
+    },
+    {
+     "batch": 4,
+     "class": "chevron",
+     "loss": 1.979,
+     "loss_10_batches_later": 2.202
+    },
+    {
+     "batch": 1,
+     "class": "diamond",
+     "loss": 2.164,
+     "loss_10_batches_later": 2.086
+    },
+    {
+     "batch": 19,
+     "class": "check",
+     "loss": 2.766,
+     "loss_10_batches_later": 2.598
+    },
+    {
+     "batch": 5,
+     "class": "triangle",
+     "loss": 2.262,
+     "loss_10_batches_later": 2.015
+    },
+    {
+     "batch": 7,
+     "class": "dot",
+     "loss": 2.262,
+     "loss_10_batches_later": 2.015
+    },
+    {
+     "batch": 3,
+     "class": "wave",
+     "loss": 2.106,
+     "loss_10_batches_later": 1.978
+    },
+    {
+     "batch": 10,
+     "class": "star",
+     "loss": 2.425,
+     "loss_10_batches_later": 2.051
+    }
+   ],
+   "batches_per_epoch": 94,
+   "one_class_batches": 87,
+   "mean_classes_per_batch": 1.07
+  },
+  "examples_shuffled": {
+   "epochs": [
+    {
+     "epoch": 1,
+     "val_loss": 1.99,
+     "val_acc": 0.21,
+     "most_predicted": "stripe",
+     "share_most_predicted": 0.658
+    },
+    {
+     "epoch": 2,
+     "val_loss": 1.745,
+     "val_acc": 0.422,
+     "most_predicted": "diamond",
+     "share_most_predicted": 0.39
+    },
+    {
+     "epoch": 3,
+     "val_loss": 1.492,
+     "val_acc": 0.516,
+     "most_predicted": "check",
+     "share_most_predicted": 0.396
+    }
+   ],
+   "batches_per_epoch": 94,
+   "one_class_batches": 0,
+   "mean_classes_per_batch": 7.84
+  }
+ },
+ "heads": {
+  "average": {
+   "head": 264,
+   "body": 4800,
+   "total": 5064,
+   "head_share": 0.052,
+   "on_32x32": "runs"
+  },
+  "flatten": {
+   "head": 9224,
+   "body": 4800,
+   "total": 14024,
+   "head_share": 0.658,
+   "on_32x32": "fails: the layer expects a fixed number of inputs"
+  },
+  "swatch_network_formula": {
+   "map": "32 x 6 x 6",
+   "flatten_inputs": 1152,
+   "flatten": 9224,
+   "average": 264
+  },
+  "ratio_flatten_to_average": 34.9,
+  "question": {
+   "map": "128 x 4 x 4",
+   "flatten_inputs": 2048,
+   "flatten": 20490,
+   "average": 1290
+  }
+ },
+ "labels": {
+  "rows": [
+   {
+    "class": "stripe",
+    "score": 2.4,
+    "softmax": 0.55,
+    "sigmoid": 0.92
+   },
+   {
+    "class": "chevron",
+    "score": -1.5,
+    "softmax": 0.01,
+    "sigmoid": 0.18
+   },
+   {
+    "class": "diamond",
+    "score": -2.0,
+    "softmax": 0.01,
+    "sigmoid": 0.12
+   },
+   {
+    "class": "check",
+    "score": -0.8,
+    "softmax": 0.02,
+    "sigmoid": 0.31
+   },
+   {
+    "class": "triangle",
+    "score": -2.6,
+    "softmax": 0.0,
+    "sigmoid": 0.07
+   },
+   {
+    "class": "dot",
+    "score": -1.9,
+    "softmax": 0.01,
+    "sigmoid": 0.13
+   },
+   {
+    "class": "wave",
+    "score": -0.4,
+    "softmax": 0.03,
+    "sigmoid": 0.4
+   },
+   {
+    "class": "star",
+    "score": 2.0,
+    "softmax": 0.37,
+    "sigmoid": 0.88
+   }
+  ],
+  "softmax_sum": 1.0,
+  "sigmoid_sum": 3.01,
+  "above_half_softmax": [
+   "stripe"
+  ],
+  "above_half_sigmoid": [
+   "stripe",
+   "star"
+  ],
+  "bce_with_logits": 0.205,
+  "softmax_best_two_labels": 0.693
+ }
+}

@@ -101,6 +101,18 @@ out[i, j] = (img[i:i+3, j:j+3] * edge).sum()
   <aside class="notes"><p>Do not derive receptive fields; the number 20 is for intuition (a 3 by 3 kernel on a map pooled twice covers 12 pixels, plus what the earlier kernels add). Batch normalisation sits after each convolution in the lab's network: it rescales each feature map with statistics of the batch during training and with stored statistics in evaluation mode, which is one more reason for model.eval().</p></aside>
 </section>
 
+<section class="slide" id="head-average-or-flatten" data-lo="LO4">
+  <div class="kicker">The last map and the head</div>
+  <h2>Average or flatten: count the layer that follows</h2>
+  <table class="t">
+    <tr><th>Map 32 × 6 × 6, 8 classes</th><th class="num">Inputs</th><th class="num">Head weights</th></tr>
+    <tr class="hl"><td>Average, then linear</td><td class="num">32</td><td class="num">264</td></tr>
+    <tr><td>Flatten, then linear</td><td class="num">1,152</td><td class="num">9,224</td></tr>
+  </table>
+  <div class="callout tip mt"><b>Count it.</b> Flatten: inputs = channels × height × width. Average: inputs = channels. Flattened, the head holds 66% of the network's weights (5% averaged) and accepts one image size only: on a 32 × 32 swatch it fails.</div>
+  <aside class="notes"><p>A parallel network, not the one of the lab: two pooled convolution blocks (16, then 32 kernels of 3 by 3) on the grey 24 by 24 swatches of Day 1; the convolutions hold 4,800 weights. Counts from labs/_tools/make_heads_and_order.py, which builds both versions and feeds them a 32 by 32 swatch. The decision: average when the question is "does the motif occur?", when labels are few and when image sizes vary; flatten only when position itself carries the answer. Ask the room to count 32 × 36 × 8 + 8 before showing the table. The lab's stretch asks the same count for Naqsh's network: do not give it.</p></aside>
+</section>
+
 <section class="slide" id="cnn-result" data-lo="LO4">
   <div class="kicker">What the lab measured</div>
   <h2>35 times fewer weights, and it learns the photographs</h2>
@@ -110,8 +122,7 @@ out[i, j] = (img[i:i+3, j:j+3] * edge).sum()
     <tr><td>Convolutional, supplied checkpoint (8 epochs)</td><td class="num">25,096</td><td class="num">0.71</td></tr>
     <tr class="hl"><td>Convolutional, 2 more epochs in the lab</td><td class="num">25,096</td><td class="num">0.86</td></tr>
   </table>
-  <div class="callout note mt"><b>Starting from a checkpoint</b> is how every lab today begins: someone else's training, saved as a file of weights, continued by you.</div>
-  <aside class="notes"><p>All three rows are from the reference run of Lab 2.1. The checkpoint took about two minutes on a laptop processor; the lab continues at a lower learning rate (0.0005), which is why two more epochs help so much: the noisy validation accuracy of the checkpoint settles.</p></aside>
+  <aside class="notes"><p>All three rows are from the reference run of Lab 2.1. Starting from a checkpoint is how every lab today begins: say it in one line. The checkpoint took about two minutes on a laptop processor; the lab continues at a lower learning rate (0.0005), which is why two more epochs help so much: the noisy validation accuracy of the checkpoint settles.</p></aside>
 </section>
 
 <section class="slide" id="first-layer-filters" data-lo="LO4">
@@ -162,12 +173,11 @@ out[i, j] = (img[i:i+3, j:j+3] * edge).sum()
     <ul class="bullets">
       <li>Labels cost an expert's time: Shaima named 100 photographs per pattern</li>
       <li>The network of this morning, trained from scratch on those 800 for 20 epochs: <b>0.48</b> on the test set</li>
-      <li>Its validation accuracy jumps between 0.27 and 0.56 from epoch to epoch</li>
     </ul>
     <div class="stat center"><div class="big">0.48</div><div class="lbl">test accuracy, small network from scratch on 800 photographs (supplied run, 60 seconds)</div></div>
   </div>
   <div class="callout tip mt"><b>This is the baseline of the day.</b> Every result this afternoon is read against it, on the same 1,000 test photographs.</div>
-  <aside class="notes"><p>The supplied run is data/runs/day2_scratch.json, made by the course's tool with the same network and loop. From here on "little data" means these 800. The outcome is worded exactly so: adapt a pretrained model with little data and measure the improvement over training from scratch.</p></aside>
+  <aside class="notes"><p>The supplied run is data/runs/day2_scratch.json, made by the course's tool with the same network and loop; its validation accuracy jumps between 0.27 and 0.56 from epoch to epoch.From here on "little data" means these 800. The outcome is worded exactly so: adapt a pretrained model with little data and measure the improvement over training from scratch.</p></aside>
 </section>
 
 <section class="slide" id="pretrained-backbone" data-lo="LO4">
@@ -231,6 +241,47 @@ with torch.no_grad():
     </div>
   </div>
   <aside class="notes"><p>Test accuracies from the supplied from-scratch run and the reference run of Lab 2.2 (0.476 and 0.774). Same 800 labelled photographs, same test set. The second approach trained 4,104 numbers. This is also called a linear probe.</p></aside>
+</section>
+
+<section class="slide" id="several-labels" data-lo="LO4">
+  <div class="kicker">One label or several</div>
+  <h2>A rug with stripes and stars needs a yes or no for each motif</h2>
+  <div class="cols cols-2">
+    <table class="t">
+      <tr><th>Motif</th><th class="num">Score</th><th class="num">Softmax</th><th class="num">Sigmoid</th></tr>
+      <tr class="hl"><td>stripe</td><td class="num">2.4</td><td class="num">0.55</td><td class="num">0.92</td></tr>
+      <tr class="hl"><td>star</td><td class="num">2.0</td><td class="num">0.37</td><td class="num">0.88</td></tr>
+      <tr><td>wave</td><td class="num">−0.4</td><td class="num">0.03</td><td class="num">0.40</td></tr>
+      <tr><td>check</td><td class="num">−0.8</td><td class="num">0.02</td><td class="num">0.31</td></tr>
+      <tr><td>four others</td><td class="num">−2.6 to −1.5</td><td class="num">0.01 or less</td><td class="num">0.07 to 0.18</td></tr>
+      <tr><td>Sum</td><td></td><td class="num">1.00</td><td class="num">3.01</td></tr>
+    </table>
+    <ul class="bullets">
+      <li>Mariam wants every piece listed under <b>each</b> motif it carries</li>
+      <li>Softmax makes the motifs compete for one unit of probability: only stripe passes 0.5</li>
+      <li>A sigmoid per motif answers eight separate questions: stripe and star both pass</li>
+    </ul>
+  </div>
+  <aside class="notes"><p>The eight scores are set by hand to show the two readings, not the output of a trained model; the two columns are computed from them by labs/_tools/make_heads_and_order.py. With two motifs truly present, the best a softmax head can give is 0.5 each, and its cross-entropy then stays at ln 2 = 0.69, never 0. Ask: what would the softmax column say for a rug with three motifs?</p></aside>
+</section>
+
+<section class="slide" id="sigmoid-per-label" data-lo="LO4">
+  <div class="kicker">The head for several labels</div>
+  <h2>Independent sigmoids with binary cross-entropy</h2>
+  <div class="cols cols-2">
+    <pre class="code"><code class="language-python">head = nn.Linear(512, 8)       # the same layer
+Y = torch.tensor(tags).float() # (N, 8) of 0 and 1
+loss = F.binary_cross_entropy_with_logits(
+    head(f), Y)
+chosen = torch.sigmoid(head(f)) &gt; 0.5</code></pre>
+    <table class="t">
+      <tr><th>Each example has</th><th>Output</th><th>Loss</th></tr>
+      <tr><td>Exactly one class</td><td>softmax</td><td>cross-entropy on class numbers</td></tr>
+      <tr><td>Any number of labels, zero included</td><td>a sigmoid per label</td><td>binary cross-entropy on a 0/1 table</td></tr>
+    </table>
+  </div>
+  <div class="callout warn mt"><b>What goes wrong.</b> A softmax head with a 0.5 cut runs without an error, and two motifs can never both pass it.</div>
+  <aside class="notes"><p>The layer does not change; the reading of its scores and the loss do. Like cross-entropy, the binary loss takes raw scores and applies the sigmoid itself. On the scores of the previous slide, with stripe and star as the target, it is 0.20 and can reach 0. The 0.5 cut is a starting point: choose one threshold per label on validation data. A parallel case: the shop's photographs tagged with every yarn colour they show. Sources: PyTorch documentation, torch.nn.BCEWithLogitsLoss.</p></aside>
 </section>
 
 <section class="slide" id="where-features-come-from" data-lo="LO4 LO7">
